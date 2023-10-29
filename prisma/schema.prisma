@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Url {
+  id          String        @id @default(uuid())
+  originalUrl String
+  shortUrl    String
+  urlCode     String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  UrlAnalytic UrlAnalytic[]
+}
+
+model UrlAnalytic {
+  id      String @id @default(uuid())
+  url     Url    @relation(fields: [url_id], references: [id])
+  url_id  String @unique
+  clicked Int
+}
