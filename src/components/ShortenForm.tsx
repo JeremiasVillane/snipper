@@ -33,7 +33,7 @@ export default function ShortenForm() {
       const { data, statusCode, error } = await createUrl(inputUrl);
 
       if (statusCode === 200) {
-        router.push(`/success?code=${data.code}`);
+        router.push(`/success?code=${data.urlCode}`);
         setError(null);
       } else {
         setError(error.message);
@@ -67,7 +67,7 @@ export default function ShortenForm() {
       <input
         type="submit"
         className="bg-sky-700 font-bold text-white p-4 rounded-r-lg cursor-pointer"
-        value="Shorten URL"
+        value="Snip URL"
       />
     </form>
   );
