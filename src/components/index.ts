@@ -1,4 +1,4 @@
 import CopyUrlForm from "./CopyUrlForm";
-import ShortenForm from "./ShortenForm";
+import SnipForm from "./SnipForm";
 
-export { ShortenForm, CopyUrlForm };
+export { SnipForm, CopyUrlForm };

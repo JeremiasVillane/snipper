@@ -1,24 +1,21 @@
+"use server";
+
 import { prisma, urlSnipper } from "@/libs";
-import { NextRequest, NextResponse } from "next/server";
 import { isWebUri } from "valid-url";
 
-interface UrlRequest extends NextRequest {
-  url: string;
-}
+const host = process.env.NEXT_PUBLIC_API_URL;
 
-export async function POST(request: UrlRequest) {
-  const { url } = await request.json(); // JSON.parse(request.body)
-  const host = process.env.NEXT_PUBLIC_API_URL;
+export default async function createUrl(url: string) {
   const { urlCode, shortUrl } = urlSnipper(host!);
 
   if (!isWebUri(url)) {
-    return NextResponse.json({
+    return {
       stausCode: 400,
       error: {
         message: "Invalid URL",
       },
       data: null,
-    });
+    };
   }
 
   const result = await prisma.$transaction(async (tx) => {
@@ -52,7 +49,17 @@ export async function POST(request: UrlRequest) {
     return newUrl;
   });
 
-  return NextResponse.json({
+  if (!result) {
+    return {
+      stausCode: 400,
+      error: {
+        message: "Database error. Please try again.",
+      },
+      data: null,
+    };
+  }
+
+  return {
     statusCode: 200,
     error: null,
     data: {
@@ -60,5 +67,5 @@ export async function POST(request: UrlRequest) {
       shortUrl: result.shortUrl,
       urlCode: result.urlCode,
     },
-  });
+  };
 }

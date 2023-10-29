@@ -1,24 +1,10 @@
 "use client";
 
+import { createUrl } from "@/server-actions";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 
-const host = process.env.NEXT_PUBLIC_API_URL;
-
-async function createUrl(url: string) {
-  const res = await fetch(`${host}/api/generate`, {
-    method: "POST",
-    body: JSON.stringify({ url }),
-  });
-
-  if (!res.ok) {
-    throw new Error("Error fetching data.");
-  }
-
-  return res.json();
-}
-
-export default function ShortenForm() {
+export default function SnipForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>();
   const [inputUrl, setInputUrl] = useState<string | null>();
@@ -36,7 +22,7 @@ export default function ShortenForm() {
         router.push(`/success?code=${data.urlCode}`);
         setError(null);
       } else {
-        setError(error.message);
+        setError(error?.message);
       }
     }
   };

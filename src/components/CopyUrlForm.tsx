@@ -33,7 +33,7 @@ export default function CopyUrlForm({ code }: CopyUrlFormProps) {
         <input
           type="text"
           className="border border-solid p-4 rounded-l-lg w-full"
-          value={`${host}/api/${code}`}
+          value={`${host}/${code}`}
           ref={inputRef}
           readOnly
         />

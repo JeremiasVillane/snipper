@@ -1,5 +1,4 @@
 import { CopyUrlForm } from "@/components";
-import React from "react";
 
 interface SuccessPageProps {
   searchParams: {

@@ -1,13 +1,8 @@
+"use server";
+
 import { prisma } from "@/libs";
-import { NextResponse } from "next/server";
 
-interface Params {
-  code: string;
-}
-
-export async function GET(request: undefined, { params }: { params: Params }) {
-  const { code } = params;
-
+export default async function getAnalytics(code: string) {
   if (typeof code !== "string") return null;
 
   const analytic = await prisma.urlAnalytic.findFirst({
@@ -22,16 +17,16 @@ export async function GET(request: undefined, { params }: { params: Params }) {
   });
 
   if (!analytic) {
-    return NextResponse.json({
+    return {
       statusCode: 400,
       error: {
-        message: "Analytic not found!",
+        message: "Analytics not found!",
       },
       data: null,
-    });
+    };
   }
 
-  return NextResponse.json({
+  return {
     statusCode: 200,
     error: null,
     data: {
@@ -42,5 +37,5 @@ export async function GET(request: undefined, { params }: { params: Params }) {
         urlCode: analytic.url.urlCode,
       },
     },
-  });
+  };
 }

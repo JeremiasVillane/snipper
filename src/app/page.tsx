@@ -1,4 +1,4 @@
-import { ShortenForm } from "@/components";
+import { SnipForm } from "@/components";
 
 export default function Home() {
   return (
@@ -6,7 +6,7 @@ export default function Home() {
       <h1 className="text-4xl text-slate-700 my-4 text-center">
         Paste a URL to be snipped
       </h1>
-      <ShortenForm />
+      <SnipForm />
     </>
   );
 }
