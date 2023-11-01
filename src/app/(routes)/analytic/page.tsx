@@ -1,3 +1,4 @@
+import { Redirector } from "@/components";
 import { getAnalytics } from "@/server-actions";
 import Link from "next/link";
 
@@ -23,31 +24,26 @@ export default async function AnalyticPage({
         <div className="flex">
           <span className="mr-2">Original URL</span>
 
-          <Link
+          <a
             href={res?.data ? res.data.url.originalUrl : "#"}
             className="text-blue-300"
             target="_blank"
           >
             {res?.data?.url.originalUrl}
-          </Link>
+          </a>
         </div>
 
         <div className="flex">
           <span className="mr-2">Snipped URL</span>
 
-          <Link
-            href={res?.data ? res.data.url.shortUrl : "#"}
-            className="text-blue-300"
-            target="_blank"
-            prefetch={false}
-          >
+          <Redirector code={res?.data ? res.data.url.urlCode : "#"}>
             {res?.data?.url.shortUrl}
-          </Link>
+          </Redirector>
         </div>
       </div>
 
       <button type="button" className="p-4 mt-8 bg-slate-400 rounded-lg">
-        <Link href="/" className="text-white" target="_blank">
+        <Link href="/" className="text-white">
           Snip another URL
         </Link>
       </button>

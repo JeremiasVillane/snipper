@@ -12,6 +12,7 @@
     "@prisma/client": "^5.5.2",
     "nanoid": "^5.0.2",
     "next": "14.0.0",
+    "next-themes": "^0.2.1",
     "react": "^18",
     "react-dom": "^18",
     "valid-url": "^1.0.9"

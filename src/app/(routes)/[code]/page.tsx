@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { getOriginalUrl } from "@/server-actions";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 interface Params {
   code: string;

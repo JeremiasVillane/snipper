@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
+import { FormEvent, useRef, useState } from "react";
 
 const host = process.env.NEXT_PUBLIC_API_URL;
 
@@ -56,11 +56,7 @@ export default function CopyUrlForm({ code }: CopyUrlFormProps) {
       <div className="flex flex-1 my-10 max-w-[600px] mx-auto">
         <span className="mr-2">See how many times your link got clicked</span>
 
-        <Link
-          href={`/analytic?code=${code}`}
-          className="text-blue-300"
-          // target="_blank"
-        >
+        <Link href={`/analytic?code=${code}`} className="text-blue-300">
           Click here
         </Link>
       </div>
