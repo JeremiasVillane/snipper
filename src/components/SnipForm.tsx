@@ -1,27 +1,37 @@
 "use client";
 
+import { useUrlValidation } from "@/hooks";
 import { createUrl } from "@/server-actions";
-import { Input } from "@nextui-org/react";
+import { Button, Card, CardBody, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Button } from "@nextui-org/react";
-import { Card, CardBody } from "@nextui-org/react";
 
-export default function SnipForm({ userEmail }: { userEmail: string }): JSX.Element {
+export default function SnipForm({
+  userEmail,
+}: {
+  userEmail: string;
+}): JSX.Element {
   const router = useRouter();
   const [error, setError] = useState<string | null>();
   const [inputUrl, setInputUrl] = useState<string | null>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { isValid, setUrl } = useUrlValidation();
 
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setInputUrl(`https://${e.target.value}`);
+  const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newUrl = e.target.value;
+    setUrl(`https://${newUrl}`);
+    setInputUrl(newUrl);
+  };
 
   const handleOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
     if (inputUrl) {
-      const { data, statusCode, error } = await createUrl(inputUrl, userEmail);
+      const { data, statusCode, error } = await createUrl(
+        `https://${inputUrl}`,
+        userEmail
+      );
 
       if (statusCode === 200) {
         router.push(`/success?code=${data.urlCode}`);
@@ -43,7 +53,7 @@ export default function SnipForm({ userEmail }: { userEmail: string }): JSX.Elem
           <div className="flex items-end w-full relative gap-x-2">
             <Input
               type="text"
-              label={`Enter a ${error ? "valid" : ""} URL`}
+              label={`Enter a ${!isValid && inputUrl?.length ? "valid" : ""} URL`}
               variant="faded"
               labelPlacement="outside"
               startContent={
@@ -51,9 +61,9 @@ export default function SnipForm({ userEmail }: { userEmail: string }): JSX.Elem
                   <span className="text-default-400 text-small">https://</span>
                 </div>
               }
-              color={error ? "danger" : "default"}
-              onChange={handleOnChange}
-              isInvalid={!!error === true}
+              color={!isValid && inputUrl?.length ? "danger" : "default"}
+              onChange={handleUrlChange}
+              isInvalid={!isValid && !inputUrl}
               autoComplete="off"
               required
             />
@@ -61,7 +71,7 @@ export default function SnipForm({ userEmail }: { userEmail: string }): JSX.Elem
             <Button
               color="primary"
               type="submit"
-              isDisabled={!inputUrl} // || !!error === true}
+              isDisabled={!isValid || !inputUrl}
               isLoading={isLoading}
             >
               Create Link

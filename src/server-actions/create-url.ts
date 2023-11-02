@@ -1,22 +1,11 @@
 "use server";
 
 import { prisma, urlSnipper } from "@/libs";
-import { isWebUri } from "valid-url";
 
 const host = process.env.NEXT_PUBLIC_APP_URL;
 
 export default async function createUrl(url: string, userEmail: string) {
   const { urlCode, shortUrl } = urlSnipper(host!);
-
-  if (!isWebUri(url)) {
-    return {
-      stausCode: 400,
-      error: {
-        message: "Invalid URL",
-      },
-      data: null,
-    };
-  }
 
   const result = await prisma.$transaction(async (tx) => {
     const originalUrl = await tx.url.findFirst({
