@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Link as NextUILink,
   Navbar,
   NavbarBrand,
   NavbarContent,
@@ -9,13 +8,14 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
+  Link as NextUILink,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { ThemeToggle, UserMenu } from ".";
 import SnipperLogo from "../../public/snipper.png";
-import Link from "next/link";
 
 export default function MainNavbar() {
   const { data: session } = useSession();
