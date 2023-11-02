@@ -16,10 +16,15 @@ export default function SnipForm({
   const [inputUrl, setInputUrl] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { isValid, setUrl } = useUrlValidation();
+  const [protocol, setProtocol] = useState<string>("https://");
+
+  const handleProtocol = () => {
+    protocol === "https://" ? setProtocol("http://") : setProtocol("https://");
+  };
 
   const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newUrl = e.target.value;
-    setUrl(`https://${newUrl}`);
+    setUrl(`${protocol}${newUrl}`);
     setInputUrl(newUrl);
   };
 
@@ -29,7 +34,7 @@ export default function SnipForm({
 
     if (inputUrl) {
       const { data, statusCode, error } = await createUrl(
-        `https://${inputUrl}`,
+        `${protocol}${inputUrl}`,
         userEmail
       );
 
@@ -58,9 +63,16 @@ export default function SnipForm({
               } URL`}
               variant="faded"
               labelPlacement="outside"
+              className="select-none"
               startContent={
-                <div className="pointer-events-none flex items-center">
-                  <span className="text-default-400 text-small">https://</span>
+                <div
+                  className="flex items-center select-none cursor-pointer"
+                  title="Change protocol"
+                  onClick={handleProtocol}
+                >
+                  <span className="text-default-400 text-small">
+                    {protocol}
+                  </span>
                 </div>
               }
               color={!isValid && inputUrl?.length ? "danger" : "default"}
