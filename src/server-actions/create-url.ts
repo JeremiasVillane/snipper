@@ -3,7 +3,7 @@
 import { prisma, urlSnipper } from "@/libs";
 import { isWebUri } from "valid-url";
 
-const host = process.env.NEXT_PUBLIC_API_URL;
+const host = process.env.NEXT_PUBLIC_APP_URL;
 
 export default async function createUrl(url: string) {
   const { urlCode, shortUrl } = urlSnipper(host!);
@@ -35,9 +35,9 @@ export default async function createUrl(url: string) {
       },
     });
 
-    await tx.urlAnalytic.create({
+    await tx.urlAnalytics.create({
       data: {
-        clicked: 0,
+        clicks: 0,
         url: {
           connect: {
             id: newUrl.id,

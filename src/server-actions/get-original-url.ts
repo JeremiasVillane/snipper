@@ -12,12 +12,12 @@ export default async function getOriginalUrl(code: string) {
 
     if (!url) return null;
 
-    await tx.urlAnalytic.update({
+    await tx.urlAnalytics.update({
       where: {
         url_id: url.id,
       },
       data: {
-        clicked: {
+        clicks: {
           increment: 1,
         },
       },

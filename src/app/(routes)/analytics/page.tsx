@@ -2,22 +2,22 @@ import { Redirector } from "@/components";
 import { getAnalytics } from "@/server-actions";
 import Link from "next/link";
 
-interface AnalyticPageProps {
+interface AnalyticsPageProps {
   searchParams: {
     code: string;
   };
 }
 
-export default async function AnalyticPage({
+export default async function AnalyticsPage({
   searchParams,
-}: AnalyticPageProps) {
+}: AnalyticsPageProps) {
   const { code } = searchParams;
   const res = await getAnalytics(code);
 
   return (
     <div className="flex flex-col p-4">
       <h1 className="text-slate-600 text-3xl">
-        Total clicks: {res?.data?.clicked}
+        Total clicks: {res?.data?.clicks}
       </h1>
 
       <div className="flex flex-col gap-4 mt-8">

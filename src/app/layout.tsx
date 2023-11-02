@@ -1,4 +1,5 @@
 import Providers from "@/app/providers";
+import Appbar from "@/components/Appbar";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -18,10 +19,15 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <body
-        className={`relative h-full w-full flex justify-center items-center ${inter.className}`}
+        // className={`relative h-full w-full flex justify-center items-center ${inter.className}`}
+        className={inter.className}
       >
-        <div className="flex flex-col shadow-2xl p-4 w-[798px] mx-auto rounded-lg">
-          <Providers>{children}</Providers>
+        {/* <div className="flex flex-col shadow-2xl p-4 w-[798px] mx-auto rounded-lg"> */}
+        <div>
+          <Providers>
+            <Appbar />
+            {children}
+          </Providers>
         </div>
       </body>
     </html>

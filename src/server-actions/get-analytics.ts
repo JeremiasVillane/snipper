@@ -5,7 +5,7 @@ import { prisma } from "@/libs";
 export default async function getAnalytics(code: string) {
   if (typeof code !== "string") return null;
 
-  const analytic = await prisma.urlAnalytic.findFirst({
+  const analytics = await prisma.urlAnalytics.findFirst({
     where: {
       url: {
         urlCode: code,
@@ -16,7 +16,7 @@ export default async function getAnalytics(code: string) {
     },
   });
 
-  if (!analytic) {
+  if (!analytics) {
     return {
       statusCode: 400,
       error: {
@@ -30,11 +30,11 @@ export default async function getAnalytics(code: string) {
     statusCode: 200,
     error: null,
     data: {
-      clicked: analytic.clicked,
+      clicks: analytics.clicks,
       url: {
-        originalUrl: analytic.url.originalUrl,
-        shortUrl: analytic.url.shortUrl,
-        urlCode: analytic.url.urlCode,
+        originalUrl: analytics.url.originalUrl,
+        shortUrl: analytics.url.shortUrl,
+        urlCode: analytics.url.urlCode,
       },
     },
   };
