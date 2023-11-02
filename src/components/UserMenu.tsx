@@ -35,7 +35,9 @@ export default function UserMenu() {
             <DropdownItem key="profile">
               <Link href="/profile">Profile</Link>
             </DropdownItem>
-            <DropdownItem key="mylinks">My Links</DropdownItem>
+            <DropdownItem key="mylinks">
+              <Link href="/mylinks">My Links</Link>
+            </DropdownItem>
             <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
               Log Out
             </DropdownItem>

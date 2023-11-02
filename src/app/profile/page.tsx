@@ -1,13 +1,14 @@
+import { getCurrentUser } from "@/server-actions";
 import {
   Card,
   CardHeader,
   CardBody,
   CardFooter,
   Divider,
-  Link,
+  // Link,
   Image,
 } from "@nextui-org/react";
-import getCurrentUser from "@/server-actions/get-current-user";
+import Link from "next/link";
 
 const ProfilePage = async () => {
   const user = await getCurrentUser();
@@ -36,9 +37,9 @@ const ProfilePage = async () => {
           <p>
             <b>Role:</b> <i>{user.role}</i>
           </p>
-          <p>
+          <Link href="/mylinks">
             <b>URLs:</b> {user.urls ? user.urls.length : <i>No urls</i>}
-          </p>
+          </Link>
         </CardBody>
         {/* <Divider />
         <CardFooter>

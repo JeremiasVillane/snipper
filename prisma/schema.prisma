@@ -64,52 +64,7 @@ model Url {
   urlCode      String         @unique
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  UrlAnalytics UrlAnalytics[]
   user         User?          @relation("UserUrls", fields: [userId], references: [id])
   userId       String?        @unique
+  clicks       Int
 }
-
-model UrlAnalytics {
-  id     String @id @default(uuid())
-  url    Url    @relation(fields: [url_id], references: [id])
-  url_id String @unique
-  clicks Int
-}
-
-// model User {
-//   id          String        @id @default(uuid())
-//   email       String        @unique
-//   userUrls    Url[]         @relation("UserUrls")
-//   createdAt   DateTime      @default(now())
-//   updatedAt   DateTime      @updatedAt
-// }
-
-// model Url {
-//   id          String        @id @default(uuid())
-//   originalUrl String
-//   shortUrl    String
-//   urlCode     String        @unique
-//   createdAt   DateTime      @default(now())
-//   updatedAt   DateTime      @updatedAt
-//   UrlAnalytics UrlAnalytics[]
-//   user        User?         @relation("UserUrls", fields: [userId], references: [id])
-//   userId      String?       @unique
-// }
-
-// model UrlAnalytics {
-//   id      String @id @default(uuid())
-//   url     Url    @relation(fields: [url_id], references: [id])
-//   url_id  String @unique
-//   clicked Int
-// }
-
-// const user = await prisma.user.findUnique({
-//   where: {
-//     id: 'USER_ID',
-//   },
-//   include: {
-//     userUrls: true,
-//   },
-// })
-
-// console.log(user.userUrls)

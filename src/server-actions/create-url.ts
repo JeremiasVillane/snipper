@@ -39,17 +39,7 @@ export default async function createUrl(url: string, userEmail: string) {
         shortUrl,
         urlCode,
         userId: currentUser?.id,
-      },
-    });
-
-    await tx.urlAnalytics.create({
-      data: {
         clicks: 0,
-        url: {
-          connect: {
-            id: newUrl.id,
-          },
-        },
       },
     });
 
