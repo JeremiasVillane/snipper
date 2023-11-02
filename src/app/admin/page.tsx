@@ -3,6 +3,7 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 
 const AdminPage = async () => {
   const session = await getServerSession(authOptions);
+  
   return (
     <div>
       This is the Admin Dashboard

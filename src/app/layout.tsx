@@ -1,5 +1,4 @@
 import Providers from "@/app/providers";
-import Appbar from "@/components/Appbar";
 import MainNavbar from "@/components/MainNavbar";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
@@ -26,7 +25,6 @@ export default function RootLayout({
         {/* <div className="flex flex-col shadow-2xl p-4 w-[798px] mx-auto rounded-lg"> */}
         <div>
           <Providers>
-            {/* <Appbar /> */}
             <MainNavbar />
             <main className="relative h-full w-full flex justify-center items-center">
               {children}

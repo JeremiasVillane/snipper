@@ -53,7 +53,7 @@ export default function MainNavbar() {
           </NavbarItem>
         ) : null}
         <NavbarItem isActive>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/about">
             About
           </Link>
         </NavbarItem>
