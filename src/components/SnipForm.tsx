@@ -13,7 +13,7 @@ export default function SnipForm({
 }): JSX.Element {
   const router = useRouter();
   const [error, setError] = useState<string | null>();
-  const [inputUrl, setInputUrl] = useState<string | null>();
+  const [inputUrl, setInputUrl] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { isValid, setUrl } = useUrlValidation();
 
@@ -53,7 +53,9 @@ export default function SnipForm({
           <div className="flex items-end w-full relative gap-x-2">
             <Input
               type="text"
-              label={`Enter a ${!isValid && inputUrl?.length ? "valid" : ""} URL`}
+              label={`Enter a ${
+                !isValid && inputUrl?.length ? "valid" : ""
+              } URL`}
               variant="faded"
               labelPlacement="outside"
               startContent={
@@ -63,7 +65,9 @@ export default function SnipForm({
               }
               color={!isValid && inputUrl?.length ? "danger" : "default"}
               onChange={handleUrlChange}
-              isInvalid={!isValid && !inputUrl}
+              isInvalid={
+                !isValid && inputUrl !== undefined && inputUrl.length > 0
+              }
               autoComplete="off"
               required
             />
