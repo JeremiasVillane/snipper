@@ -7,7 +7,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { Card, CardBody } from "@nextui-org/react";
 
-export default function SnipForm({ userEmail }: { userEmail: string }) {
+export default function SnipForm({ userEmail }: { userEmail: string }): JSX.Element {
   const router = useRouter();
   const [error, setError] = useState<string | null>();
   const [inputUrl, setInputUrl] = useState<string | null>();

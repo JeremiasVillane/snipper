@@ -9,7 +9,7 @@ interface CopyUrlFormProps {
   code: string;
 }
 
-export default function CopyUrlForm({ code }: CopyUrlFormProps) {
+export default function CopyUrlForm({ code }: CopyUrlFormProps): JSX.Element {
   const [isCopy, setIsCopy] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 

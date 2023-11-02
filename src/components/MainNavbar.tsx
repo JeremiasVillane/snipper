@@ -13,13 +13,13 @@ import {
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useState } from "react";
 import { ThemeToggle, UserMenu } from ".";
 import SnipperLogo from "../../public/snipper.png";
 
-export default function MainNavbar() {
+export default function MainNavbar(): JSX.Element {
   const { data: session } = useSession();
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const menuItems = ["New link", "About", "Log Out"];
 

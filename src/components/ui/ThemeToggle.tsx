@@ -7,7 +7,7 @@ import { MoonIcon } from "./MoonIcon";
 import { SunIcon } from "./SunIcon";
 
 export default function ThemeToggle(): JSX.Element {
-  const useEffectRan = useRef(false);
+  const useEffectRan = useRef<boolean>(false);
   const { theme, setTheme } = useTheme();
   const [isSelected, setIsSelected] = useState<boolean | undefined>();
 

@@ -12,7 +12,7 @@ import {
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
-export default function UserMenu() {
+export default function UserMenu(): JSX.Element {
   const { data: session } = useSession();
 
   if (session && session.user) {
