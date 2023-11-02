@@ -8,7 +8,10 @@ const nunito = Nunito_Sans({ weight: "400", subsets: ["latin"] });
 
 export default function Home() {
   return (
-    <div className="h-96 relative w-full overflow-hidden bg-slate-200 dark:bg-slate-900 flex flex-col items-center justify-center rounded-lg select-none">
+    <div
+      style={{ height: "calc(100vh - 64px)" }}
+      className="relative w-full overflow-hidden bg-slate-200 dark:bg-slate-900 flex flex-col items-center justify-center rounded-lg select-none"
+    >
       <div className="absolute inset-0 w-full h-full bg-slate-200 dark:bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <BoxesContainer />
       <Image
@@ -20,7 +23,7 @@ export default function Home() {
       />
       <h1
         className={twMerge(
-          "md:text-6xl text-xl text-black dark:text-white relative z-20 !p-0 !m-0",
+          "text-6xl  text-black dark:text-white relative z-20 !p-0 !m-0",
           nunito.className
         )}
       >
