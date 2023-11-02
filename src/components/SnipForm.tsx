@@ -1,22 +1,27 @@
 "use client";
 
 import { createUrl } from "@/server-actions";
+import { Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { Button } from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/react";
 
-export default function SnipForm() {
+export default function SnipForm({ userEmail }: { userEmail: string }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>();
   const [inputUrl, setInputUrl] = useState<string | null>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setInputUrl(e.target.value);
+    setInputUrl(`https://${e.target.value}`);
 
   const handleOnSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (inputUrl) {
-      const { data, statusCode, error } = await createUrl(inputUrl);
+      const { data, statusCode, error } = await createUrl(inputUrl, userEmail);
 
       if (statusCode === 200) {
         router.push(`/success?code=${data.urlCode}`);
@@ -24,37 +29,46 @@ export default function SnipForm() {
       } else {
         setError(error?.message);
       }
+      setIsLoading(false);
     }
   };
 
   return (
-    <form
-      className="max-w-[600px] w-full flex justify-center my-4 mx-auto"
-      onSubmit={handleOnSubmit}
-    >
-      <div className="flex flex-col w-full relative">
-        <input
-          type="text"
-          placeholder="Enter a URL"
-          className={`border border-solid p-4 rounded-l-lg w-full ${
-            error && "border-rose-600"
-          }`}
-          onChange={handleOnChange}
-          required
-        />
+    <Card className="shadow-lg mx-2">
+      <CardBody>
+        <form
+          className="w-full flex justify-center my-4 mx-auto"
+          onSubmit={handleOnSubmit}
+        >
+          <div className="flex items-end w-full relative gap-x-2">
+            <Input
+              type="text"
+              label={`Enter a ${error ? "valid" : ""} URL`}
+              variant="faded"
+              labelPlacement="outside"
+              startContent={
+                <div className="pointer-events-none flex items-center">
+                  <span className="text-default-400 text-small">https://</span>
+                </div>
+              }
+              color={error ? "danger" : "default"}
+              onChange={handleOnChange}
+              isInvalid={!!error === true}
+              autoComplete="off"
+              required
+            />
 
-        {error && (
-          <div className="text-xs text-red-600 my-2 absolute top-14">
-            {error}
+            <Button
+              color="primary"
+              type="submit"
+              isDisabled={!inputUrl} // || !!error === true}
+              isLoading={isLoading}
+            >
+              Create Link
+            </Button>
           </div>
-        )}
-      </div>
-
-      <input
-        type="submit"
-        className="bg-sky-700 font-bold text-white p-4 rounded-r-lg cursor-pointer"
-        value="Snip URL"
-      />
-    </form>
+        </form>
+      </CardBody>
+    </Card>
   );
 }

@@ -1,5 +1,6 @@
 import Providers from "@/app/providers";
 import Appbar from "@/components/Appbar";
+import MainNavbar from "@/components/MainNavbar";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -25,8 +26,11 @@ export default function RootLayout({
         {/* <div className="flex flex-col shadow-2xl p-4 w-[798px] mx-auto rounded-lg"> */}
         <div>
           <Providers>
-            <Appbar />
-            {children}
+            {/* <Appbar /> */}
+            <MainNavbar />
+            <main className="relative h-full w-full flex justify-center items-center">
+              {children}
+            </main>
           </Providers>
         </div>
       </body>

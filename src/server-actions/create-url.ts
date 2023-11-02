@@ -5,7 +5,7 @@ import { isWebUri } from "valid-url";
 
 const host = process.env.NEXT_PUBLIC_APP_URL;
 
-export default async function createUrl(url: string) {
+export default async function createUrl(url: string, userEmail: string) {
   const { urlCode, shortUrl } = urlSnipper(host!);
 
   if (!isWebUri(url)) {
@@ -27,11 +27,18 @@ export default async function createUrl(url: string) {
 
     if (originalUrl) return originalUrl;
 
+    const currentUser = await tx.user.findFirst({
+      where: {
+        email: userEmail,
+      },
+    });
+
     const newUrl = await tx.url.create({
       data: {
         originalUrl: url,
         shortUrl,
         urlCode,
+        userId: currentUser?.id,
       },
     });
 
