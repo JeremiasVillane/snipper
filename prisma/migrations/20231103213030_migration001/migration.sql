@@ -1,19 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `UrlAnalytic` table. If the table is not empty, all the data it contains will be lost.
-  - A unique constraint covering the columns `[userId]` on the table `Url` will be added. If there are existing duplicate values, this will fail.
-
-*/
--- DropForeignKey
-ALTER TABLE "UrlAnalytic" DROP CONSTRAINT "UrlAnalytic_url_id_fkey";
-
--- AlterTable
-ALTER TABLE "Url" ADD COLUMN     "userId" TEXT;
-
--- DropTable
-DROP TABLE "UrlAnalytic";
-
 -- CreateTable
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
@@ -62,12 +46,17 @@ CREATE TABLE "VerificationToken" (
 );
 
 -- CreateTable
-CREATE TABLE "UrlAnalytics" (
+CREATE TABLE "Url" (
     "id" TEXT NOT NULL,
-    "url_id" TEXT NOT NULL,
+    "originalUrl" TEXT NOT NULL,
+    "shortUrl" TEXT NOT NULL,
+    "urlCode" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT,
     "clicks" INTEGER NOT NULL,
 
-    CONSTRAINT "UrlAnalytics_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Url_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -86,10 +75,7 @@ CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token"
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UrlAnalytics_url_id_key" ON "UrlAnalytics"("url_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Url_userId_key" ON "Url"("userId");
+CREATE UNIQUE INDEX "Url_urlCode_key" ON "Url"("urlCode");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -99,6 +85,3 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Url" ADD CONSTRAINT "Url_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "UrlAnalytics" ADD CONSTRAINT "UrlAnalytics_url_id_fkey" FOREIGN KEY ("url_id") REFERENCES "Url"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
