@@ -1,7 +1,7 @@
 import CopyUrlModal from "./CopyUrlModal";
 import MainNavbar from "./MainNavbar";
 import Redirector from "./Redirector";
-import SnipCard from "./SnipCard";
+import SnipCards from "./SnipCards";
 import SnipForm from "./SnipForm";
 import UserMenu from "./UserMenu";
 import { AnchorIcon } from "./ui/AnchorIcon";
@@ -21,7 +21,7 @@ export {
   MoonIcon,
   Redirector,
   ShareIcon,
-  SnipCard,
+  SnipCards,
   SnipForm,
   SunIcon,
   ThemeToggle,

@@ -8,19 +8,21 @@ export default async function createUrl(url: string, userEmail: string) {
   const { urlCode, shortUrl } = urlSnipper(host!);
 
   const result = await prisma.$transaction(async (tx) => {
-    const originalUrl = await tx.url.findFirst({
-      where: {
-        originalUrl: url,
-      },
-    });
-
-    if (originalUrl) return originalUrl;
-
     const currentUser = await tx.user.findFirst({
       where: {
         email: userEmail,
       },
     });
+
+    const originalUrl = await tx.url.findFirst({
+      where: {
+        originalUrl: url,
+        userId: currentUser?.id,
+      },
+    });
+
+    if (originalUrl) return originalUrl;
+
     const newUrl = await tx.url.create({
       data: {
         originalUrl: url,
