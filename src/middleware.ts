@@ -17,7 +17,5 @@ export const config = {
     "/profile",
     "/new",
     "/mylinks",
-    "/analytics",
-    "/success",
   ],
 };
