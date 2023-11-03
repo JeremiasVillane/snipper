@@ -21,8 +21,6 @@ export default function MainNavbar(): JSX.Element {
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const menuItems = ["New link", "About", "Log Out"];
-
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} className="z-50 select-none">
       <NavbarContent>
@@ -39,7 +37,7 @@ export default function MainNavbar(): JSX.Element {
               height={33}
               className="dark:invert mx-4"
             />
-            <p className="font-bold text-inherit">SNIPPER</p>
+            <p className="font-bold text-inherit hidden sm:flex">SNIPPER</p>
           </NavbarBrand>
         </Link>
       </NavbarContent>
@@ -67,24 +65,25 @@ export default function MainNavbar(): JSX.Element {
         </NavbarItem>
       </NavbarContent>
       <NavbarMenu>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
-            <NextUILink
-              color={
-                index === 2
-                  ? "primary"
-                  : index === menuItems.length - 1
-                  ? "danger"
-                  : "foreground"
-              }
-              className="w-full"
-              href="#"
-              size="lg"
-            >
-              {item}
-            </NextUILink>
-          </NavbarMenuItem>
-        ))}
+        {session && session.user ? (
+          <>
+            <NavbarMenuItem>
+              <NextUILink className="w-full" href="/new" size="lg">
+                New link
+              </NextUILink>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <NextUILink className="w-full" href="/mylinks" size="lg">
+                My Links
+              </NextUILink>
+            </NavbarMenuItem>
+          </>
+        ) : null}
+        <NavbarMenuItem>
+          <NextUILink className="w-full" href="/about" size="lg">
+            About
+          </NextUILink>
+        </NavbarMenuItem>
       </NavbarMenu>
     </Navbar>
   );

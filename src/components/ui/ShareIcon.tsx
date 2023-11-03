@@ -2,8 +2,8 @@ import React, { SVGProps } from "react";
 
 export const ShareIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
-    aria-hidden="true"
-    focusable="false"
+    aria-hidden="false"
+    focusable="true"
     height={props.height ?? "24"}
     width={props.width ?? "24"}
     role="presentation"

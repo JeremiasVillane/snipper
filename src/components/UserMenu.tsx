@@ -7,7 +7,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Link as NextUILink,
 } from "@nextui-org/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -46,14 +45,9 @@ export default function UserMenu(): JSX.Element {
       </div>
     );
   }
+
   return (
-    <Button
-      as={NextUILink}
-      color="primary"
-      href="#"
-      variant="flat"
-      onClick={() => signIn()}
-    >
+    <Button color="primary" variant="flat" onClick={() => signIn()}>
       Sign In
     </Button>
   );
