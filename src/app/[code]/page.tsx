@@ -15,8 +15,6 @@ export default function RedirectingPage({ params }: { params: Params }) {
   const router = useRouter();
   const { code } = params;
 
-  if (typeof code !== "string") return;
-
   const useEffectRan = useRef(false);
 
   useEffect(() => {
@@ -30,11 +28,11 @@ export default function RedirectingPage({ params }: { params: Params }) {
 
       redirectToUrl(code);
 
-      return () => {
-        useEffectRan.current = true;
-      };
+      useEffectRan.current = true;
     }
-  }, []);
+  }, [code, router]);
+
+  if (typeof code !== "string") return null;
 
   return (
     <div className="w-screen h-screen fixed inset-0 flex flex-col items-center justify-center z-[333] bg-slate-200 dark:bg-[#0f172a]">
