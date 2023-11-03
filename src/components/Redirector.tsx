@@ -3,6 +3,7 @@
 import { getOriginalUrl } from "@/server-actions";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import { AnchorIcon } from ".";
 
 interface RedirectorProps {
   children: ReactNode;
@@ -28,8 +29,11 @@ export default function Redirector({
   };
 
   return (
-    <span className="text-blue-300 cursor-pointer" onClick={handleClick}>
-      {children}
+    <span
+      className="flex items-center text-blue-500 cursor-pointer"
+      onClick={handleClick}
+    >
+      {children} <AnchorIcon width="20" height="20" color="rgb(59 130 246)" />
     </span>
   );
 }

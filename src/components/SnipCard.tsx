@@ -1,9 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
 import { Link } from "@nextui-org/react";
+import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
+import { useState } from "react";
+import { AnchorIcon, Redirector, ShareIcon } from ".";
 
 interface SnipCardProps {
   index: number;
@@ -48,20 +49,35 @@ export default function SnipCard({
           />
         )}
       </AnimatePresence>
-      <div className=" rounded-2xl h-full w-full p-4 overflow-hidden bg-gradient-to-br from-white to-slate-200/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent group-hover:border-slate-300 dark:group-hover:border-slate-700 relative z-50">
-        <div className="relative z-50">
+      <div className="rounded-2xl h-full w-full p-4 overflow-hidden bg-gradient-to-br from-white to-slate-200/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent group-hover:border-slate-300 dark:group-hover:border-slate-700 relative z-40">
+        <div className="relative z-40">
+          <ShareIcon
+            width="21"
+            height="21"
+            color="rgb(59 130 246)"
+            className="cursor-pointer"
+          />
           <div className="p-4">
             <h4 className="text-zinc-600 dark:text-zinc-100 font-bold tracking-wide mt-4">
-              <Link href={shortUrl} isExternal showAnchorIcon as={NextLink}>
+              <Redirector code={urlCode}>{urlCode}</Redirector>
+              {/* <Link href={shortUrl} isExternal showAnchorIcon as={NextLink}>
                 {urlCode}
-              </Link>
+              </Link> */}
             </h4>
             <div className="mt-8 text-zinc-500 tracking-wide leading-relaxed text-sm">
               <p className="select-none">
                 <b>Original URL:</b>
               </p>
 
-              <Link href={originalUrl} isExternal showAnchorIcon as={NextLink}>
+              <Link
+                href={originalUrl}
+                isExternal
+                showAnchorIcon
+                anchorIcon={
+                  <AnchorIcon width="18" height="18" color="#0661cc" />
+                }
+                as={NextLink}
+              >
                 {originalUrl}
               </Link>
 

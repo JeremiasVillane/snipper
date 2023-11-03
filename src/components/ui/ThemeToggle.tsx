@@ -3,8 +3,7 @@
 import { Switch } from "@nextui-org/react";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
-import { MoonIcon } from "./MoonIcon";
-import { SunIcon } from "./SunIcon";
+import { MoonIcon, SunIcon } from "..";
 
 export default function ThemeToggle(): JSX.Element {
   const useEffectRan = useRef<boolean>(false);

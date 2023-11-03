@@ -12,7 +12,9 @@ export default async function getCurrentUser() {
       email: session?.user.email,
     },
     include: {
-      urls: true,
+      urls: {
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
 

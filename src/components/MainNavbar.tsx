@@ -24,7 +24,7 @@ export default function MainNavbar(): JSX.Element {
   const menuItems = ["New link", "About", "Log Out"];
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen} className="select-none">
+    <Navbar onMenuOpenChange={setIsMenuOpen} className="z-50 select-none">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
