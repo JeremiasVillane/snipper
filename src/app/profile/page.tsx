@@ -8,12 +8,15 @@ import {
   // Link,
   Image,
 } from "@nextui-org/react";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Snipper: Profile",
+};
 
 const ProfilePage = async () => {
   const user = await getCurrentUser();
-
-  console.log(user?.urls);
 
   return (
     <div>

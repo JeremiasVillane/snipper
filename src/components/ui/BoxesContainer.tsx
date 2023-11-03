@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export const BoxesContainer = (): JSX.Element => {
+export default function BoxesContainer(): JSX.Element {
   const rows = new Array(150).fill(1);
   const cols = new Array(100).fill(1);
   let colors = [
@@ -66,4 +66,4 @@ export const BoxesContainer = (): JSX.Element => {
       ))}
     </div>
   );
-};
+}

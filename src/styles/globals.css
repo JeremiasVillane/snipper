@@ -22,6 +22,6 @@ a {
 
 @layer base {
   body {
-    @apply dark:bg-gray-800 bg-slate-200;
+    @apply dark:bg-[#0f172a] bg-slate-200;
   }
 }

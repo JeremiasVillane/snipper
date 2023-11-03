@@ -1,7 +1,11 @@
 import { SnipForm } from "@/components";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import React from "react";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+
+export const metadata: Metadata = {
+  title: "Snipper: New Link",
+};
 
 export default async function NewLink() {
   const session = await getServerSession(authOptions);

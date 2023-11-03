@@ -7,7 +7,6 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Snipper: URL shortnener",
   description: "Developed by Jeremias Villane",
 };
 

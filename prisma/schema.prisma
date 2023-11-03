@@ -58,13 +58,13 @@ model VerificationToken {
 }
 
 model Url {
-  id           String         @id @default(uuid())
-  originalUrl  String
-  shortUrl     String
-  urlCode      String         @unique
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  user         User?          @relation("UserUrls", fields: [userId], references: [id])
-  userId       String?        @unique
-  clicks       Int
+  id          String   @id @default(uuid())
+  originalUrl String
+  shortUrl    String
+  urlCode     String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User?    @relation("UserUrls", fields: [userId], references: [id])
+  userId      String?
+  clicks      Int
 }

@@ -21,7 +21,6 @@ export default async function createUrl(url: string, userEmail: string) {
         email: userEmail,
       },
     });
-
     const newUrl = await tx.url.create({
       data: {
         originalUrl: url,

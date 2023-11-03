@@ -1,8 +1,13 @@
 import { BoxesContainer } from "@/components";
+import { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import SnipperLogo from "../../public/snipper.png";
+
+export const metadata: Metadata = {
+  title: "Snipper: URL shortnener",
+};
 
 const nunito = Nunito_Sans({ weight: "400", subsets: ["latin"] });
 
