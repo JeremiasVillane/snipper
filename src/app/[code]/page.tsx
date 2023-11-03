@@ -11,7 +11,7 @@ interface Params {
   code: string;
 }
 
-export default function ({ params }: { params: Params }) {
+export default function RedirectingPage({ params }: { params: Params }) {
   const router = useRouter();
   const { code } = params;
 

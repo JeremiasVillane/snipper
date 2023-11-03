@@ -1,6 +1,6 @@
 import { customAlphabet } from "nanoid";
 
-export default (host: string) => {
+export default function UrlSnipper(host: string) {
   const nanoid = customAlphabet(
     "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
     9
@@ -11,4 +11,4 @@ export default (host: string) => {
     urlCode,
     shortUrl: `${host}/${urlCode}`,
   };
-};
+}

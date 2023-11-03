@@ -18,7 +18,7 @@ export default function ThemeToggle(): JSX.Element {
         useEffectRan.current = true;
       };
     }
-  }, []);
+  }, [theme]);
 
   const handleChange = () => {
     if (theme === "dark") {

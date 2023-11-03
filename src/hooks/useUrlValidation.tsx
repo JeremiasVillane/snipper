@@ -10,7 +10,7 @@ function useUrlValidation() {
 
   useEffect(() => {
     setIsValid(urlRegex.test(url));
-  }, [url]);
+  }, [url, urlRegex]);
 
   return { isValid, setUrl };
 }
