@@ -1,4 +1,24 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project implementing [NextAuth](https://next-auth.js.org/), [Next-Themes](https://www.npmjs.com/package/next-themes), [NextUI](https://nextui.org/), [Framer Motion](https://www.framer.com/motion/), [Prisma](https://www.prisma.io/), [PostgreSQL](https://www.postgresql.org/) and [Tailwind CSS](https://tailwindcss.com/).
+
+# Snipper
+A simple URL shortener/tracker. It provides you with a shorten url and let you know how many clicks it received.
+
+## Screenshots
+
+### Landing
+![screen01](./public/screen01.png)
+
+### Form to create a new Link
+![screen02](./public/screen02.png)
+
+### Modal to copy the new link
+![screen03](./public/screen03.png)
+
+### My Links section
+![screen04](./public/screen04.png)
+
+### Light Theme
+![screen05](./public/screen05.png)
 
 ## Getting Started
 
