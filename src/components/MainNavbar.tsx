@@ -8,16 +8,18 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
-  Link as NextUILink,
+  Link,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
+import NextLink from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ThemeToggle, UserMenu } from ".";
 import SnipperLogo from "../../public/snipper.png";
 
 export default function MainNavbar(): JSX.Element {
+  const currentPath = usePathname();
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -28,7 +30,7 @@ export default function MainNavbar(): JSX.Element {
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
         />
-        <Link href={"/"}>
+        <Link href={"/"} color="foreground" as={NextLink}>
           <NavbarBrand>
             <Image
               src={SnipperLogo}
@@ -44,14 +46,22 @@ export default function MainNavbar(): JSX.Element {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {session && session.user ? (
-          <NavbarItem>
-            <Link href="/new" aria-current="page">
+          <NavbarItem isActive={currentPath === "/new"}>
+            <Link
+              color={currentPath === "/new" ? "primary" : "foreground"}
+              href="/new"
+              as={NextLink}
+            >
               New link
             </Link>
           </NavbarItem>
         ) : null}
-        <NavbarItem isActive>
-          <Link color="foreground" href="/about">
+        <NavbarItem isActive={currentPath === "/about"}>
+          <Link
+            color={currentPath === "/about" ? "primary" : "foreground"}
+            href="/about"
+            as={NextLink}
+          >
             About
           </Link>
         </NavbarItem>
@@ -68,21 +78,39 @@ export default function MainNavbar(): JSX.Element {
         {session && session.user ? (
           <>
             <NavbarMenuItem>
-              <NextUILink className="w-full" href="/new" size="lg">
+              <Link
+                className="w-full"
+                href="/new"
+                size="lg"
+                color={currentPath === "/new" ? "primary" : "foreground"}
+                as={NextLink}
+              >
                 New link
-              </NextUILink>
+              </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
-              <NextUILink className="w-full" href="/mylinks" size="lg">
+              <Link
+                className="w-full"
+                href="/mylinks"
+                size="lg"
+                color={currentPath === "/mylinks" ? "primary" : "foreground"}
+                as={NextLink}
+              >
                 My Links
-              </NextUILink>
+              </Link>
             </NavbarMenuItem>
           </>
         ) : null}
         <NavbarMenuItem>
-          <NextUILink className="w-full" href="/about" size="lg">
+          <Link
+            className="w-full"
+            href="/about"
+            size="lg"
+            color={currentPath === "/about" ? "primary" : "foreground"}
+            as={NextLink}
+          >
             About
-          </NextUILink>
+          </Link>
         </NavbarMenuItem>
       </NavbarMenu>
     </Navbar>
