@@ -12,7 +12,7 @@ export default async function NewLink() {
 
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl text-slate-700 dark:text-white mt-9 mb-6 px-12 text-center">
+      <h1 className="text-2xl md:text-3xl text-slate-700 dark:text-white mt-9 mb-6 px-12 text-center select-none">
         Paste a URL to create a short link
       </h1>
       <SnipForm userEmail={session?.user.email ? session.user.email : ""} />

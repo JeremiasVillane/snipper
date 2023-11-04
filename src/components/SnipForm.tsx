@@ -1,7 +1,7 @@
 "use client";
 
 import { useUrlValidation } from "@/hooks";
-import { createUrl } from "@/server-actions";
+import { createLink } from "@/server-actions";
 import { Button, Card, CardBody, Input } from "@nextui-org/react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { CopyUrlModal } from ".";
@@ -43,7 +43,7 @@ export default function SnipForm({
     setIsLoading(true);
 
     if (inputUrl) {
-      const { data, statusCode, error } = await createUrl(
+      const { data, statusCode, error } = await createLink(
         `${protocol}${inputUrl}`,
         userEmail
       );

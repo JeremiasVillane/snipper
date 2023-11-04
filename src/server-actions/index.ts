@@ -1,6 +1,13 @@
-import createUrl from "./create-url";
+import createLink from "./create-link";
 import deleteLink from "./delete-link";
 import getCurrentUser from "./get-current-user";
 import getOriginalUrl from "./get-original-url";
+import getTotalClicks from "./get-total-clicks";
 
-export { createUrl, deleteLink, getCurrentUser, getOriginalUrl };
+export {
+  createLink,
+  deleteLink,
+  getCurrentUser,
+  getOriginalUrl,
+  getTotalClicks,
+};

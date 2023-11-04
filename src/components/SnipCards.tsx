@@ -102,14 +102,14 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
                     <p className="mt-3 select-none">
                       <b>Created:</b>
                     </p>
-                    <p className="text-zinc-400">
+                    <p className="text-zinc-400 select-none">
                       {new Date(url.createdAt).toLocaleDateString()}
                     </p>
 
                     <p className="mt-3 select-none">
                       <b>Total clicks:</b>
                     </p>
-                    <p className="text-zinc-400">{url.clicks}</p>
+                    <p className="text-zinc-400 select-none">{url.clicks}</p>
                   </div>
                 </div>
               </div>
