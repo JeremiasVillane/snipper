@@ -1,13 +1,17 @@
 "use client";
 
+import { deleteLink } from "@/server-actions";
 import { Link } from "@nextui-org/react";
 import { Url } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnchorIcon, CopyUrlModal, Redirector, ShareIcon } from ".";
+import { DeleteIcon } from "./ui/DeleteIcon";
 
 export default function SnipCards({ urls }: { urls: [Url] }) {
+  const router = useRouter();
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [currentCode, setCurrentCode] = useState<string>("");
@@ -15,6 +19,11 @@ export default function SnipCards({ urls }: { urls: [Url] }) {
   const handleShare = (urlCode: string) => {
     setShowModal(true);
     setCurrentCode(urlCode);
+  };
+
+  const handleDelete = async (urlCode: string) => {
+    await deleteLink(urlCode);
+    router.refresh();
   };
 
   return (
@@ -46,13 +55,22 @@ export default function SnipCards({ urls }: { urls: [Url] }) {
             </AnimatePresence>
             <div className="rounded-2xl h-full w-full p-4 overflow-hidden bg-gradient-to-br from-white to-slate-200/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent group-hover:border-slate-300 dark:group-hover:border-slate-700 relative z-20">
               <div className="relative z-20">
-                <ShareIcon
-                  width="21"
-                  height="21"
-                  color="rgb(59 130 246)"
-                  className="cursor-pointer"
-                  onClick={() => handleShare(url.urlCode)}
-                />
+                <div id="icons" className="flex justify-between">
+                  <ShareIcon
+                    width="21"
+                    height="21"
+                    color="rgb(59 130 246)"
+                    className="cursor-pointer"
+                    onClick={() => handleShare(url.urlCode)}
+                  />
+                  <DeleteIcon
+                    width="21"
+                    height="21"
+                    color="rgb(157 23 77)"
+                    className="cursor-pointer"
+                    onClick={() => handleDelete(url.urlCode)}
+                  />
+                </div>
                 <div className="p-4">
                   <h4 className="text-zinc-600 dark:text-zinc-100 font-bold tracking-wide mt-4">
                     <Redirector code={url.urlCode}>{url.urlCode}</Redirector>
