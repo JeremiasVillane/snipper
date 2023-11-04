@@ -27,20 +27,20 @@ export default function UserMenu(): JSX.Element {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="session" className="h-14 gap-2">
+            <DropdownItem className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
               <p className="font-regular">{session.user.name}</p>
             </DropdownItem>
-            <DropdownItem key="profile">
+            <DropdownItem>
               <Link href="/profile">Profile</Link>
             </DropdownItem>
-            <DropdownItem key="mylinks">
+            <DropdownItem>
               <Link href="/mylinks">My Links</Link>
             </DropdownItem>
-            <DropdownItem key="mylinks">
+            <DropdownItem>
               <Link href="/new">New Link</Link>
             </DropdownItem>
-            <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
+            <DropdownItem color="danger" onClick={() => signOut()}>
               Log Out
             </DropdownItem>
           </DropdownMenu>

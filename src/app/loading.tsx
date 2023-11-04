@@ -1,9 +1,12 @@
-import { Spinner } from "@nextui-org/react";
+import { Progress } from "@nextui-org/react";
 
-export default function Loading() {
+export default function App() {
   return (
-    <div className="flex items-center justify-center fixed mt-64">
-      <Spinner size="lg" />
-    </div>
+    <Progress
+      size="sm"
+      isIndeterminate
+      aria-label="Loading..."
+      className="w-screen"
+    />
   );
 }
