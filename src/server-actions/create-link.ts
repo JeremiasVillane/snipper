@@ -6,6 +6,11 @@ const host = process.env.NEXT_PUBLIC_APP_URL;
 
 export default async function createLink(url: string, userEmail: string) {
   const { urlCode, shortUrl } = urlSnipper(host!);
+  let currentUrl: string;
+
+  if (url.endsWith("/")) {
+    currentUrl = url.slice(0, -1);
+  } else currentUrl = url;
 
   const result = await prisma.$transaction(async (tx) => {
     const currentUser = await tx.user.findFirst({
@@ -16,7 +21,7 @@ export default async function createLink(url: string, userEmail: string) {
 
     const originalUrl = await tx.url.findFirst({
       where: {
-        originalUrl: url,
+        originalUrl: currentUrl,
         userId: currentUser?.id,
       },
     });
@@ -25,7 +30,7 @@ export default async function createLink(url: string, userEmail: string) {
 
     const newUrl = await tx.url.create({
       data: {
-        originalUrl: url,
+        originalUrl: currentUrl,
         shortUrl,
         urlCode,
         userId: currentUser?.id,

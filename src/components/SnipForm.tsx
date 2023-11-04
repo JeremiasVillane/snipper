@@ -44,7 +44,7 @@ export default function SnipForm({
 
     if (inputUrl) {
       const { data, statusCode, error } = await createLink(
-        `${protocol}${inputUrl}`,
+        `${protocol}${inputUrl.toLowerCase()}`,
         userEmail
       );
 
