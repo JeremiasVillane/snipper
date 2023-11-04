@@ -1,3 +1,4 @@
+import useMediaQuery from "./useMediaQuery";
 import useUrlValidation from "./useUrlValidation";
 
-export { useUrlValidation };
+export { useMediaQuery, useUrlValidation };
