@@ -37,6 +37,9 @@ export default function UserMenu(): JSX.Element {
             <DropdownItem key="mylinks">
               <Link href="/mylinks">My Links</Link>
             </DropdownItem>
+            <DropdownItem key="mylinks">
+              <Link href="/new">New Link</Link>
+            </DropdownItem>
             <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
               Log Out
             </DropdownItem>
