@@ -1,15 +1,16 @@
 "use client";
 
+import { Button } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
 import React from "react";
 
 export default function SignOutButton() {
   return (
-    <button
-      className="rounded-lg bg-red-400 text-red-50 text-sm p-2 px-6 transform hover:scale-105 duration-300 select-none"
+    <Button
+      className="bg-red-400 text-white transform hover:scale-105 duration-200 select-none"
       onClick={() => signOut()}
     >
       Logout
-    </button>
+    </Button>
   );
 }

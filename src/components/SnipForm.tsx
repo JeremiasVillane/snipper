@@ -106,6 +106,7 @@ export default function SnipForm({
               <Button
                 color="primary"
                 type="submit"
+                className="transform hover:scale-105 duration-200"
                 isDisabled={!isValid || !inputUrl}
                 isLoading={isLoading}
               >

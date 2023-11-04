@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 import { Url } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
@@ -13,8 +13,11 @@ import {
   Redirector,
   ShareIcon,
 } from ".";
+import resetLinkClicks from "@/server-actions/reset-link-clicks";
+import { useRouter } from "next/navigation";
 
 export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
+  const router = useRouter();
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [showCopyModal, setShowCopyModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -28,6 +31,13 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
   const handleDelete = async (urlCode: string) => {
     setShowDeleteModal(true);
     setCurrentCode(urlCode);
+  };
+
+  const handleResetClicks = async (urlId: string, urlClicks: number) => {
+    if (urlClicks === 0) return;
+
+    await resetLinkClicks(urlId);
+    router.refresh();
   };
 
   return (
@@ -96,7 +106,12 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
                       }
                       as={NextLink}
                     >
-                      <input type="text" readOnly className="bg-transparent text-ellipsis cursor-pointer" value={url.originalUrl} />
+                      <input
+                        type="text"
+                        readOnly
+                        className="bg-transparent text-ellipsis cursor-pointer"
+                        value={url.originalUrl}
+                      />
                     </Link>
 
                     <p className="mt-3 select-none">
@@ -106,10 +121,24 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
                       {new Date(url.createdAt).toLocaleDateString()}
                     </p>
 
-                    <p className="mt-3 select-none">
-                      <b>Total clicks:</b>
-                    </p>
-                    <p className="text-zinc-400 select-none">{url.clicks}</p>
+                    <div className="flex items-end justify-between">
+                      <p className="mt-3 select-none">
+                        <b>Total clicks:</b>
+                        {" "}
+                        <span className="text-zinc-400 select-none">
+                          {url.clicks}
+                        </span>
+                      </p>
+
+                      <Button
+                        size="sm"
+                        color="primary"
+                        className="p-1.5 transform hover:scale-105 duration-200"
+                        onClick={() => handleResetClicks(url.id, url.clicks)}
+                      >
+                        Reset
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
