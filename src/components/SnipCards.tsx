@@ -5,11 +5,16 @@ import { Url } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
 import { useState } from "react";
-import { AnchorIcon, CopyUrlModal, Redirector, ShareIcon } from ".";
-import DeleteLinkModal from "./DeleteLinkModal";
-import { DeleteIcon } from "./ui/DeleteIcon";
+import {
+  AnchorIcon,
+  CopyUrlModal,
+  DeleteIcon,
+  DeleteLinkModal,
+  Redirector,
+  ShareIcon,
+} from ".";
 
-export default function SnipCards({ urls }: { urls: [Url] }) {
+export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [showCopyModal, setShowCopyModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

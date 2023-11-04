@@ -12,7 +12,7 @@ import { Metadata } from "next";
 import NextLink from "next/link";
 
 export const metadata: Metadata = {
-  title: "Snipper: Profile",
+  title: "Profile | Snipper",
 };
 
 const ProfilePage = async () => {

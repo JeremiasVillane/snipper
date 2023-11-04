@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export const metadata: Metadata = {
-  title: "Snipper: New Link",
+  title: "New Link | Snipper",
 };
 
 export default async function NewLink() {

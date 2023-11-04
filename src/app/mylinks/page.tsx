@@ -4,7 +4,7 @@ import { Url } from "@prisma/client";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Snipper: My URLs",
+  title: "My Links | Snipper",
 };
 
 export default async function MyLinks() {

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Link,
   Navbar,
   NavbarBrand,
   NavbarContent,
@@ -8,15 +9,14 @@ import {
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
-  Link,
 } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
+import SnipperLogo from "public/snipper.png";
 import { useState } from "react";
 import { ThemeToggle, UserMenu } from ".";
-import SnipperLogo from "public/snipper.png";
 
 export default function MainNavbar(): JSX.Element {
   const currentPath = usePathname();
