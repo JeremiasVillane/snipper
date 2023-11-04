@@ -57,7 +57,7 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
                 />
               )}
             </AnimatePresence>
-            <div className="rounded-2xl h-full w-full p-4 overflow-hidden bg-gradient-to-br from-white to-slate-200/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent group-hover:border-slate-300 dark:group-hover:border-slate-700 relative z-20">
+            <div className="rounded-2xl h-full w-full p-4 overflow-hidden bg-gradient-to-br from-white to-slate-300/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent group-hover:border-slate-300 dark:group-hover:border-slate-700 relative z-20">
               <div className="relative z-20">
                 <div id="icons" className="flex justify-between">
                   <ShareIcon
