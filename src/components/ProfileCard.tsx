@@ -1,8 +1,8 @@
-import SignOutButton from "@/components/SignOutButton";
 import { getTotalClicks } from "@/server-actions";
 import { Avatar } from "@nextui-org/react";
 import { currentUser } from "next-auth";
 import NextLink from "next/link";
+import { SignOutButton } from ".";
 
 export default async function ProfileCard({ user }: { user: currentUser }) {
   const totalClicks = await getTotalClicks();

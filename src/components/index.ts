@@ -11,6 +11,7 @@ import { CopyIcon } from "./ui/CopyIcon";
 import { DeleteIcon } from "./ui/DeleteIcon";
 import { MoonIcon } from "./ui/MoonIcon";
 import { ShareIcon } from "./ui/ShareIcon";
+import SignOutButton from "./ui/SignOutButton";
 import { SunIcon } from "./ui/SunIcon";
 import ThemeToggle from "./ui/ThemeToggle";
 
@@ -25,6 +26,7 @@ export {
   MoonIcon,
   Redirector,
   ShareIcon,
+  SignOutButton,
   SnipCards,
   SnipForm,
   SunIcon,
