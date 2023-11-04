@@ -1,6 +1,5 @@
 "use client";
 
-import { deleteLink } from "@/server-actions";
 import { Link } from "@nextui-org/react";
 import { Url } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
@@ -8,22 +7,23 @@ import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnchorIcon, CopyUrlModal, Redirector, ShareIcon } from ".";
+import DeleteLinkModal from "./DeleteLinkModal";
 import { DeleteIcon } from "./ui/DeleteIcon";
 
 export default function SnipCards({ urls }: { urls: [Url] }) {
-  const router = useRouter();
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showCopyModal, setShowCopyModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentCode, setCurrentCode] = useState<string>("");
 
   const handleShare = (urlCode: string) => {
-    setShowModal(true);
+    setShowCopyModal(true);
     setCurrentCode(urlCode);
   };
 
   const handleDelete = async (urlCode: string) => {
-    await deleteLink(urlCode);
-    router.refresh();
+    setShowDeleteModal(true);
+    setCurrentCode(urlCode);
   };
 
   return (
@@ -116,8 +116,13 @@ export default function SnipCards({ urls }: { urls: [Url] }) {
         <p>No urls</p>
       )}
       <CopyUrlModal
-        showModal={showModal}
-        setShowModal={setShowModal}
+        showModal={showCopyModal}
+        setShowModal={setShowCopyModal}
+        code={currentCode}
+      />
+      <DeleteLinkModal
+        showModal={showDeleteModal}
+        setShowModal={setShowDeleteModal}
         code={currentCode}
       />
     </>
