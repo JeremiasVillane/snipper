@@ -4,7 +4,7 @@ import { prisma, urlSnipper } from "@/libs";
 
 const host = process.env.NEXT_PUBLIC_APP_URL;
 
-export default async function createUrl(url: string, userEmail: string) {
+export default async function createLink(url: string, userEmail: string) {
   const { urlCode, shortUrl } = urlSnipper(host!);
 
   const result = await prisma.$transaction(async (tx) => {
