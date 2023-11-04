@@ -24,7 +24,16 @@ export default function SnipForm({
   };
 
   const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newUrl = e.target.value;
+    let newUrl = e.target.value;
+
+    if (newUrl.startsWith("https://")) {
+      newUrl = newUrl.substring(8);
+      setProtocol("https://");
+    } else if (newUrl.startsWith("http://")) {
+      newUrl = newUrl.substring(7);
+      setProtocol("http://");
+    }
+    
     setUrl(`${protocol}${newUrl}`);
     setInputUrl(newUrl);
   };
@@ -79,6 +88,7 @@ export default function SnipForm({
                   </div>
                 }
                 color={!isValid && inputUrl?.length ? "danger" : "default"}
+                value={inputUrl}
                 onChange={handleUrlChange}
                 isInvalid={
                   !isValid && inputUrl !== undefined && inputUrl.length > 0
