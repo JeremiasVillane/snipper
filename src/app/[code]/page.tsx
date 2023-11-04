@@ -1,10 +1,10 @@
 "use client";
 
 import { getOriginalUrl } from "@/server-actions";
-import { Spinner } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import SnipperLogo from "../../../public/snipper.png";
 
 interface Params {
@@ -12,6 +12,7 @@ interface Params {
 }
 
 export default function RedirectingPage({ params }: { params: Params }) {
+  const [notFound, setNotFound] = useState<boolean>(false);
   const router = useRouter();
   const { code } = params;
 
@@ -21,9 +22,7 @@ export default function RedirectingPage({ params }: { params: Params }) {
     if (useEffectRan.current === false) {
       const redirectToUrl = async (code: string) => {
         const url = await getOriginalUrl(code);
-        if (!url) return;
-
-        router.push(url);
+        !url ? setNotFound(true) : router.push(url);
       };
 
       redirectToUrl(code);
@@ -43,7 +42,21 @@ export default function RedirectingPage({ params }: { params: Params }) {
         height={99}
         className="dark:invert mb-8"
       />
-      <Spinner size="lg" />
+      {notFound ? (
+        <div className="flex flex-col justify-center items-center">
+          <p className="text-3xl mb-4">
+            <b>404</b>: Not Found
+          </p>
+          <Button
+            color="primary"
+            onPress={() => router.back()}
+          >
+            Go Back
+          </Button>
+        </div>
+      ) : (
+        <Spinner size="lg" />
+      )}
     </div>
   );
 }

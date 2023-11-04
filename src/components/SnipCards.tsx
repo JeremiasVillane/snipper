@@ -4,7 +4,6 @@ import { Link } from "@nextui-org/react";
 import { Url } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnchorIcon, CopyUrlModal, Redirector, ShareIcon } from ".";
 import DeleteLinkModal from "./DeleteLinkModal";

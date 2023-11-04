@@ -14,10 +14,10 @@ export default function SnipForm({
   const [error, setError] = useState<string | null>();
   const [inputUrl, setInputUrl] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { isValid, setUrl } = useUrlValidation();
   const [protocol, setProtocol] = useState<string>("https://");
   const [showModal, setShowModal] = useState(false);
   const [newCode, setNewCode] = useState<string>("");
+  const { isValid, setUrl } = useUrlValidation();
 
   const handleProtocol = () => {
     protocol === "https://" ? setProtocol("http://") : setProtocol("https://");
@@ -33,7 +33,7 @@ export default function SnipForm({
       newUrl = newUrl.substring(7);
       setProtocol("http://");
     }
-    
+
     setUrl(`${protocol}${newUrl}`);
     setInputUrl(newUrl);
   };
@@ -70,9 +70,13 @@ export default function SnipForm({
             <div className="flex items-end w-full relative gap-x-2">
               <Input
                 type="text"
-                label={`Enter a ${
-                  !isValid && inputUrl?.length ? "valid" : ""
-                } URL`}
+                label={`${
+                  error
+                    ? error
+                    : `Enter a ${
+                        !isValid && inputUrl?.length ? "valid" : ""
+                      } URL`
+                }`}
                 variant="faded"
                 labelPlacement="outside"
                 className="select-none"
@@ -87,7 +91,9 @@ export default function SnipForm({
                     </span>
                   </div>
                 }
-                color={!isValid && inputUrl?.length ? "danger" : "default"}
+                color={
+                  (!isValid && inputUrl?.length) || error ? "danger" : "default"
+                }
                 value={inputUrl}
                 onChange={handleUrlChange}
                 isInvalid={
