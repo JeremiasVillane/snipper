@@ -46,15 +46,26 @@ export default function MainNavbar(): JSX.Element {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {session && session.user ? (
-          <NavbarItem isActive={currentPath === "/new"}>
-            <Link
-              color={currentPath === "/new" ? "primary" : "foreground"}
-              href="/new"
-              as={NextLink}
-            >
-              New link
-            </Link>
-          </NavbarItem>
+          <>
+            <NavbarItem isActive={currentPath === "/new"}>
+              <Link
+                color={currentPath === "/new" ? "primary" : "foreground"}
+                href="/new"
+                as={NextLink}
+              >
+                New link
+              </Link>
+            </NavbarItem>
+            <NavbarItem isActive={currentPath === "/mylinks"}>
+              <Link
+                color={currentPath === "/mylinks" ? "primary" : "foreground"}
+                href="/mylinks"
+                as={NextLink}
+              >
+                My links
+              </Link>
+            </NavbarItem>
+          </>
         ) : null}
         <NavbarItem isActive={currentPath === "/about"}>
           <Link
