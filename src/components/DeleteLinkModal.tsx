@@ -56,7 +56,7 @@ export default function DeleteLinkModal({
         <>
           <ModalHeader className="flex flex-col gap-1">Delete Link</ModalHeader>
           <ModalBody>
-            <p>Are you sure you want to delete this beautiul link?</p>
+            <p>Are you sure you want to delete this beautiful link?</p>
           </ModalBody>
           <ModalFooter>
             <Button
