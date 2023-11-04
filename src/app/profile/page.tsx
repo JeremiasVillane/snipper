@@ -5,11 +5,11 @@ import {
   CardBody,
   CardFooter,
   Divider,
-  // Link,
+  Link,
   Image,
 } from "@nextui-org/react";
 import { Metadata } from "next";
-import Link from "next/link";
+import NextLink from "next/link";
 
 export const metadata: Metadata = {
   title: "Snipper: Profile",
@@ -40,34 +40,23 @@ const ProfilePage = async () => {
           <p>
             <b>Role:</b> <i>{user.role}</i>
           </p>
-          <Link href="/mylinks">
+          <NextLink href="/mylinks">
             <b>URLs:</b> {user.urls ? user.urls.length : <i>No urls</i>}
-          </Link>
+          </NextLink>
         </CardBody>
-        {/* <Divider />
+        <Divider />
         <CardFooter>
-        <Link
-          isExternal
-          showAnchorIcon
-          href="https://github.com/nextui-org/nextui"
-        >
-          Visit source code on GitHub.
-        </Link>
-      </CardFooter> */}
+          <Link
+            isExternal
+            showAnchorIcon
+            href="https://github.com/JeremiasVillane/snipper"
+            as={NextLink}
+          >
+            Visit source code on GitHub.
+          </Link>
+        </CardFooter>
       </Card>
     </div>
-    // <div className="flex items-center justify-center">
-    //   <div className="bg-sky-700 text-slate-100 p-2 rounded shadow grid grid-cols-2 mt-9">
-    //     <p>Name:</p>
-    //     <p>{session?.user.name}</p>
-    //     <p>Email:</p>
-    //     <p>{session?.user.email}</p>
-    //     <p>URLs:</p>
-    //     {session?.user.urls
-    //       ? session?.user.urls.map((url: string) => <p key={url}>{url}</p>)
-    //       : "No urls"}
-    //   </div>
-    // </div>
   );
 };
 

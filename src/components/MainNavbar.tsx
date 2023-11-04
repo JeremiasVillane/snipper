@@ -16,7 +16,7 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ThemeToggle, UserMenu } from ".";
-import SnipperLogo from "../../public/snipper.png";
+import SnipperLogo from "public/snipper.png";
 
 export default function MainNavbar(): JSX.Element {
   const currentPath = usePathname();

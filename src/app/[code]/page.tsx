@@ -5,7 +5,7 @@ import { Button, Spinner } from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import SnipperLogo from "../../../public/snipper.png";
+import SnipperLogo from "public/snipper.png";
 
 interface Params {
   code: string;
