@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org/) project implementing [NextAuth](https://next-auth.js.org/), [Next-Themes](https://www.npmjs.com/package/next-themes), [NextUI](https://nextui.org/), [Framer Motion](https://www.framer.com/motion/), [Prisma](https://www.prisma.io/), [PostgreSQL](https://www.postgresql.org/) and [Tailwind CSS](https://tailwindcss.com/).
 
+<img alt="Snipper" src="./public/snipper.png" width="107" />
+
 # Snipper
 A simple URL shortener/tracker. It provides you with a shorten url and let you know how many clicks it received.
 
@@ -19,6 +21,9 @@ A simple URL shortener/tracker. It provides you with a shorten url and let you k
 
 ### Light Theme
 ![screen05](./public/screen05.png)
+
+### Profile section
+![screen05](./public/screen06.png)
 
 ## Getting Started
 
