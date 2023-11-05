@@ -9,7 +9,12 @@ const config: Config = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: "class",
-  theme: {},
+  theme: {
+    fontFamily: {
+      header: ["Raleway", "sans-serif"],
+      body: ["Open Sans", "sans-serif"],
+    },
+  },
   plugins: [nextui()],
 };
 export default config;
