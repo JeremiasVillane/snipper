@@ -17,7 +17,7 @@ export default async function deleteLink(urlCode: string) {
     };
   } catch (error) {
     return {
-      statusCode: 400,
+      statusCode: 500,
       error: {
         message: "Error deleting link",
       },

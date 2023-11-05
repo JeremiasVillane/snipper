@@ -1,10 +1,10 @@
-import { User } from "@prisma/client";
+import { Url, User } from "@prisma/client";
 import "next-auth";
 import "next-auth/jwt";
 
 declare module "next-auth" {
   interface currentUser extends User {
-    urls: string[];
+    urls: [Url];
     email: string;
   }
 

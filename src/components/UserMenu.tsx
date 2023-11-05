@@ -9,10 +9,11 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function UserMenu(): JSX.Element {
   const { data: session } = useSession();
+  const route = useRouter();
 
   if (session && session.user) {
     return (
@@ -31,14 +32,14 @@ export default function UserMenu(): JSX.Element {
               <p className="font-semibold">Signed in as</p>
               <p className="font-regular">{session.user.name}</p>
             </DropdownItem>
-            <DropdownItem>
-              <Link href="/profile">Profile</Link>
+            <DropdownItem onClick={() => route.push("/profile")}>
+              Profile
             </DropdownItem>
-            <DropdownItem>
-              <Link href="/mylinks">My Links</Link>
+            <DropdownItem onClick={() => route.push("/mylinks")}>
+              My Links
             </DropdownItem>
-            <DropdownItem>
-              <Link href="/new">New Link</Link>
+            <DropdownItem onClick={() => route.push("/new")}>
+              New Link
             </DropdownItem>
             <DropdownItem color="danger" onClick={() => signOut()}>
               Log Out

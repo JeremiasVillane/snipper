@@ -12,7 +12,7 @@ export default function AboutPage() {
         className="relative bg-cover bg-center bg-no-repeat py-8"
         style={{ backgroundImage: "url(/public/screen01.png)" }}
       >
-        <div className="absolute inset-0 z-20 bg-gradient-to-r from-hero-gradient-from to-hero-gradient-to bg-cover bg-center bg-no-repeat"></div>
+        <div className="absolute inset-0 z-20 bg-gradient-to-r from-[rgba(85, 64, 174, 0.95)] to-[rgba(65, 47, 144, 0.93)] bg-cover bg-center bg-no-repeat"></div>
 
         <div className="container relative z-30 pt-20 pb-12 sm:pt-56 sm:pb-48 lg:pt-64 lg:pb-48">
           <div className="flex flex-col items-center justify-center lg:flex-row">
