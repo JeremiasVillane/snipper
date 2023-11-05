@@ -6,7 +6,6 @@ import SnipCards from "./SnipCards";
 import SnipForm from "./SnipForm";
 import UserMenu from "./UserMenu";
 import { AnchorIcon } from "./ui/AnchorIcon";
-import BoxesContainer from "./ui/BoxesContainer";
 import { CopyIcon } from "./ui/CopyIcon";
 import { DeleteIcon } from "./ui/DeleteIcon";
 import { MoonIcon } from "./ui/MoonIcon";
@@ -17,7 +16,6 @@ import ThemeToggle from "./ui/ThemeToggle";
 
 export {
   AnchorIcon,
-  BoxesContainer,
   CopyIcon,
   CopyUrlModal,
   DeleteIcon,

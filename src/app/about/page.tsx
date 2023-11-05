@@ -1,3 +1,4 @@
+import { Image } from "@nextui-org/react";
 import { Metadata } from "next";
 import React from "react";
 
@@ -7,18 +8,18 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="flex flex-col">
+    <main id="hero" className="flex flex-col">
       <section
-        className="relative bg-cover bg-center bg-no-repeat py-8"
-        style={{ backgroundImage: "url(/public/screen01.png)" }}
+        className="relative bg-cover bg-center bg-no-repeat py-8 w-screen"
+        style={{ backgroundImage: "url(/bg-hero.jpg)" }}
       >
-        <div className="absolute inset-0 z-20 bg-gradient-to-r from-[rgba(85, 64, 174, 0.95)] to-[rgba(65, 47, 144, 0.93)] bg-cover bg-center bg-no-repeat"></div>
+        <div className="absolute inset-0 z-20 bg-gradient-to-r from-hero-gradient-from to-hero-gradient-to dark:from-hero-gradient-dark-from dark:to-hero-gradient-dark-to bg-cover bg-center bg-no-repeat"></div>
 
         <div className="container relative z-30 pt-20 pb-12 sm:pt-56 sm:pb-48 lg:pt-64 lg:pb-48">
           <div className="flex flex-col items-center justify-center lg:flex-row">
             <div className="rounded-full border-8 border-primary shadow-xl">
-              <img
-                src="/assets/img/blog-author.jpg"
+              <Image
+                src="/author.jpg"
                 className="h-48 rounded-full sm:h-56"
                 alt="author"
               />
@@ -42,7 +43,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section id="about">
+      <section id="about" className="pl-0 md:pl-9">
         <div className="container flex flex-col items-center py-16 md:py-20 lg:flex-row">
           <article className="w-full text-center sm:w-3/4 lg:w-3/5 lg:text-left">
             <h2 className="font-header text-4xl font-semibold uppercase text-primary sm:text-5xl lg:text-6xl">
@@ -95,7 +96,7 @@ export default function AboutPage() {
             </div>
           </article>
 
-          <article className="w-full pl-0 pt-10 sm:w-3/4 lg:w-2/5 lg:pl-12 lg:pt-0">
+          <article id="tech-stack" className="w-full pl-2 pt-10 sm:w-3/4 lg:w-2/5 lg:pl-12 lg:pt-0">
             <div>
               <div className="flex items-end justify-between">
                 <h4 className="font-body text-lg font-semibold uppercase text-grey-20">

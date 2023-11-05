@@ -1,4 +1,3 @@
-// import { BoxesContainer } from "@/components";
 import { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import Image from "next/image";
@@ -17,14 +16,13 @@ export default function Home() {
       style={{ height: "calc(100vh - 64px)" }}
       className="relative w-full overflow-hidden  flex flex-col items-center justify-center rounded-lg select-none"
     >
-      {/* <div className="absolute inset-0 w-full h-full bg-slate-200 dark:bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" /> */}
-      {/* <BoxesContainer /> */}
+      <div className="absolute inset-0 w-full h-full invert dark:invert-0 grayscale dark:grayscale-0 pointer-events-none" style={{backgroundImage: "url(/bg.png)"}} />
       <Image
         src={SnipperLogo}
         alt="Snipper"
         width={99}
         height={99}
-        className="dark:invert mt-[-64px]"
+        className="dark:invert mt-[-64px] z-10"
       />
       <h1
         className={twMerge(
