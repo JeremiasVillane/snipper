@@ -1,6 +1,7 @@
-import { Image } from "@nextui-org/react";
+import { ArrowIcon, GitHubIcon, LinkedInIcon } from "@/components";
+import { Image, Link } from "@nextui-org/react";
 import { Metadata } from "next";
-import React from "react";
+import NextLink from "next/link";
 
 export const metadata: Metadata = {
   title: "About | Snipper",
@@ -8,8 +9,9 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main id="hero" className="flex flex-col">
+    <main className="flex flex-col">
       <section
+        id="hero"
         className="relative bg-cover bg-center bg-no-repeat py-8 w-screen"
         style={{ backgroundImage: "url(/bg-hero.jpg)" }}
       >
@@ -20,7 +22,7 @@ export default function AboutPage() {
             <div className="rounded-full border-8 border-primary shadow-xl">
               <Image
                 src="/author.jpg"
-                className="h-48 rounded-full sm:h-56"
+                className="h-48 rounded-full sm:h-56 select-none"
                 alt="author"
               />
             </div>
@@ -50,8 +52,8 @@ export default function AboutPage() {
               What is this?
             </h2>
             <h4 className="pt-6 font-header text-xl font-medium text-black dark:text-white sm:text-2xl lg:text-3xl">
-              <b>Snipper</b> is a little project to continue to learn full stack web
-              development
+              <b>Snipper</b> is a small project to continue my learning of Full
+              Stack Web Development
             </h4>
             <p className="pt-6 font-body leading-relaxed text-grey-20">
               I am an enthusiastic web developer in constant search of knowledge
@@ -65,42 +67,52 @@ export default function AboutPage() {
               <b>React</b> and <b>Redux</b> as fundamental tools and recently
               with <b>NextJS</b>. In addition, I have worked with <b>Node.js</b>{" "}
               to develop robust and scalable backend services, managing{" "}
-              <b>SQL</b> databases primarely using <b>PostgreSQL</b> and <b>Express</b>.
+              <b>SQL</b> databases primarely using <b>PostgreSQL</b> and{" "}
+              <b>Express</b>.
             </p>
             <div className="flex flex-col justify-center pt-6 sm:flex-row lg:justify-start">
               <div className="flex items-center justify-center sm:justify-start">
-                <p className="font-body text-lg font-semibold uppercase text-grey-20">
+                <p className="font-body text-lg font-semibold uppercase text-grey-20 select-none">
                   Connect with me
                 </p>
                 <div className="hidden sm:block">
-                  <i className="bx bx-chevron-right text-2xl text-primary"></i>
+                  <ArrowIcon color="#d59453" className="mx-2" />
                 </div>
               </div>
               <div className="flex items-center justify-center pt-5 pl-2 sm:justify-start sm:pt-0">
-                <a href="/">
-                  <i className="bx bxl-facebook-square text-2xl text-primary hover:text-yellow"></i>
+                <a
+                  href="https://snppr.vercel.app/r0nyEBaLC"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                >
+                  <GitHubIcon
+                    name="GitHub"
+                    className="dark:invert transform hover:scale-105 duration-200 select-none"
+                  />
                 </a>
-                <a href="/" className="pl-4">
-                  <i className="bx bxl-twitter text-2xl text-primary hover:text-yellow"></i>
-                </a>
-                <a href="/" className="pl-4">
-                  <i className="bx bxl-dribbble text-2xl text-primary hover:text-yellow"></i>
-                </a>
-                <a href="/" className="pl-4">
-                  <i className="bx bxl-linkedin text-2xl text-primary hover:text-yellow"></i>
-                </a>
-                <a href="/" className="pl-4">
-                  <i className="bx bxl-instagram text-2xl text-primary hover:text-yellow"></i>
+                <a
+                  href="https://snppr.vercel.app/2Vt7W2xMe"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  className="pl-4"
+                >
+                  <LinkedInIcon
+                    name="LinkedIn"
+                    className="transform hover:scale-105 duration-200 select-none"
+                  />
                 </a>
               </div>
             </div>
           </article>
 
-          <article id="tech-stack" className="w-full pl-2 pt-10 sm:w-3/4 lg:w-2/5 lg:pl-12 lg:pt-0">
+          <article
+            id="tech-stack"
+            className="w-full pl-2 pt-10 sm:w-3/4 lg:w-2/5 lg:pl-12 lg:pt-0"
+          >
             <div>
               <div className="flex items-end justify-between">
                 <h4 className="font-body text-lg font-semibold uppercase text-grey-20">
-                  Tech Stack:
+                  Tech Stack used:
                 </h4>
               </div>
             </div>
@@ -130,6 +142,18 @@ export default function AboutPage() {
                 <h4 className="font-body font-semibold text-black dark:text-white">
                   Styles: TAILWIND CSS, NEXT-THEMES, NEXTUI, FRAMER MOTION
                 </h4>
+              </div>
+            </div>
+            <div className="pt-6">
+              <div className="flex items-end justify-between">
+                <Link
+                  isExternal
+                  showAnchorIcon
+                  href="https://snppr.vercel.app/BOWA6mKuF"
+                  as={NextLink}
+                >
+                  Visit source code on GitHub.
+                </Link>
               </div>
             </div>
           </article>

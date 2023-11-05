@@ -71,6 +71,7 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
               <div className="relative z-20">
                 <div id="icons" className="flex justify-between">
                   <ShareIcon
+                    name="Share"
                     width="21"
                     height="21"
                     color="rgb(59 130 246)"
@@ -78,6 +79,7 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
                     onClick={() => handleShare(url.urlCode)}
                   />
                   <DeleteIcon
+                    name="Delete"
                     width="21"
                     height="21"
                     color="rgb(157 23 77)"
@@ -123,8 +125,7 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
 
                     <div className="flex items-end justify-between">
                       <p className="mt-3 select-none">
-                        <b>Total clicks:</b>
-                        {" "}
+                        <b>Total clicks:</b>{" "}
                         <span className="text-zinc-400 select-none">
                           {url.clicks}
                         </span>
@@ -133,7 +134,7 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
                       <Button
                         size="sm"
                         color="primary"
-                        className="p-1.5 transform hover:scale-105 duration-200"
+                        className="p-1.5 transform hover:bg-blue-500 duration-200"
                         onClick={() => handleResetClicks(url.id, url.clicks)}
                       >
                         Reset

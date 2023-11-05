@@ -7,7 +7,7 @@ import React from "react";
 export default function SignOutButton() {
   return (
     <Button
-      className="bg-red-400 text-white transform hover:scale-105 duration-200 select-none"
+      className="bg-red-500 text-white transform hover:bg-red-400 duration-200 select-none"
       onClick={() => signOut()}
     >
       Logout
