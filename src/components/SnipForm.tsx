@@ -12,7 +12,7 @@ export default function SnipForm({
   userEmail: string;
 }): JSX.Element {
   const [error, setError] = useState<string | null>();
-  const [inputUrl, setInputUrl] = useState<string | undefined>();
+  const [inputUrl, setInputUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [protocol, setProtocol] = useState<string>("https://");
   const [showModal, setShowModal] = useState(false);
@@ -110,7 +110,7 @@ export default function SnipForm({
                 isDisabled={!isValid || !inputUrl}
                 isLoading={isLoading}
               >
-                Create Link
+                Create
               </Button>
             </div>
           </form>

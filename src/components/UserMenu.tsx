@@ -7,6 +7,7 @@ import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
+import { Button } from ".";
 
 export default function UserMenu({ session }: Session | any): JSX.Element {
   if (session && session.user) {
@@ -34,7 +35,7 @@ export default function UserMenu({ session }: Session | any): JSX.Element {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-gray-700 dark:text-gray-300">
+          <Menu.Items className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg dark:shadow-zinc-900 ring-1 ring-black ring-opacity-5 focus:outline-none text-gray-700 dark:text-gray-300">
             <Menu.Item>
               {({ active }) => (
                 <Link
@@ -70,9 +71,9 @@ export default function UserMenu({ session }: Session | any): JSX.Element {
   }
 
   return (
-    <button className="bg-primary" onClick={() => signIn()}>
+    <Button color="primary" size="sm" className="ml-2" onClick={() => signIn()}>
       Sign In
-    </button>
+    </Button>
   );
 }
 

@@ -1,11 +1,17 @@
 "use client";
 
-import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { MoonIcon, SunIcon } from "..";
 
-
-export default function ThemeToggle(): JSX.Element {
+export default function ThemeToggle(): JSX.Element | null {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleChange = () => {
     if (theme === "dark") {
@@ -15,10 +21,12 @@ export default function ThemeToggle(): JSX.Element {
     }
   };
 
+  if (!mounted) return null;
+
   return (
     <button
       type="button"
-      className="relative rounded-full p-1 text-gray-600 dark:text-gray-400 hover:text-gray-400 dark:hover:text-white"
+      className="relative rounded-full p-1 text-gray-600 dark:text-white hover:text-gray-400 dark:hover:text-gray-400"
       onClick={handleChange}
     >
       <span className="absolute -inset-1.5" />

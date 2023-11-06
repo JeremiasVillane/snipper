@@ -1,20 +1,21 @@
 "use client";
 
-import { Button, Link } from "@nextui-org/react";
+import resetLinkClicks from "@/server-actions/reset-link-clicks";
+import { Link } from "@nextui-org/react";
 import { Url } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   AnchorIcon,
+  Button,
   CopyUrlModal,
   DeleteIcon,
   DeleteLinkModal,
   Redirector,
   ShareIcon,
 } from ".";
-import resetLinkClicks from "@/server-actions/reset-link-clicks";
-import { useRouter } from "next/navigation";
 
 export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
   const router = useRouter();
@@ -75,7 +76,7 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
                     width="21"
                     height="21"
                     color="rgb(59 130 246)"
-                    className="cursor-pointer"
+                    className="cursor-pointer hover:brightness-125 hover:scale-105 transition-all ease-in-out"
                     onClick={() => handleShare(url.urlCode)}
                   />
                   <DeleteIcon
@@ -83,7 +84,7 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
                     width="21"
                     height="21"
                     color="rgb(157 23 77)"
-                    className="cursor-pointer"
+                    className="cursor-pointer hover:brightness-125 hover:scale-105 transition-all ease-in-out"
                     onClick={() => handleDelete(url.urlCode)}
                   />
                 </div>
@@ -132,9 +133,8 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
                       </p>
 
                       <Button
-                        size="sm"
+                        size="xs"
                         color="primary"
-                        className="p-1.5 transform hover:bg-blue-500 duration-200"
                         onClick={() => handleResetClicks(url.id, url.clicks)}
                       >
                         Reset

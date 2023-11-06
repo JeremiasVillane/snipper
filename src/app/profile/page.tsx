@@ -1,3 +1,4 @@
+import { Header } from "@/components";
 import ProfileCard from "@/components/ProfileCard";
 import { getCurrentUser } from "@/server-actions";
 import { Metadata } from "next";
@@ -8,12 +9,16 @@ export const metadata: Metadata = {
 };
 
 const ProfilePage = async () => {
-  const { user }: { user: currentUser } = await getCurrentUser();
+  const { user, totalClicks }: { user: currentUser; totalClicks: number } =
+    await getCurrentUser();
 
   return (
-    <div className="relative py-12 sm:max-w-xl sm:mx-auto">
-      <ProfileCard user={user} />
-    </div>
+    <>
+      <Header title="Profile" />
+      <div className="relative sm:max-w-xl sm:mx-auto">
+        <ProfileCard user={user} totalClicks={totalClicks} />
+      </div>
+    </>
   );
 };
 

@@ -1,16 +1,18 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
-import React from "react";
+import { Button } from "..";
 
-export default function SignOutButton() {
+export default function SignOutButton(): JSX.Element {
   return (
     <Button
-      className="bg-red-500 text-white transform hover:bg-red-400 duration-200 select-none"
+      size="sm"
+      height="2.5"
+      width="5.5"
+      color="danger"
       onClick={() => signOut()}
     >
-      Logout
+      Sign Out
     </Button>
   );
 }

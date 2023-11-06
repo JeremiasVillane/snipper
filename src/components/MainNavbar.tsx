@@ -1,23 +1,19 @@
 "use client";
 
+import { navigator } from "@/constants";
 import { classNames } from "@/libs";
 import { Disclosure } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MoonIcon, ThemeToggle, UserMenu } from ".";
+import { ThemeToggle, UserMenu } from ".";
 
-export default function Example() {
+export default function MainNavbar() {
   const { data: session } = useSession();
   const currentPath = usePathname();
-
-  const navigation = [
-    { name: "New Link", href: "/new", current: currentPath === "/new" },
-    { name: "My Links", href: "/mylinks", current: currentPath === "/mylinks" },
-    { name: "About", href: "/about", current: currentPath === "/about" },
-  ];
+  const navigation = navigator(currentPath);
 
   return (
     <Disclosure as="nav" className="bg-white dark:bg-gray-800 select-none">
@@ -42,7 +38,7 @@ export default function Example() {
                 <div className="flex flex-shrink-0 items-center">
                   <Link href={"/"}>
                     <Image
-                      src="/snipper.png"
+                      src="/snipper.svg"
                       alt="Snipper"
                       width={33}
                       height={33}
@@ -59,7 +55,7 @@ export default function Example() {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? "bg-blue-500 dark:bg-blue-900 text-white"
+                              ? "bg-gray-400 dark:bg-gray-900 text-white"
                               : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-700 hover:text-gray-900 hover:dark:text-white",
                             "rounded-md px-3 py-2 text-sm font-medium"
                           )}
@@ -74,7 +70,7 @@ export default function Example() {
                         href="/about"
                         className={classNames(
                           currentPath === "/about"
-                            ? "bg-gray-500 dark:bg-gray-900 text-white"
+                            ? "bg-gray-400 dark:bg-gray-900 text-white"
                             : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-700 hover:text-gray-900 hover:dark:text-white",
                           "rounded-md px-3 py-2 text-sm font-medium"
                         )}
@@ -105,7 +101,7 @@ export default function Example() {
                   href={item.href}
                   className={classNames(
                     item.current
-                      ? "bg-gray-500 dark:bg-gray-900 text-white"
+                      ? "bg-blue-400 dark:bg-gray-900 text-white"
                       : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-700 hover:text-gray-900 hover:dark:text-white",
                     "block rounded-md px-3 py-2 text-base font-medium"
                   )}
@@ -122,131 +118,3 @@ export default function Example() {
     </Disclosure>
   );
 }
-
-// import {
-//   Link,
-//   Navbar,
-//   NavbarBrand,
-//   NavbarContent,
-//   NavbarItem,
-//   NavbarMenu,
-//   NavbarMenuItem,
-//   NavbarMenuToggle,
-// } from "@nextui-org/react";
-// import { useSession } from "next-auth/react";
-// import Image from "next/image";
-// import NextLink from "next/link";
-// import { usePathname } from "next/navigation";
-// import SnipperLogo from "public/snipper.png";
-// import { useState } from "react";
-// import { ThemeToggle, UserMenu } from ".";
-
-// export default function MainNavbar(): JSX.Element {
-//   const currentPath = usePathname();
-//   const { data: session } = useSession();
-//   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-
-//   return (
-//     <Navbar onMenuOpenChange={setIsMenuOpen} className="z-50 select-none">
-//       <NavbarContent>
-//         <NavbarMenuToggle
-//           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-//           className="sm:hidden"
-//         />
-//         <Link href={"/"} color="foreground" as={NextLink}>
-//           <NavbarBrand>
-//             <Image
-//               src={SnipperLogo}
-//               alt="Snipper"
-//               width={33}
-//               height={33}
-//               className="dark:invert mx-4"
-//             />
-//             <p className="font-bold text-inherit hidden sm:flex">SNIPPER</p>
-//           </NavbarBrand>
-//         </Link>
-//       </NavbarContent>
-
-//       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-//         {session && session.user ? (
-//           <>
-//             <NavbarItem isActive={currentPath === "/new"}>
-//               <Link
-//                 color={currentPath === "/new" ? "primary" : "foreground"}
-//                 href="/new"
-//                 as={NextLink}
-//               >
-//                 New link
-//               </Link>
-//             </NavbarItem>
-//             <NavbarItem isActive={currentPath === "/mylinks"}>
-//               <Link
-//                 color={currentPath === "/mylinks" ? "primary" : "foreground"}
-//                 href="/mylinks"
-//                 as={NextLink}
-//               >
-//                 My links
-//               </Link>
-//             </NavbarItem>
-//           </>
-//         ) : null}
-//         <NavbarItem isActive={currentPath === "/about"}>
-//           <Link
-//             color={currentPath === "/about" ? "primary" : "foreground"}
-//             href="/about"
-//             as={NextLink}
-//           >
-//             About
-//           </Link>
-//         </NavbarItem>
-//       </NavbarContent>
-//       <NavbarContent justify="end">
-//         <NavbarItem>
-//           <ThemeToggle />
-//         </NavbarItem>
-//         <NavbarItem>
-//           <UserMenu />
-//         </NavbarItem>
-//       </NavbarContent>
-//       <NavbarMenu>
-//         {session && session.user ? (
-//           <>
-//             <NavbarMenuItem>
-//               <Link
-//                 className="w-full"
-//                 href="/new"
-//                 size="lg"
-//                 color={currentPath === "/new" ? "primary" : "foreground"}
-//                 as={NextLink}
-//               >
-//                 New link
-//               </Link>
-//             </NavbarMenuItem>
-//             <NavbarMenuItem>
-//               <Link
-//                 className="w-full"
-//                 href="/mylinks"
-//                 size="lg"
-//                 color={currentPath === "/mylinks" ? "primary" : "foreground"}
-//                 as={NextLink}
-//               >
-//                 My Links
-//               </Link>
-//             </NavbarMenuItem>
-//           </>
-//         ) : null}
-//         <NavbarMenuItem>
-//           <Link
-//             className="w-full"
-//             href="/about"
-//             size="lg"
-//             color={currentPath === "/about" ? "primary" : "foreground"}
-//             as={NextLink}
-//           >
-//             About
-//           </Link>
-//         </NavbarMenuItem>
-//       </NavbarMenu>
-//     </Navbar>
-//   );
-// }

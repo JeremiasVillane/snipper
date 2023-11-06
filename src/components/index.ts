@@ -8,6 +8,7 @@ import SnipForm from "./SnipForm";
 import UserMenu from "./UserMenu";
 import { AnchorIcon } from "./ui/AnchorIcon";
 import { ArrowIcon } from "./ui/ArrowIcon";
+import Button from "./ui/Button";
 import { CopyIcon } from "./ui/CopyIcon";
 import { DeleteIcon } from "./ui/DeleteIcon";
 import { GitHubIcon } from "./ui/GitHubIcon";
@@ -21,6 +22,7 @@ import ThemeToggle from "./ui/ThemeToggle";
 export {
   AnchorIcon,
   ArrowIcon,
+  Button,
   CopyIcon,
   CopyUrlModal,
   DeleteIcon,

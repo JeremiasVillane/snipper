@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
-import SnipperLogo from "public/snipper.png";
+import SnipperLogo from "public/snipper.svg";
 
 export const metadata: Metadata = {
   title: "Snipper: URL shortnener",

@@ -1,12 +1,15 @@
-import { getCurrentUser } from "@/server-actions";
 import { Avatar } from "@nextui-org/react";
 import { currentUser } from "next-auth";
 import NextLink from "next/link";
-import { SignOutButton } from ".";
+import { Button, SignOutButton } from ".";
 
-export default async function ProfileCard({ user }: { user: currentUser }) {
-  const { totalClicks }: { totalClicks: number } = await getCurrentUser();
-
+export default async function ProfileCard({
+  user,
+  totalClicks,
+}: {
+  user: currentUser;
+  totalClicks: number;
+}) {
   return (
     <div
       className="rounded-2xl flex p-6 flex-col space-y-5 bg-gradient-to-br from-white to-slate-300/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent hover:border-slate-300 dark:hover:border-slate-700"
