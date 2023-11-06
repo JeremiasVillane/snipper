@@ -61,7 +61,7 @@ export default function SnipForm({
 
   return (
     <>
-      <Card className="shadow-lg mx-2 bg-gradient-to-br from-white to-slate-400/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent hover:border-slate-300 dark:hover:border-slate-700">
+      <Card className="shadow-lg bg-gradient-to-br from-white to-slate-400/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent hover:border-slate-300 dark:hover:border-slate-700 mx-2 md:w-[550px]">
         <CardBody>
           <form
             className="w-full flex justify-center my-4 mx-auto"

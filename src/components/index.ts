@@ -1,5 +1,6 @@
 import CopyUrlModal from "./CopyUrlModal";
 import DeleteLinkModal from "./DeleteLinkModal";
+import Header from "./Header";
 import MainNavbar from "./MainNavbar";
 import Redirector from "./Redirector";
 import SnipCards from "./SnipCards";
@@ -25,6 +26,7 @@ export {
   DeleteIcon,
   DeleteLinkModal,
   GitHubIcon,
+  Header,
   LinkedInIcon,
   MainNavbar,
   MoonIcon,

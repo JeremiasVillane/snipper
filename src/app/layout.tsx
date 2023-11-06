@@ -21,9 +21,9 @@ export default function RootLayout({
         <div>
           <Providers>
             <MainNavbar />
-            <main className="relative h-full w-full flex justify-center items-center">
+            <div className="flex flex-col h-full w-full items-center justify-center">
               {children}
-            </main>
+            </div>
           </Providers>
         </div>
       </body>

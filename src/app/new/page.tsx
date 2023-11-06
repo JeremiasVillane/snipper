@@ -1,4 +1,4 @@
-import { SnipForm } from "@/components";
+import { Header, SnipForm } from "@/components";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
@@ -11,11 +11,9 @@ export default async function NewLink() {
   const session = await getServerSession(authOptions);
 
   return (
-    <div>
-      <h1 className="text-2xl md:text-3xl text-slate-700 dark:text-white mt-9 mb-6 px-12 text-center select-none">
-        Paste a URL to create a short link
-      </h1>
+    <>
+      <Header title="Paste a URL to create a short link" />
       <SnipForm userEmail={session?.user.email ? session.user.email : ""} />
-    </div>
+    </>
   );
 }

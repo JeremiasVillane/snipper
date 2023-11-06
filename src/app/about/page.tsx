@@ -12,7 +12,7 @@ export default function AboutPage() {
     <main className="flex flex-col">
       <section
         id="hero"
-        className="relative bg-cover bg-center bg-no-repeat py-8 w-screen"
+        className="relative bg-cover bg-center bg-no-repeat py-8 w-screen select-none"
         style={{ backgroundImage: "url(/bg-hero.jpg)" }}
       >
         <div className="absolute inset-0 z-20 bg-gradient-to-r from-hero-gradient-from to-hero-gradient-to dark:from-hero-gradient-dark-from dark:to-hero-gradient-dark-to bg-cover bg-center bg-no-repeat"></div>
@@ -22,7 +22,7 @@ export default function AboutPage() {
             <div className="rounded-full border-8 border-primary shadow-xl">
               <Image
                 src="/author.jpg"
-                className="h-48 rounded-full sm:h-56 select-none"
+                className="h-48 rounded-full sm:h-56"
                 alt="author"
               />
             </div>
@@ -94,7 +94,7 @@ export default function AboutPage() {
                   href="https://snppr.vercel.app/2Vt7W2xMe"
                   rel="noreferrer noopener"
                   target="_blank"
-                  className="pl-4"
+                  className="ml-4"
                 >
                   <LinkedInIcon
                     name="LinkedIn"
@@ -145,7 +145,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="pt-6">
-              <div className="flex items-end justify-between">
+              <div className="flex items-end justify-between select-none">
                 <Link
                   isExternal
                   showAnchorIcon

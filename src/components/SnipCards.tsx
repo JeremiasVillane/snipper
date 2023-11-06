@@ -46,7 +46,7 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
         urls.map((url: Url, index: number) => (
           <div
             key={index}
-            className="relative group  block p-2 h-full w-full"
+            className="relative group block p-2 h-full w-full"
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
           >
@@ -147,7 +147,7 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
           </div>
         ))
       ) : (
-        <p>No urls</p>
+        <></>
       )}
       <CopyUrlModal
         showModal={showCopyModal}
