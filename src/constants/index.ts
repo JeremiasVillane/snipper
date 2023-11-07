@@ -5,9 +5,3 @@ export const navigator = (path: string) => {
     { name: "About", href: "/about", current: path === "/about" },
   ];
 };
-
-export const buttonColors = {
-  primary: `bg-blue-500`,
-  secondary: `bg-gray-500`,
-  danger: `bg-red-500`,
-};

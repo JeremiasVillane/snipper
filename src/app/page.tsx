@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import Image from "next/image";
-import { twMerge } from "tailwind-merge";
 import SnipperLogo from "public/snipper.svg";
+import { twMerge } from "tailwind-merge";
 
 export const metadata: Metadata = {
   title: "Snipper: URL shortnener",
@@ -12,11 +12,14 @@ const nunito = Nunito_Sans({ weight: "400", subsets: ["latin"] });
 
 export default function Home() {
   return (
-    <div
+    <main
       style={{ height: "calc(100vh - 64px)" }}
-      className="relative w-full overflow-hidden  flex flex-col items-center justify-center rounded-lg select-none"
+      className="relative w-full overflow-hidden flex flex-col items-center justify-center rounded-lg select-none"
     >
-      <div className="absolute inset-0 w-full h-full invert dark:invert-0 grayscale dark:grayscale-0 pointer-events-none" style={{backgroundImage: "url(/bg.png)"}} />
+      <div
+        className="absolute inset-0 w-full h-full invert dark:invert-0 grayscale dark:grayscale-0 pointer-events-none"
+        style={{ backgroundImage: "url(/bg.png)", opacity: "0.5" }}
+      />
       <Image
         src={SnipperLogo}
         alt="Snipper"
@@ -32,9 +35,9 @@ export default function Home() {
       >
         Snipper
       </h1>
-      <p className="text-2xl text-center mt-2 text-slate-900 dark:text-neutral-300 relative z-20">
+      <p className="text-2xl text-center mt-2 text-neutral-700 dark:text-neutral-300 relative z-20">
         A simple URL shortnener
       </p>
-    </div>
+    </main>
   );
 }

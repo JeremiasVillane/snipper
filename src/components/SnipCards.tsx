@@ -11,7 +11,7 @@ import {
   AnchorIcon,
   Button,
   CopyUrlModal,
-  DeleteIcon,
+  XMarkIcon,
   DeleteLinkModal,
   Redirector,
   ShareIcon,
@@ -72,17 +72,18 @@ export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
               <div className="relative z-20">
                 <div id="icons" className="flex justify-between">
                   <ShareIcon
-                    name="Share"
+                    title="Share"
                     width="21"
                     height="21"
                     color="rgb(59 130 246)"
                     className="cursor-pointer hover:brightness-125 hover:scale-105 transition-all ease-in-out"
                     onClick={() => handleShare(url.urlCode)}
                   />
-                  <DeleteIcon
-                    name="Delete"
+                  <XMarkIcon
+                    title="Delete"
                     width="21"
                     height="21"
+                    stroke="3"
                     color="rgb(157 23 77)"
                     className="cursor-pointer hover:brightness-125 hover:scale-105 transition-all ease-in-out"
                     onClick={() => handleDelete(url.urlCode)}

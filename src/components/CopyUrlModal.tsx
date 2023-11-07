@@ -103,24 +103,22 @@ export default function CopyUrlModal({
                 </div>
                 <div className="bg-gray-50 dark:bg-zinc-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <Button
-                    type="button"
                     size="sm"
-                    className="mt-2 w-full sm:mt-0 sm:w-auto"
+                    color="primary"
+                    className="w-full sm:mt-0 sm:w-auto"
                     onClick={() => handleClose("/mylinks")}
                   >
                     My Links
                   </Button>
                   <Button
-                    type="button"
                     size="sm"
+                    color="primary"
                     className="mt-2 w-full sm:mt-0 sm:w-auto sm:mr-2"
-                    // className="mt-2 inline-flex w-full justify-center rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset hover:bg-blue-400 sm:mr-2 sm:mt-0 sm:w-auto"
                     onClick={() => handleClose("/new")}
                   >
                     New
                   </Button>
                   <Button
-                    type="button"
                     size="sm"
                     color="secondary"
                     className="mt-2 w-full sm:mt-0 sm:w-auto sm:mr-2"

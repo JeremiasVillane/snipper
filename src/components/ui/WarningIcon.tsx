@@ -1,6 +1,6 @@
 import React, { SVGProps } from "react";
 
-export const MoonIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+export const WarningIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     aria-hidden="true"
     focusable="false"
@@ -8,6 +8,8 @@ export const MoonIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     width={props.width ?? "24"}
     role="presentation"
     viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
     <path
@@ -16,7 +18,7 @@ export const MoonIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth="1.5"
-      d="M21.752 15.002A9.718 9.718 0 0 1 18 15.75A9.75 9.75 0 0 1 8.25 6c0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25A9.75 9.75 0 0 0 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
     />
   </svg>
 );

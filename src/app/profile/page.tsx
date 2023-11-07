@@ -1,5 +1,4 @@
-import { Header } from "@/components";
-import ProfileCard from "@/components/ProfileCard";
+import { Header, ProfileCard } from "@/components";
 import { getCurrentUser } from "@/server-actions";
 import { Metadata } from "next";
 import { currentUser } from "next-auth";

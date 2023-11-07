@@ -9,7 +9,7 @@ export default function SignOutButton(): JSX.Element {
       size="sm"
       height="2.5"
       width="5.5"
-      color="danger"
+      className="bg-red-400"
       onClick={() => signOut()}
     >
       Sign Out

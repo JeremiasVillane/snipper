@@ -26,6 +26,45 @@ a {
   }
 }
 
+/* top loading bar */
+.loading_bar {
+  height: 3px;
+  width: 100%;
+  background-color: #0074d9;
+  animation: loading 1s infinite;
+  display: block;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/*******************/
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1rem;
+  height: 1rem;
+  border: 0.25rem solid rgba(255, 255, 255, 0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* buttons animation */
 /* span.ripple {
   position: absolute;

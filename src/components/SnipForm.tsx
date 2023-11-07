@@ -2,9 +2,9 @@
 
 import { useUrlValidation } from "@/hooks";
 import { createLink } from "@/server-actions";
-import { Button, Card, CardBody, Input } from "@nextui-org/react";
+import { Card, CardBody, Input } from "@nextui-org/react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { CopyUrlModal } from ".";
+import { Button, CopyUrlModal } from ".";
 
 export default function SnipForm({
   userEmail,
@@ -106,8 +106,10 @@ export default function SnipForm({
               <Button
                 color="primary"
                 type="submit"
-                className="transform hover:bg-blue-500 duration-200"
-                isDisabled={!isValid || !inputUrl}
+                size="md"
+                width="5"
+                className="overflow-visible"
+                disabled={!isValid || !inputUrl}
                 isLoading={isLoading}
               >
                 Create

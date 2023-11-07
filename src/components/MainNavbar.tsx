@@ -3,12 +3,11 @@
 import { navigator } from "@/constants";
 import { classNames } from "@/libs";
 import { Disclosure } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ThemeToggle, UserMenu } from ".";
+import { XMarkIcon, MenuIcon, ThemeToggle, UserMenu } from ".";
 
 export default function MainNavbar() {
   const { data: session } = useSession();
@@ -29,7 +28,7 @@ export default function MainNavbar() {
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    <MenuIcon className="block h-6 w-6" aria-hidden="true" />
                   )}
                 </Disclosure.Button>
                 {/*********************/}

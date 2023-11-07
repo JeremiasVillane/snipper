@@ -86,7 +86,7 @@ export default function AboutPage() {
                   target="_blank"
                 >
                   <GitHubIcon
-                    name="GitHub"
+                    title="GitHub"
                     className="dark:invert transform hover:scale-105 duration-200 select-none"
                   />
                 </a>
@@ -97,7 +97,7 @@ export default function AboutPage() {
                   className="ml-4"
                 >
                   <LinkedInIcon
-                    name="LinkedIn"
+                    title="LinkedIn"
                     className="transform hover:scale-105 duration-200 select-none"
                   />
                 </a>

@@ -1,6 +1,10 @@
 import React, { SVGProps } from "react";
 
-export const GitHubIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+interface MySvg extends SVGProps<SVGSVGElement> {
+  title?: string;
+}
+
+export const GitHubIcon: React.FC<MySvg> = (props) => (
   <svg
     aria-hidden="false"
     focusable="true"
@@ -20,7 +24,7 @@ export const GitHubIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
       strokeLinejoin="round"
     ></g>
     <g id="SVGRepo_iconCarrier">
-      <title>{props.name ?? ""}</title>
+      <title>{props.title ?? ""}</title>
       <rect width="512" height="512" rx="15%" fill="#1B1817"></rect>
       <path
         fill="#ffffff"
