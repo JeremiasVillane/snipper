@@ -54,8 +54,8 @@ export default function MainNavbar() {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? "bg-gray-400 dark:bg-gray-900 text-white"
-                              : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-700 hover:text-gray-900 hover:dark:text-white",
+                              ? "menu-item-selected"
+                              : "menu-item",
                             "rounded-md px-3 py-2 text-sm font-medium"
                           )}
                           aria-current={item.current ? "page" : undefined}
@@ -69,8 +69,8 @@ export default function MainNavbar() {
                         href="/about"
                         className={classNames(
                           currentPath === "/about"
-                            ? "bg-gray-400 dark:bg-gray-900 text-white"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-700 hover:text-gray-900 hover:dark:text-white",
+                            ? "menu-item-selected"
+                            : "menu-item",
                           "rounded-md px-3 py-2 text-sm font-medium"
                         )}
                         aria-current={
@@ -100,8 +100,8 @@ export default function MainNavbar() {
                   href={item.href}
                   className={classNames(
                     item.current
-                      ? "bg-blue-400 dark:bg-gray-900 text-white"
-                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-700 hover:text-gray-900 hover:dark:text-white",
+                      ? "menu-item-selected"
+                      : "menu-item",
                     "block rounded-md px-3 py-2 text-base font-medium"
                   )}
                   aria-current={item.current ? "page" : undefined}

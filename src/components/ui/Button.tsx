@@ -1,6 +1,5 @@
 "use client";
 
-import { createRipple } from "@/libs";
 import React from "react";
 import { LoaderAnimIcon } from "..";
 
@@ -40,7 +39,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       size = "md",
       radius = "xl",
-      color,
+      color = "primary",
       height = "100%",
       width = "100%",
       isLoading = false,
@@ -49,9 +48,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      createRipple(event);
-
+    const handleButtonClick = (
+      event: MouseEvent & React.MouseEvent<HTMLButtonElement>
+    ) => {
       if (onClick) {
         onClick(event);
       }
@@ -62,9 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       width: `${width}rem`,
       backgroundColor: props.disabled
         ? "gray"
-        : color
-        ? buttonColors[color]
-        : "",
+        :  buttonColors[color],
       borderRadius: buttonRadius[radius],
     };
 

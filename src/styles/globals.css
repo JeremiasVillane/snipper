@@ -22,12 +22,22 @@ a {
 
 @layer base {
   body {
-    @apply dark:bg-[#0f172a] bg-slate-200;
+    @apply dark:bg-[#0f172a] bg-slate-200 transition-all duration-300 ease-in-out;
+  }
+}
+
+@layer components {
+  .menu-item {
+    @apply transition-all duration-300 ease-in-out text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-700 hover:text-gray-900 hover:dark:text-white;
+  }
+
+  .menu-item-selected {
+    @apply bg-gray-400 dark:bg-gray-900 text-white;
   }
 }
 
 /* top loading bar */
-.loading_bar {
+/* .loading_bar {
   height: 3px;
   width: 100%;
   background-color: #0074d9;
@@ -42,41 +52,24 @@ a {
   100% {
     transform: translateX(100%);
   }
-}
-
-/*******************/
-
-.spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 1rem;
-  height: 1rem;
-  border: 0.25rem solid rgba(255, 255, 255, 0.2);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* buttons animation */
-/* span.ripple {
-  position: absolute;
-  border-radius: 50%;
-  transform: scale(0);
-  animation: ripple 600ms linear;
-  background-color: rgba(255, 255, 255, 0.7);
 } */
 
-/* @keyframes ripple {
-  to {
-    transform: scale(4);
-    opacity: 0;
-  }
+
+/* buttons animation */
+/* .ripple {
+  background-position: center;
+  transition: background 0.8s;
+}
+
+.ripple:hover {
+  background-color: #47a7f5;
+  background-image: radial-gradient(circle, transparent 1%, #47a7f5 1%);
+  background-position: center;
+  background-size: 15000%;
+}
+
+.ripple:active {
+  transition: background 0s;
+  background-color: #6eb9f7;
+  background-size: 100%;
 } */
