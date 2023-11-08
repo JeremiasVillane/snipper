@@ -14,9 +14,7 @@ const ProfilePage = async () => {
   return (
     <>
       <Header title="Profile" />
-      <div className="relative sm:max-w-xl sm:mx-auto">
-        <ProfileCard user={user} totalClicks={totalClicks} />
-      </div>
+      <ProfileCard user={user} totalClicks={totalClicks} />
     </>
   );
 };

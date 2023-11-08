@@ -1,7 +1,7 @@
 import { Avatar } from "@nextui-org/react";
 import { currentUser } from "next-auth";
 import NextLink from "next/link";
-import { Button, SignOutButton } from ".";
+import { SignOutButton } from ".";
 
 export default async function ProfileCard({
   user,
@@ -11,9 +11,8 @@ export default async function ProfileCard({
   totalClicks: number;
 }) {
   return (
-    <div
-      className="rounded-2xl flex p-6 flex-col space-y-5 bg-gradient-to-br from-white to-slate-300/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent hover:border-slate-300 dark:hover:border-slate-700"
-      id="widget"
+    <section
+      className="auth-card"
     >
       <div className="flex justify-between w-64">
         <Avatar
@@ -44,6 +43,6 @@ export default async function ProfileCard({
       <div className="flex space-x-5 items-center">
         <SignOutButton />
       </div>
-    </div>
+    </section>
   );
 }

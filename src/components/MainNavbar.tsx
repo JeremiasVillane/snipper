@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { XMarkIcon, MenuIcon, ThemeToggle, UserMenu } from ".";
+import { MenuIcon, ThemeToggle, UserMenu, XMarkIcon } from ".";
 
 export default function MainNavbar() {
   const { data: session } = useSession();
@@ -37,6 +37,7 @@ export default function MainNavbar() {
                 <div className="flex flex-shrink-0 items-center">
                   <Link href={"/"}>
                     <Image
+                      priority
                       src="/snipper.svg"
                       alt="Snipper"
                       width={33}
@@ -53,9 +54,7 @@ export default function MainNavbar() {
                           key={item.name}
                           href={item.href}
                           className={classNames(
-                            item.current
-                              ? "menu-item-selected"
-                              : "menu-item",
+                            item.current ? "menu-item-selected" : "menu-item",
                             "rounded-md px-3 py-2 text-sm font-medium"
                           )}
                           aria-current={item.current ? "page" : undefined}
@@ -85,7 +84,7 @@ export default function MainNavbar() {
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <ThemeToggle />
-                <UserMenu session={session} />
+                <UserMenu session={session!} currentPath={currentPath} />
               </div>
             </div>
           </div>
@@ -99,9 +98,7 @@ export default function MainNavbar() {
                   as={Link}
                   href={item.href}
                   className={classNames(
-                    item.current
-                      ? "menu-item-selected"
-                      : "menu-item",
+                    item.current ? "menu-item-selected" : "menu-item",
                     "block rounded-md px-3 py-2 text-base font-medium"
                   )}
                   aria-current={item.current ? "page" : undefined}

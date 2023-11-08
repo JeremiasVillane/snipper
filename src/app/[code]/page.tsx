@@ -1,11 +1,11 @@
 "use client";
 
 import { getOriginalUrl } from "@/server-actions";
-import { Button, Spinner } from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import SnipperLogo from "public/snipper.svg";
+import { Button, LoaderAnimIcon } from "@/components";
 
 interface Params {
   code: string;
@@ -38,24 +38,27 @@ export default function RedirectingPage({ params }: { params: Params }) {
       <Image
         src={SnipperLogo}
         alt="Snipper"
-        width={99}
-        height={99}
-        className="dark:invert mb-8"
+        width={111}
+        height={111}
+        className="dark:invert mb-8 ml-8"
+        priority
       />
       {notFound ? (
         <div className="flex flex-col justify-center items-center">
           <p className="text-3xl mb-4">
             <b>404</b>: Not Found
           </p>
-          <Button
-            color="primary"
-            onPress={() => router.back()}
-          >
-            Go Back
-          </Button>
+          <div className="flex gap-1">
+            <Button color="primary" onClick={() => router.back()}>
+              Go Back
+            </Button>
+            <Button color="transparent" onClick={() => router.push("/")}>
+              Go to Home <span aria-hidden="true">&nbsp;&rarr;</span>
+            </Button>
+          </div>
         </div>
       ) : (
-        <Spinner size="lg" />
+        <LoaderAnimIcon color="rgb(59, 130, 246)" height="55" width="55" />
       )}
     </div>
   );

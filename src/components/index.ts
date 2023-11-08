@@ -1,6 +1,7 @@
 import CopyUrlModal from "./CopyUrlModal";
 import DeleteLinkModal from "./DeleteLinkModal";
 import Header from "./Header";
+import SignInForm from "./SignInForm";
 import MainNavbar from "./MainNavbar";
 import ProfileCard from "./ProfileCard";
 import Redirector from "./Redirector";
@@ -34,6 +35,7 @@ export {
   Header,
   LinkedInIcon,
   LoaderAnimIcon,
+  SignInForm,
   MainNavbar,
   MenuIcon,
   MoonIcon,

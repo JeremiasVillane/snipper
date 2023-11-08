@@ -9,7 +9,13 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { Button } from ".";
 
-export default function UserMenu({ session }: Session | any): JSX.Element {
+export default function UserMenu({
+  session,
+  currentPath,
+}: {
+  session: Session;
+  currentPath: string;
+}): JSX.Element {
   if (session && session.user) {
     return (
       <Menu as="div" className="relative ml-3">
@@ -79,7 +85,13 @@ export default function UserMenu({ session }: Session | any): JSX.Element {
   }
 
   return (
-    <Button color="primary" size="sm" className="ml-2" onClick={() => signIn()}>
+    <Button
+      color="primary"
+      size="sm"
+      className="ml-2"
+      onClick={() => signIn()}
+      disabled={currentPath.startsWith("/signin")}
+    >
       Sign In
     </Button>
   );

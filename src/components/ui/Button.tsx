@@ -7,6 +7,7 @@ const buttonColors = {
   primary: "rgb(59, 130, 246)",
   secondary: "rgb(107, 114, 128)",
   danger: "rgb(248, 113, 113)",
+  transparent: "transparent",
 };
 
 const buttonRadius = {
@@ -27,7 +28,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   radius?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
   height?: string;
   width?: string;
-  color?: "primary" | "secondary" | "danger";
+  color?: "primary" | "secondary" | "danger" | "transparent";
   isLoading?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -59,9 +60,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const buttonStyles = {
       height: `${height}rem`,
       width: `${width}rem`,
-      backgroundColor: props.disabled
-        ? "gray"
-        :  buttonColors[color],
+      backgroundColor: props.disabled ? "gray" : buttonColors[color],
       borderRadius: buttonRadius[radius],
     };
 
@@ -69,20 +68,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         type={props.type ?? "button"}
         style={buttonStyles}
-        className={`relative overflow-hidden whitespace-nowrap items-center justify-center px-3 py-2 outline-none border-0 shadow-md cursor-pointer select-none hover:brightness-125 active:brightness-150 active:scale-95 transition-filter duration-300 ease-in-out font-semibold text-white disabled:text-gray-300 disabled:shadow-sm disabled:cursor-default disabled:pointer-events-none text-${size} ${className}`}
+        className={`relative overflow-hidden whitespace-nowrap items-center justify-center px-3 py-2 outline-none border-0 ${
+          color === "transparent" ? "shadow-none" : "shadow-md"
+        } cursor-pointer select-none hover:brightness-125 active:brightness-150 active:scale-95 transition-filter duration-300 ease-in-out ${
+          color === "transparent"
+            ? "text-gray-900 dark:text-white"
+            : "text-white"
+        } disabled:text-gray-300 disabled:shadow-sm disabled:cursor-default disabled:pointer-events-none text-${size} ${className}`}
         onClick={handleButtonClick}
         ref={ref}
         {...props}
       >
         <span className="flex items-center justify-center">
-          {isLoading ? (
-            <LoaderAnimIcon
-              className="bg-transparent block flex-shrink-0 pr-1"
-              style={{ shapeRendering: "auto" }}
-            />
-          ) : (
-            <></>
-          )}
+          {isLoading ? <LoaderAnimIcon className="pr-0.5" /> : <></>}
           {children}
         </span>
       </button>

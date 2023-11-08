@@ -34,6 +34,9 @@ a {
   .menu-item-selected {
     @apply bg-gray-400 dark:bg-gray-900 text-white;
   }
+  .auth-card {
+    @apply rounded-2xl flex p-6 flex-col space-y-5 bg-gradient-to-br from-white to-slate-300/[0.2] dark:from-slate-800 dark:to-slate-800/[0.2] border border-transparent hover:border-slate-300 dark:hover:border-slate-700 sm:max-w-xl sm:mx-auto;
+  }
 }
 
 /* top loading bar */
@@ -53,7 +56,6 @@ a {
     transform: translateX(100%);
   }
 } */
-
 
 /* buttons animation */
 /* .ripple {
