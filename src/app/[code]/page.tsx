@@ -52,8 +52,14 @@ export default function RedirectingPage({ params }: { params: Params }) {
             <Button color="primary" onClick={() => router.back()}>
               Go Back
             </Button>
-            <Button color="transparent" onClick={() => router.push("/")}>
-              Go to Home <span aria-hidden="true">&nbsp;&rarr;</span>
+            <Button className="group" color="transparent" onClick={() => router.push("/")}>
+              Go to Home
+              <span
+                aria-hidden="true"
+                className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none"
+              >
+                &nbsp;-&gt;
+              </span>
             </Button>
           </div>
         </div>
