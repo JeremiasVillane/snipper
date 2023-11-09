@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MenuIcon, ThemeToggle, UserMenu, XMarkIcon } from ".";
+import { MenuIcon, ThemeToggle, UserMenu, XMarkIcon } from "..";
 
 export default function MainNavbar() {
   const { data: session } = useSession();

@@ -4,7 +4,7 @@ import { deleteLink } from "@/server-actions";
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import { Fragment, useRef } from "react";
-import { Button, WarningIcon } from ".";
+import { Button, WarningIcon } from "..";
 
 export default function DeleteLinkModal({
   showModal,

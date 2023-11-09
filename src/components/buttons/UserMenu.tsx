@@ -7,7 +7,7 @@ import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
-import { Button } from ".";
+import { Button } from "..";
 
 export default function UserMenu({
   session,

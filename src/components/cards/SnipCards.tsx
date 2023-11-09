@@ -15,7 +15,7 @@ import {
   DeleteLinkModal,
   Redirector,
   ShareIcon,
-} from ".";
+} from "..";
 
 export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
   const router = useRouter();

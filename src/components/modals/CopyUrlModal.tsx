@@ -3,7 +3,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { Button, CopyIcon } from ".";
+import { Button, CopyIcon } from "..";
 
 const host = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -34,7 +34,7 @@ export default function CopyUrlModal({
     setShowModal(false);
     setIsCopy(false);
     path && router.push(path);
-    router.refresh();
+    path && router.refresh();
   };
 
   return (

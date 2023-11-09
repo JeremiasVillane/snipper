@@ -4,7 +4,7 @@ import { useUrlValidation } from "@/hooks";
 import { createLink } from "@/server-actions";
 import { Card, CardBody, Input } from "@nextui-org/react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Button, CopyUrlModal } from ".";
+import { Button, CopyUrlModal } from "..";
 
 export default function SnipForm({
   userEmail,
