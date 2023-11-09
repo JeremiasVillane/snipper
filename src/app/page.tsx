@@ -36,7 +36,7 @@ export default function Home() {
         Snipper
       </h1>
       <p className="text-2xl text-center mt-2 text-neutral-700 dark:text-neutral-300 relative z-20">
-        A simple URL shortnener
+        A simple URL shortener
       </p>
     </main>
   );
