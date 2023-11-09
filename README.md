@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org) project implementing [TypeScript](https://www.typescriptlang.org), [NextAuth](https://next-auth.js.org), [Next-Themes](https://www.npmjs.com/package/next-themes), [NextUI](https://nextui.org), [HeadlessUI](https://headlessui.com), [Framer Motion](https://www.framer.com/motion), [Prisma](https://www.prisma.io), [PostgreSQL](https://www.postgresql.org) and [Tailwind CSS](https://tailwindcss.com).
 
-<div style="text-align: center;">
+<div align="center">
 <img alt="Snipper" src="./public/snipper.svg" width="107" />
 
 # Snipper: A simple URL shortener/tracker.
@@ -62,7 +62,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Screenshots
 
 <details>
-<summary>Mostrar</summary>
+<summary>Show</summary>
 
 ### Landing
 
