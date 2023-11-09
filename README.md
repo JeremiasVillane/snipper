@@ -1,61 +1,99 @@
-This is a [Next.js](https://nextjs.org/) project implementing [TypeScript](https://www.typescriptlang.org/), [NextAuth](https://next-auth.js.org/), [Next-Themes](https://www.npmjs.com/package/next-themes), [NextUI](https://nextui.org/), [Framer Motion](https://www.framer.com/motion/), [Prisma](https://www.prisma.io/), [PostgreSQL](https://www.postgresql.org/) and [Tailwind CSS](https://tailwindcss.com/).
+This is a [Next.js](https://nextjs.org) project implementing [TypeScript](https://www.typescriptlang.org), [NextAuth](https://next-auth.js.org), [Next-Themes](https://www.npmjs.com/package/next-themes), [NextUI](https://nextui.org), [HeadlessUI](https://headlessui.com), [Framer Motion](https://www.framer.com/motion), [Prisma](https://www.prisma.io), [PostgreSQL](https://www.postgresql.org) and [Tailwind CSS](https://tailwindcss.com).
 
-<img alt="Snipper" src="./public/snipper.png" width="107" />
+<div style="text-align: center;">
+<img alt="Snipper" src="./public/snipper.svg" width="107" />
 
-# Snipper
-A simple URL shortener/tracker. It provides you with a shorten url and let you know how many clicks it received.
+# Snipper: A simple URL shortener/tracker.
 
-## Screenshots
+</div>
 
-### Landing
-![screen01](./public/screen01.png)
+## Features:
 
-### Form to create a new Link
-![screen02](./public/screen02.png)
+- Generate uniques links
+- Track how many times a link has been clicked
+- Redirection screen
+- UI created with TailwindCSS and NextUI
+- Full responsivity and mobile UI
+- Light / Dark mode using next-themes
+- ORM using Prisma
+- PostgreSQL database using Vercel Storage
+- Authentication with next-auth
+- This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Google Fonts.
 
-### Modal to copy the new link
-![screen03](./public/screen03.png)
+### Prerequisites
 
-### My Links section
-![screen04](./public/screen04.png)
+**Node version 20.x.x**
 
-### Light Theme
-![screen05](./public/screen05.png)
+### Setup .env file
 
-### Profile section
-![screen05](./public/screen06.png)
+```js
+POSTGRES_PRISMA_URL =
+  "postgresql://username:password@host:port/database?schema=public";
+POSTGRES_URL_NON_POOLING =
+  "postgresql://username:password@host:port/database?schema=public";
+NEXT_PUBLIC_APP_URL = "https://www.your-deploy-url.com";
 
-## Getting Started
+NEXTAUTH_SECRET = "secretkey";
+NEXTAUTH_URL = "https://www.your-deploy-url.com";
 
-First, run the development server:
+// Visit: https://console.cloud.google.com/apis/credentials
+GOOGLE_CLIENT_ID = "your-google-client-id";
+GOOGLE_CLIENT_SECRET = "your-google-client-secret";
+```
 
-```bash
+### Setup Prisma
+
+Add PostgreSQL Database (I used Vercel Storage)
+
+```shell
+npx prisma generate
+npx prisma db push
+
+```
+
+### Start the app
+
+```shell
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Screenshots
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<details>
+<summary>Mostrar</summary>
 
-## Learn More
+### Landing
 
-To learn more about Next.js, take a look at the following resources:
+![screen01](./public/screen01.jpg)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Form to create a new Link
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+![screen02](./public/screen02.jpg)
 
-## Deploy on Vercel
+### Modal to copy the new link
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![screen03](./public/screen03.jpg)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### My Links section
+
+![screen04](./public/screen04.jpg)
+
+### Light Theme
+
+![screen05](./public/screen05.jpg)
+
+### Profile section
+
+![screen06](./public/screen06.jpg)
+
+### About section (mobile)
+
+![screen07](./public/screen07.jpg)
+
+</details>
+
+## Contact me
+
+- [LinkedIn](https://snppr.vercel.app/2Vt7W2xMe)

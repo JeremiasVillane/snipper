@@ -52,6 +52,7 @@ export default function SnipForm({
         setShowModal(true);
         setNewCode(data.urlCode);
         setError(null);
+        setInputUrl("");
       } else {
         setError(error?.message);
       }
