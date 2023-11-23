@@ -12,7 +12,7 @@ export default function SignInForm() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setTimeout(() => setMounted(true), 1000);
   }, []);
 
   if (session && session.user) {
