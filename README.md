@@ -1,11 +1,19 @@
-This is a [Next.js](https://nextjs.org) project implementing [TypeScript](https://www.typescriptlang.org), [NextAuth](https://next-auth.js.org), [Next-Themes](https://www.npmjs.com/package/next-themes), [NextUI](https://nextui.org), [HeadlessUI](https://headlessui.com), [Framer Motion](https://www.framer.com/motion), [Prisma](https://www.prisma.io), [PostgreSQL](https://www.postgresql.org) and [Tailwind CSS](https://tailwindcss.com).
-
 <div align="center">
 <img alt="Snipper" src="./public/snipper.svg" width="107" />
 
 # Snipper: A simple URL shortener/tracker.
 
+![Version](https://img.shields.io/github/package-json/v/jeremiasvillane/snipper.svg)
+[![License](https://badgen.net/github/license/jeremiasvillane/snipper)](https://github.com/jeremiasvillane/snipper/blob/main/LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper?ref=badge_shield&issueType=license)
+[![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+![Last commit](https://badgen.net/github/last-commit/jeremiasvillane/snipper)
+
 </div>
+
+---
+
+This is a [Next.js](https://nextjs.org) project implementing [TypeScript](https://www.typescriptlang.org), [NextAuth](https://next-auth.js.org), [Next-Themes](https://www.npmjs.com/package/next-themes), [NextUI](https://nextui.org), [HeadlessUI](https://headlessui.com), [Framer Motion](https://www.framer.com/motion), [Prisma](https://www.prisma.io), [PostgreSQL](https://www.postgresql.org) and [Tailwind CSS](https://tailwindcss.com).
 
 ## Features:
 
@@ -93,6 +101,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ![screen07](./public/screen07.jpg)
 
 </details>
+
+## License
+
+Distributed under the [**MIT License**](LICENSE).
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper?ref=badge_large&issueType=license)
 
 ## Contact me
 
