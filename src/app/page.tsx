@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import Image from "next/image";
-import SnipperLogo from "../../public/snipper.svg";
 import { twMerge } from "tailwind-merge";
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ export default function Home() {
         style={{ backgroundImage: "url(/bg.png)", opacity: "0.5" }}
       />
       <Image
-        src={SnipperLogo}
+        src="/snipper.svg"
         alt="Snipper"
         width={99}
         height={99}

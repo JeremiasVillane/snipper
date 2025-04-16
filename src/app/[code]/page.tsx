@@ -4,7 +4,6 @@ import { getOriginalUrl } from "@/server-actions";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import SnipperLogo from "../../public/snipper.svg";
 import { Button, LoaderAnimIcon } from "@/components";
 
 interface Params {
@@ -36,7 +35,7 @@ export default function RedirectingPage({ params }: { params: Params }) {
   return (
     <div className="w-screen h-screen fixed inset-0 flex flex-col items-center justify-center z-[333] bg-slate-200 dark:bg-[#0f172a]">
       <Image
-        src={SnipperLogo}
+        src="/snipper.svg"
         alt="Snipper"
         width={111}
         height={111}
