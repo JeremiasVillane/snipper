@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { getOriginalUrl } from "@/server-actions";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
@@ -13,7 +14,7 @@ interface RedirectorProps {
 export default function Redirector({
   children,
   code,
-}: RedirectorProps): JSX.Element {
+}: RedirectorProps): React.JSX.Element {
   const router = useRouter();
 
   const redirectToUrl = async (code: string) => {

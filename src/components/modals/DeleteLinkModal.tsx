@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { deleteLink } from "@/server-actions";
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
@@ -14,7 +15,7 @@ export default function DeleteLinkModal({
   showModal: boolean;
   setShowModal: any;
   code: string;
-}): JSX.Element {
+}): React.JSX.Element {
   const router = useRouter();
   const cancelButtonRef = useRef(null);
 

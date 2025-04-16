@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { classNames } from "@/libs";
 import { Menu, Transition } from "@headlessui/react";
 import { Session } from "next-auth";
@@ -15,7 +16,7 @@ export default function UserMenu({
 }: {
   session: Session;
   currentPath: string;
-}): JSX.Element {
+}): React.JSX.Element {
   if (session && session.user) {
     return (
       <Menu as="div" className="relative ml-3">

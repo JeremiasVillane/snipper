@@ -1,8 +1,9 @@
 "use client";
 
+import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/navigation";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { Button, CopyIcon } from "..";
 
 const host = process.env.NEXT_PUBLIC_APP_URL;
@@ -15,7 +16,7 @@ export default function CopyUrlModal({
   showModal: boolean;
   setShowModal: any;
   code: string;
-}): JSX.Element {
+}): React.JSX.Element {
   const router = useRouter();
   const [isCopy, setIsCopy] = useState<boolean>(false);
   let inputRef = useRef<HTMLInputElement>(null);
@@ -54,9 +55,7 @@ export default function CopyUrlModal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div
-            className="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-zinc-900 dark:bg-opacity-75 transition-opacity"
-          />
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-zinc-900 dark:bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto select-none">

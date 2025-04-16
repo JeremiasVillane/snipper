@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useUrlValidation } from "@/hooks";
 import { createLink } from "@/server-actions";
 import { Card, CardBody, Input } from "@nextui-org/react";
@@ -10,7 +11,7 @@ export default function SnipForm({
   userEmail,
 }: {
   userEmail: string;
-}): JSX.Element {
+}): React.JSX.Element {
   const [error, setError] = useState<string | null>();
   const [inputUrl, setInputUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);

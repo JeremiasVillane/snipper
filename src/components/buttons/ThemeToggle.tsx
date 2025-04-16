@@ -1,11 +1,11 @@
 "use client";
 
-
+import React from "react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { MoonIcon, SunIcon } from "..";
 
-export default function ThemeToggle(): JSX.Element | null {
+export default function ThemeToggle(): React.JSX.Element | null {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 

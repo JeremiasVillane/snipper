@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import resetLinkClicks from "@/server-actions/reset-link-clicks";
 import { Link } from "@nextui-org/react";
 import { Url } from "@prisma/client";
@@ -17,7 +18,11 @@ import {
 } from "..";
 import { AnimatePresence, motion } from "motion/react";
 
-export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
+export default function SnipCards({
+  urls,
+}: {
+  urls: [Url];
+}): React.JSX.Element {
   const router = useRouter();
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [showCopyModal, setShowCopyModal] = useState(false);
