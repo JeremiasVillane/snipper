@@ -1,60 +1,51 @@
-"use client";
-
+import { Button } from "@/components";
 import { getOriginalUrl } from "@/server-actions";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { Button, LoaderAnimIcon } from "@/components";
+import { redirect } from "next/navigation";
 
-interface Params {
-  code: string;
+interface RedirectingPageParams {
+  params: Promise<{ code: string }>;
 }
 
-export default function RedirectingPage({ params }: { params: Params }) {
-  const [notFound, setNotFound] = useState<boolean>(false);
-  const router = useRouter();
-  const { code } = params;
-
-  const useEffectRan = useRef(false);
-
-  useEffect(() => {
-    if (useEffectRan.current === false) {
-      const redirectToUrl = async (code: string) => {
-        const url = await getOriginalUrl(code);
-        !url ? setNotFound(true) : router.push(url);
-      };
-
-      redirectToUrl(code);
-
-      useEffectRan.current = true;
-    }
-  }, [code, router]);
+export default async function RedirectingPage({
+  params,
+}: RedirectingPageParams) {
+  const { code } = await params;
 
   if (typeof code !== "string") return null;
 
-  return (
-    <div className="w-screen h-screen fixed inset-0 flex flex-col items-center justify-center z-[333] bg-slate-200 dark:bg-[#0f172a]">
-      <Image
-        src="/snipper.svg"
-        alt="Snipper"
-        width={111}
-        height={111}
-        className="dark:invert mb-8 ml-8"
-        priority
-      />
-      {notFound ? (
+  const url = await getOriginalUrl(code);
+
+  if (!url) {
+    return (
+      <div className="w-screen h-screen fixed inset-0 flex flex-col items-center justify-center z-[333] bg-slate-200 dark:bg-[#0f172a]">
+        <Image
+          src="/snipper.svg"
+          alt="Snipper"
+          width={111}
+          height={111}
+          className="dark:invert mb-8 ml-8"
+          priority
+        />
         <div className="flex flex-col justify-center items-center">
           <p className="text-3xl mb-4">
             <b>404</b>: Not Found
           </p>
           <div className="flex gap-1">
-            <Button color="primary" onClick={() => router.back()}>
+            <Button
+              color="primary"
+              onClick={() => {
+                window.history.back();
+              }}
+            >
               Go Back
             </Button>
             <Button
               className="group"
               color="transparent"
-              onClick={() => router.push("/")}
+              onClick={() => {
+                window.location.href = "/";
+              }}
             >
               Go to Home
               <span
@@ -66,9 +57,9 @@ export default function RedirectingPage({ params }: { params: Params }) {
             </Button>
           </div>
         </div>
-      ) : (
-        <LoaderAnimIcon color="rgb(59, 130, 246)" height="55" width="55" />
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+
+  redirect(url);
 }
