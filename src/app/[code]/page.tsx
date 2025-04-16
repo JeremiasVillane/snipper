@@ -4,7 +4,7 @@ import { getOriginalUrl } from "@/server-actions";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import SnipperLogo from "public/snipper.svg";
+import SnipperLogo from "../../public/snipper.svg";
 import { Button, LoaderAnimIcon } from "@/components";
 
 interface Params {
@@ -52,7 +52,11 @@ export default function RedirectingPage({ params }: { params: Params }) {
             <Button color="primary" onClick={() => router.back()}>
               Go Back
             </Button>
-            <Button className="group" color="transparent" onClick={() => router.push("/")}>
+            <Button
+              className="group"
+              color="transparent"
+              onClick={() => router.push("/")}
+            >
               Go to Home
               <span
                 aria-hidden="true"

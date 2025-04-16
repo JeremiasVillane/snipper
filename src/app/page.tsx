@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import Image from "next/image";
-import SnipperLogo from "public/snipper.svg";
+import SnipperLogo from "../../public/snipper.svg";
 import { twMerge } from "tailwind-merge";
 
 export const metadata: Metadata = {

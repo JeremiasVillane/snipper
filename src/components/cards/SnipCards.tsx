@@ -3,7 +3,6 @@
 import resetLinkClicks from "@/server-actions/reset-link-clicks";
 import { Link } from "@nextui-org/react";
 import { Url } from "@prisma/client";
-import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,6 +15,7 @@ import {
   Redirector,
   ShareIcon,
 } from "..";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function SnipCards({ urls }: { urls: [Url] }): JSX.Element {
   const router = useRouter();
