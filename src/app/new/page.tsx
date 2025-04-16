@@ -1,7 +1,7 @@
 import { Header, SnipForm } from "@/components";
+import { authOptions } from "@/libs/auth";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export const metadata: Metadata = {
   title: "New Link | Snipper",
