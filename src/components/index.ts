@@ -4,7 +4,6 @@ import SignOutButton from "./buttons/SignOutButton";
 import ThemeToggle from "./buttons/ThemeToggle";
 import UserMenu from "./buttons/UserMenu";
 import ProfileCard from "./cards/ProfileCard";
-import SnipCards from "./cards/SnipCards";
 import SignInForm from "./forms/SignInForm";
 import SnipForm from "./forms/SnipForm";
 import { AnchorIcon } from "./icons/AnchorIcon";
@@ -43,7 +42,6 @@ export {
   ShareIcon,
   SignInForm,
   SignOutButton,
-  SnipCards,
   SnipForm,
   SunIcon,
   ThemeToggle,
