@@ -16,9 +16,9 @@ export default withAuth(
   {
     callbacks: {
       authorized: async ({ req, token }) => {
-        if (req.nextUrl.pathname.startsWith("/admin")) {
-          return token?.role === "admin";
-        }
+        // if (req.nextUrl.pathname.startsWith("/admin")) {
+        //   return token?.role === "admin";
+        // }
         // if (req.nextUrl.pathname.startsWith("/signin")) {
         //   if (token) return false;
         //   else return true;
@@ -30,5 +30,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/admin:path*", "/profile", "/new", "/mylinks"],
+  matcher: ["/admin:path*", "/profile"],
 };
