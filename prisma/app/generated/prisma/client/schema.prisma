@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "app/generated/prisma/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+  id            String      @id @default(uuid())
+  name          String?
+  email         String      @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  accounts      Account[]
+  apiKeys       ApiKey[]
+  sessions      Session[]
+  shortLinks    ShortLink[]
+  tags          Tag[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Account {
+  id                String  @id
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  tokenType         String?
+  scope             String?
+  idToken           String?
+  sessionState      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model ApiKey {
+  id        String    @id
+  userId    String
+  name      String
+  key       String    @unique
+  createdAt DateTime  @default(now())
+  lastUsed  DateTime?
+  expiresAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id           String   @id
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ShortLink {
+  id          String    @id
+  originalUrl String
+  shortCode   String    @unique
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  password    String?
+  userId      String?
+  qrCodeUrl   String?
+  clicks      Int       @default(0)
+
+  user        User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  clickEvents ClickEvent[]
+  linkTags    LinkTag[]
+}
+
+model ClickEvent {
+  id          String   @id
+  shortLinkId String
+  timestamp   DateTime @default(now())
+  ipAddress   String?
+  userAgent   String?
+  referrer    String?
+  country     String?
+  city        String?
+  device      String?
+  browser     String?
+  os          String?
+
+  shortLink ShortLink @relation(fields: [shortLinkId], references: [id], onDelete: Cascade)
+}
+
+model Tag {
+  id     String @id
+  name   String
+  userId String
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  linkTags LinkTag[]
+}
+
+model LinkTag {
+  linkId String
+  tagId  String
+
+  link ShortLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  tag  Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([linkId, tagId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+  @@unique([token])
+}

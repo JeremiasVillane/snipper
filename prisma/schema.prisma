@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "app/generated/prisma/client"
 }
 
 datasource db {
@@ -12,18 +13,19 @@ datasource db {
 }
 
 model User {
-  id            String      @id
+  id            String      @id @default(uuid())
   name          String?
   email         String      @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  createdAt     DateTime    @default(now())
   accounts      Account[]
   apiKeys       ApiKey[]
   sessions      Session[]
   shortLinks    ShortLink[]
   tags          Tag[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model Account {

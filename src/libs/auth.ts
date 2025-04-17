@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
+import { usersRepository } from "@/lib/db/repositories";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
@@ -46,12 +47,11 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (!existingUser) {
-            await prisma.user.create({
-              data: {
-                email: user.email,
-                name: user.name || "",
-                image: (profile as any).picture || "",
-              },
+            await usersRepository.create({
+              id: user.id,
+              email: user.email,
+              name: user.name || "",
+              image: (profile as any).picture || "",
             });
           }
 

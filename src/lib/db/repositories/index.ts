@@ -1,2 +1,3 @@
 export * from "./short-links-repository";
 export * from "./tags-repository";
+export * from "./users-repository";
