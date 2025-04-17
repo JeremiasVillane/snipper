@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/simple-toast";
 import { shortenUrl } from "@/actions";
+import Link from "next/link";
 
 export function ShortenerForm() {
   const [url, setUrl] = useState("");
@@ -102,9 +103,9 @@ export function ShortenerForm() {
             </div>
             <p className="text-sm text-muted-foreground mt-2">
               Want more features?{" "}
-              <a href="/register" className="text-primary hover:underline">
+              <Link href="/register" className="text-primary hover:underline">
                 Create an account
-              </a>{" "}
+              </Link>{" "}
               to customize your links, track analytics, and more.
             </p>
           </div>
