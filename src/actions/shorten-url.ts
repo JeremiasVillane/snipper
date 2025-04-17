@@ -2,8 +2,7 @@
 
 import { shortLinksRepository, tagsRepository } from "@/lib/db/repositories";
 import { generateQRCode, generateShortCode } from "@/lib/helpers";
-import { authOptions } from "@/libs/auth";
-import { getServerSession } from "next-auth";
+import { auth, authOptions } from "@/lib/auth";
 import { z } from "zod";
 
 const shortenUrlSchema = z.object({
@@ -55,7 +54,7 @@ export async function shortenUrl(
     utmContent: utmParams?.content,
   });
 
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const user = session?.user;
 
   let finalUrl = parsedUrl.url;
