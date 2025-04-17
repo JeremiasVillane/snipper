@@ -4,11 +4,7 @@ import { Tag } from "@prisma/client";
 export const tagsRepository = {
   async create(data: Tag) {
     return await prisma.tag.create({
-      data: {
-        id: data.id,
-        name: data.name,
-        userId: data.userId,
-      },
+      data,
     });
   },
 

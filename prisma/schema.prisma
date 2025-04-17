@@ -84,7 +84,7 @@ model ShortLink {
 }
 
 model ClickEvent {
-  id          String   @id
+  id          String   @id @default(uuid())
   shortLinkId String
   timestamp   DateTime @default(now())
   ipAddress   String?
