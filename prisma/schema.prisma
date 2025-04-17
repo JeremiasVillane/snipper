@@ -11,61 +11,117 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+model User {
+  id            String      @id
+  name          String?
+  email         String      @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  createdAt     DateTime    @default(now())
+  accounts      Account[]
+  apiKeys       ApiKey[]
+  sessions      Session[]
+  shortLinks    ShortLink[]
+  tags          Tag[]
+}
+
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  tokenType         String?
   scope             String?
-  id_token          String? @db.Text
-  session_state     String?
+  idToken           String?
+  sessionState      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
+model ApiKey {
+  id        String    @id
+  userId    String
+  name      String
+  key       String    @unique
+  createdAt DateTime  @default(now())
+  lastUsed  DateTime?
+  expiresAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  urls          Url[]     @relation("UserUrls")
-  role          String?
-  accounts      Account[]
-  sessions      Session[]
+model ShortLink {
+  id          String    @id
+  originalUrl String
+  shortCode   String    @unique
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  password    String?
+  userId      String?
+  qrCodeUrl   String?
+  clicks      Int       @default(0)
+
+  user        User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  clickEvents ClickEvent[]
+  linkTags    LinkTag[]
+}
+
+model ClickEvent {
+  id          String   @id
+  shortLinkId String
+  timestamp   DateTime @default(now())
+  ipAddress   String?
+  userAgent   String?
+  referrer    String?
+  country     String?
+  city        String?
+  device      String?
+  browser     String?
+  os          String?
+
+  shortLink ShortLink @relation(fields: [shortLinkId], references: [id], onDelete: Cascade)
+}
+
+model Tag {
+  id     String @id
+  name   String
+  userId String
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  linkTags LinkTag[]
+}
+
+model LinkTag {
+  linkId String
+  tagId  String
+
+  link ShortLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  tag  Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([linkId, tagId])
 }
 
 model VerificationToken {
   identifier String
-  token      String   @unique
+  token      String
   expires    DateTime
 
-  @@unique([identifier, token])
-}
-
-model Url {
-  id          String   @id @default(uuid())
-  originalUrl String
-  shortUrl    String
-  urlCode     String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User?    @relation("UserUrls", fields: [userId], references: [id])
-  userId      String?
-  clicks      Int
+  @@id([identifier, token])
+  @@unique([token])
 }

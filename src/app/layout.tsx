@@ -1,31 +1,41 @@
 import Providers from "@/app/providers";
-import { MainNavbar } from "@/components";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { Toaster } from "@/components/ui/simple-toast";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const nunito = Nunito_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  description: "Developed by Jeremias Villane",
+  title: "Snipper - Modern URL Shortener",
+  description:
+    "Shorten, customize, and track your links with advanced analytics",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <div>
-          <Providers>
-            <MainNavbar />
-            <div className="flex flex-col h-full w-full items-center justify-center">
-              {children}
-            </div>
-          </Providers>
-        </div>
+      <body className={nunito.className}>
+        <Providers>
+          <div className="flex min-h-screen flex-col">
+            <SiteHeader />
+            {children}
+            <SiteFooter />
+          </div>
+          <Toaster
+            defaultDuration={3000}
+            defaultEnterAnimationType="slide-down"
+            defaultPosition="top-right"
+            defaultShowProgressBar
+            defaultShowCloseButton
+          />
+        </Providers>
       </body>
     </html>
   );

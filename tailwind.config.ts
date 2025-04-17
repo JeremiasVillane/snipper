@@ -2,13 +2,8 @@ import type { Config } from "tailwindcss";
 import { nextui } from "@nextui-org/react";
 
 const config: Config = {
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-  ],
-  darkMode: "class",
+  darkMode: ["class"],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     fontFamily: {
       header: ["Raleway", "sans-serif"],
@@ -16,14 +11,199 @@ const config: Config = {
     },
     extend: {
       colors: {
-      "hero-gradient-from": "rgba(25, 64, 174, 0.95)",
-      "hero-gradient-to": "rgba(45, 47, 144, 0.93)",
-      "hero-gradient-dark-from": "rgba(4, 17, 54, 0.95)",
-      "hero-gradient-dark-to": "rgba(21, 22, 69, 0.93)",
+        "hero-gradient-from": "rgba(25, 64, 174, 0.95)",
+        "hero-gradient-to": "rgba(45, 47, 144, 0.93)",
+        "hero-gradient-dark-from": "rgba(4, 17, 54, 0.95)",
+        "hero-gradient-dark-to": "rgba(21, 22, 69, 0.93)",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        chart: {
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "toast-fade-in": {
+          "0%": {
+            opacity: "0",
+          },
+          "100%": {
+            opacity: "1",
+          },
+        },
+        "toast-slide-down": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(-100%)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+        "toast-slide-up": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(100%)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+        "toast-slide-left": {
+          "0%": {
+            opacity: "0",
+            transform: "translateX(100%)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+        },
+        "toast-slide-right": {
+          "0%": {
+            opacity: "0",
+            transform: "translateX(-100%)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+        },
+        "toast-zoom-in": {
+          "0%": {
+            opacity: "0",
+            transform: "scale(0.8)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "scale(1)",
+          },
+        },
+        "toast-fade-out": {
+          from: {
+            opacity: "1",
+          },
+          to: {
+            opacity: "0",
+          },
+        },
+        "toast-slide-out-up": {
+          from: {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+          to: {
+            opacity: "0",
+            transform: "translateY(-100%)",
+          },
+        },
+        "toast-slide-out-down": {
+          from: {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+          to: {
+            opacity: "0",
+            transform: "translateY(100%)",
+          },
+        },
+        "toast-slide-out-right": {
+          from: {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+          to: {
+            opacity: "0",
+            transform: "translateX(100%)",
+          },
+        },
+        "toast-slide-out-left": {
+          from: {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+          to: {
+            opacity: "0",
+            transform: "translateX(-100%)",
+          },
+        },
+        "toast-zoom-out": {
+          from: {
+            opacity: "1",
+            transform: "scale(1)",
+          },
+          to: {
+            opacity: "0",
+            transform: "scale(0.8)",
+          },
+        },
+        "toast-progress-bar-decrease": {
+          from: {
+            width: "100%",
+          },
+          to: {
+            width: "0%",
+          },
+        },
+      },
+      animation: {
+        "toast-fade-in": "toast-fade-in 0.3s ease-out forwards",
+        "toast-slide-down": "toast-slide-down 0.3s ease-out forwards",
+        "toast-slide-up": "toast-slide-up 0.3s ease-out forwards",
+        "toast-slide-left": "toast-slide-left 0.3s ease-out forwards",
+        "toast-slide-right": "toast-slide-right 0.3s ease-out forwards",
+        "toast-zoom-in": "toast-zoom-in 0.3s ease-out forwards",
+        "toast-fade-out": "toast-fade-out 0.3s ease-in forwards",
+        "toast-slide-out-up": "toast-slide-out-up 0.3s ease-in forwards",
+        "toast-slide-out-down": "toast-slide-out-down 0.3s ease-in forwards",
+        "toast-slide-out-right": "toast-slide-out-right 0.3s ease-in forwards",
+        "toast-slide-out-left": "toast-slide-out-left 0.3s ease-in forwards",
+        "toast-zoom-out": "toast-zoom-out 0.3s ease-in forwards",
+        "toast-progress-bar": "toast-progress-bar-decrease linear forwards",
+      },
     },
-    }
-    
   },
-  plugins: [nextui()],
+  plugins: [nextui(), require("tailwindcss-animate")],
 };
 export default config;
