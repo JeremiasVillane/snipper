@@ -5,33 +5,41 @@ import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-slate-50 dark:from-slate-950 dark:to-slate-900">
+    <section className="bg-gradient-to-b from-secondary to-secondary/20 py-20">
       <div className="container px-4 md:px-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-          <div className="flex flex-col justify-center space-y-4">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                Shorten, Share, Track
-              </h1>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                Create short, memorable links in seconds. Track performance with
-                powerful analytics. Take control of your links.
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <Link href="#shorten">
-                <Button size="lg" className="gap-1.5">
-                  Get Started <ArrowRight className="h-4 w-4" />
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center justify-center lg:justify-start">
+          <div className="space-y-4 text-center lg:text-left">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+              Shorten, Share, Track
+            </h1>
+            <p className="max-w-[600px] text-muted-foreground md:text-xl">
+              Create short, memorable links in seconds. Track performance with
+              powerful analytics. Take control of your links.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 py-3 justify-center lg:justify-start">
+              <Link href="/register">
+                <Button
+                  size="lg"
+                  iconRight={<ArrowRight className="ml-1" />}
+                  iconAnimation="translateXRight"
+                  className="w-full sm:w-auto"
+                >
+                  Get Started For Free
                 </Button>
               </Link>
-              <Link href="#features">
-                <Button size="lg" variant="outline">
+              <Link href="/features">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                >
                   Learn More
                 </Button>
               </Link>
             </div>
           </div>
-          <div className="flex items-center justify-center">
+
+          <div className="hidden lg:flex items-center justify-center">
             <div className="relative w-full max-w-[500px] aspect-[4/3] overflow-hidden rounded-xl border bg-background shadow-xl">
               <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-purple-700 opacity-20"></div>
               <div className="relative p-6 flex flex-col h-full justify-center">

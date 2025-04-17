@@ -1,6 +1,6 @@
 import Providers from "@/app/providers";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
+import { SiteHeader } from "@/components/layout/header/site-header";
 import { Toaster } from "@/components/ui/simple-toast";
 import "@/styles/globals.css";
 import type { Metadata } from "next";

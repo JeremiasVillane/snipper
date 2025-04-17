@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 
-function useUrlValidation() {
+export function useUrlValidation() {
   const [url, setUrl] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean>(false);
 
@@ -16,5 +16,3 @@ function useUrlValidation() {
 
   return { isValid, setUrl };
 }
-
-export default useUrlValidation;
