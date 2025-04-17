@@ -1,17 +1,11 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../prisma";
 
 export const shortLinksRepository = {
-  async create(
-    data: Omit<Prisma.ShortLinkCreateInput, "createdAt" | "clicks"> & {
-      createdAt?: Date;
-      clicks?: number;
-    }
-  ) {
+  async create(data: Prisma.ShortLinkCreateInput) {
     const shortLink = await prisma.shortLink.create({
       data: {
         ...data,
-        createdAt: data.createdAt || new Date(),
         clicks: data.clicks || 0,
       },
     });
@@ -56,7 +50,7 @@ export const shortLinksRepository = {
     }));
   },
 
-  async update(id: string, data: Partial<Prisma.ShortLinkUpdateInput>) {
+  async update(id: string, data: Prisma.ShortLinkUpdateInput) {
     return await prisma.shortLink.update({
       where: { id },
       data,
