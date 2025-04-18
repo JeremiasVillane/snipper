@@ -45,7 +45,7 @@ export function LinkTable({ links }: LinkTableProps) {
   const [editingLink, setEditingLink] = useState<ShortLink | null>(null);
   const [deletingLink, setDeletingLink] = useState<ShortLink | null>(null);
   const [showingQrCode, setShowingQrCode] = useState<ShortLink | null>(null);
-console.log("links:", links)
+
   const copyToClipboard = (shortCode: string) => {
     const shortUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${shortCode}`;
     navigator.clipboard.writeText(shortUrl);
@@ -127,8 +127,8 @@ console.log("links:", links)
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {link.tags.map((tag) => (
-                      <Badge key={tag} variant="outline">
-                        {tag}
+                      <Badge key={tag.id} variant="outline">
+                        {tag.name}
                       </Badge>
                     ))}
                     {link.tags.length === 0 && (

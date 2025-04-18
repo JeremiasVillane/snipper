@@ -61,7 +61,7 @@ export default function EditLinkDialog({
       setCustomAlias(link.shortCode);
       setPassword(link.password || "");
       setExpiresAt(link.expiresAt || undefined);
-      setTags(link.tags || []);
+      setTags(link.tags.map((tag) => tag.name) || []);
     }
   }, [link]);
 

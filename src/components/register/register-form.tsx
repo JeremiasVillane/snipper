@@ -56,7 +56,14 @@ export function RegisterForm() {
       router.push("/dashboard");
       router.refresh();
     } catch (error) {
-      toast({ title: "Error", description: error.message, type: "error" });
+      toast({
+        title: "Error",
+        description:
+          !!error && typeof error === "object" && "message" in error
+            ? (error.message as string)
+            : "Internal server error",
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }

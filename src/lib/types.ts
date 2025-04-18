@@ -1,3 +1,5 @@
+import { Tag } from "@prisma/client";
+
 export interface User {
   id: string;
   email: string;
@@ -14,7 +16,7 @@ export interface ShortLink {
   expiresAt: Date | null;
   password: string | null;
   userId: string | null;
-  tags: string[];
+  tags: Tag[];
   qrCodeUrl: string | null;
   clicks: number;
 }
