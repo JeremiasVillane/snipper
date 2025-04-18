@@ -16,22 +16,34 @@ export function SiteFooter() {
               service.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-primary"
+              >
                 <Twitter className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-primary"
+              >
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-primary"
+              >
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary">
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-primary"
+              >
                 <Github className="h-5 w-5" />
                 <span className="sr-only">GitHub</span>
-              </a>
+              </Link>
             </div>
           </div>
 

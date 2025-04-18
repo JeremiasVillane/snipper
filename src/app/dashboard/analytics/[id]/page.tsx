@@ -18,6 +18,7 @@ import {
   DeviceTypes,
   TopCountries,
 } from "@/components/dashboard/analytics";
+import Link from "next/link";
 
 interface AnalyticsPageProps {
   params: Promise<{
@@ -38,9 +39,9 @@ export default async function AnalyticsPage({ params }: AnalyticsPageProps) {
     <main className="flex-1 container py-6">
       <div className="flex items-center gap-2 mb-6">
         <Button variant="ghost" size="icon" asChild>
-          <a href="/dashboard">
+          <Link href="/dashboard">
             <ArrowLeft className="h-4 w-4" />
-          </a>
+          </Link>
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Link Analytics</h1>
@@ -98,14 +99,14 @@ export default async function AnalyticsPage({ params }: AnalyticsPageProps) {
           </CardHeader>
           <CardContent>
             <div className="text-sm font-medium truncate">
-              <a
+              <Link
                 href={shortLink.originalUrl}
                 target="_blank"
                 className="hover:underline"
                 rel="noreferrer"
               >
                 {shortLink.originalUrl}
-              </a>
+              </Link>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               Short URL: {process.env.NEXT_PUBLIC_APP_URL}/{shortLink.shortCode}
