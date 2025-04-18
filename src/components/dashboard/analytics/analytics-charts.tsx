@@ -82,7 +82,7 @@ export function ClicksOverTime({
       date,
       clicks: data[date] || 0,
     }));
-  }, [data]);
+  }, [data, timeRange]);
 
   if (chartData.length === 0) {
     return (
