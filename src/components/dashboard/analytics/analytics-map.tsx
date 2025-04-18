@@ -15,17 +15,17 @@ const GEO_URL =
   "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/refs/heads/master/geojson/ne_110m_admin_0_countries.geojson";
 
 const colorScale = scaleQuantize<string>()
-  .domain([1, 1000])
+  .domain([1, 100])
   .range([
-    "#ffedea",
-    "#ffcec5",
-    "#ffad9f",
-    "#ff8a75",
-    "#ff5533",
-    "#e2492d",
-    "#be3d26",
-    "#9a311f",
-    "#782618",
+    "#F3EAFF",
+    "#DCC5FF",
+    "#C6A0FF",
+    "#AD77FF",
+    "#9634FF",
+    "#8C2DE4",
+    "#7626C1",
+    "#671F9C",
+    "#4E187B",
   ]);
 
 interface CountryMapProps {
@@ -66,13 +66,13 @@ export function CountryMap({ data }: CountryMapProps) {
                     }}
                     style={{
                       default: {
-                        fill: countryData ? colorScale(countryData) : "#EEE",
+                        fill: countryData ? colorScale(countryData) : "#B7CBE1",
                         outline: "none",
                         stroke: "#FFF",
                         strokeWidth: 0.5,
                       },
                       hover: {
-                        fill: countryData ? colorScale(countryData) : "#DDD",
+                        fill: countryData ? colorScale(countryData) : "#9AACC0",
                         outline: "none",
                         stroke: "#FFF",
                         strokeWidth: 0.5,
