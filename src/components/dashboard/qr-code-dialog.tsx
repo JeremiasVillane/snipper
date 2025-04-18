@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import type { ShortLink } from "@/lib/types";
 import { toast } from "../ui/simple-toast";
+import Image from "next/image";
 
 interface QrCodeDialogProps {
   link: ShortLink;
@@ -51,10 +52,12 @@ export default function QrCodeDialog({
         </DialogHeader>
         <div className="flex justify-center py-6">
           {link.qrCodeUrl ? (
-            <img
+            <Image
               src={link.qrCodeUrl || "/placeholder.svg"}
               alt={`QR code for ${link.shortCode}`}
               className="w-48 h-48 border rounded-md"
+              width={12}
+              height={12}
             />
           ) : (
             <div className="w-48 h-48 border rounded-md flex items-center justify-center bg-muted">

@@ -8,14 +8,16 @@ import { type NextRequest, NextResponse } from "next/server";
 // GET /api/v1/links/[id]/analytics - Get analytics for a specific link
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const apiKeyRecord = await validateApiKey(request);
   if (!apiKeyRecord) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const link = await shortLinksRepository.findById(params.id);
+  const { id } = await params;
+
+  const link = await shortLinksRepository.findById(id);
   if (!link) {
     return NextResponse.json({ error: "Link not found" }, { status: 404 });
   }
@@ -24,7 +26,7 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const clickEvents = await clickEventsRepository.findByShortLinkId(params.id);
+  const clickEvents = await clickEventsRepository.findByShortLinkId(id);
 
   const totalClicks = clickEvents.length;
 
