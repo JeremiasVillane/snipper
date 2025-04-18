@@ -78,7 +78,9 @@ export function LinkTable({ links }: LinkTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Short URL</TableHead>
+              <TableHead className="flex items-center ms-2">
+                Short URL
+              </TableHead>
               <TableHead>Original URL</TableHead>
               <TableHead>Created</TableHead>
               <TableHead>Expires</TableHead>
@@ -91,7 +93,7 @@ export function LinkTable({ links }: LinkTableProps) {
             {links.map((link) => (
               <TableRow key={link.id}>
                 <TableCell className="font-medium">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 ms-2">
                     <Link
                       href={`/${link.shortCode}`}
                       target="_blank"

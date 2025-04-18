@@ -17,6 +17,7 @@ import {
 } from "./analytics-charts";
 import { CountryMap } from "./analytics-map";
 import { ClicksTable } from "./clicks-table";
+import { AnalyticsDevices } from "./analytics-devices";
 
 interface AnalyticsTabsProps {
   analytics: ShortLinkAnalyticsData;
@@ -121,7 +122,13 @@ export function AnalyticsTabs({ analytics }: AnalyticsTabsProps) {
                 </h4>
                 <DeviceTypes data={analytics.clicksByDevice} />
               </div>
-            </div>{" "}
+            </div>
+
+            <AnalyticsDevices
+              clicksByBrowser={analytics.clicksByBrowser}
+              clicksByDevice={analytics.clicksByDevice}
+              clicksByOS={analytics.clicksByOS}
+            />
           </CardContent>
         </Card>
       </TabsContent>
