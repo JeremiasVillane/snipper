@@ -34,8 +34,29 @@ export default async function ShortCodePage({ params }: ShortCodePageProps) {
   const xForwardedFor = headersList.get("x-forwarded-for");
   const ip = xForwardedFor ? xForwardedFor.split(",")[0].trim() : "127.0.0.1";
 
-  const country = headersList.get("x-vercel-ip-country") || "Unknown";
-  const city = headersList.get("x-vercel-ip-city") || "Unknown";
+  const rawCountry = headersList.get("x-vercel-ip-country");
+  const rawCity = headersList.get("x-vercel-ip-city");
+
+  let country = "Unknown";
+  let city = "Unknown";
+
+  if (rawCountry) {
+    try {
+      country = decodeURIComponent(rawCountry);
+    } catch (e) {
+      console.error("Failed to decode country header:", rawCountry, e);
+      country = rawCountry;
+    }
+  }
+
+  if (rawCity) {
+    try {
+      city = decodeURIComponent(rawCity);
+    } catch (e) {
+      console.error("Failed to decode city header:", rawCity, e);
+      city = rawCity;
+    }
+  }
 
   const { browser, os, device } = parseUserAgentImproved(userAgent);
 

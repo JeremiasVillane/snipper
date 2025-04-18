@@ -20,7 +20,7 @@ export function parseUserAgentImproved(userAgent: string): ParsedUAInfo {
   return {
     browser,
     os,
-    device: result.device.type ?? "Unknown",
+    device: result.device.type ?? "Desktop",
     browserVersion: result.browser.version,
     osVersion: result.os.version,
     deviceVendor: result.device.vendor,
