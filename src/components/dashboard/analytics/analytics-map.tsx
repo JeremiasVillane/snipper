@@ -10,9 +10,7 @@ import {
   ZoomableGroup,
 } from "react-simple-maps";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-
-const GEO_URL =
-  "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/refs/heads/master/geojson/ne_110m_admin_0_countries.geojson";
+import geography from "@/data/world_countries.json";
 
 const colorScale = scaleQuantize<string>()
   .domain([1, 1000])
@@ -43,14 +41,11 @@ export function CountryMap({ data }: CountryMapProps) {
         className="m-0 lg:-my-16"
       >
         <ZoomableGroup center={[0, 0]} zoom={1}>
-          <Geographies geography={GEO_URL}>
+          <Geographies {...{ geography }}>
             {({ geographies }) =>
               geographies.map((geo) => {
                 const countryName = geo.properties.NAME;
-                const countryCode =
-                  geo.properties.ISO_A2 === "-99"
-                    ? geo.properties.ISO_A2_EH
-                    : geo.properties.ISO_A2;
+                const countryCode = geo.properties.ISO_A2;
                 const countryData = data[countryCode];
 
                 return (
@@ -72,14 +67,14 @@ export function CountryMap({ data }: CountryMapProps) {
                         strokeWidth: 0.5,
                       },
                       hover: {
-                        fill: countryData ? colorScale(countryData) : "#C0BDC9",
+                        fill: countryData ? colorScale(countryData) : "#B0AEB3",
                         outline: "none",
-                        stroke: "#FFF",
+                        stroke: "#A79BB6",
                         strokeWidth: 0.5,
                         cursor: "pointer",
                       },
                       pressed: {
-                        fill: "#AAA",
+                        fill: "#999",
                         outline: "none",
                       },
                     }}
@@ -92,7 +87,7 @@ export function CountryMap({ data }: CountryMapProps) {
           </Geographies>
         </ZoomableGroup>
       </ComposableMap>
-      <ReactTooltip id="country-tooltip" />
+      <ReactTooltip id="country-tooltip" float offset={15} />
     </div>
   );
 }
