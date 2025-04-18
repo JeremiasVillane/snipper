@@ -17,15 +17,15 @@ const GEO_URL =
 const colorScale = scaleQuantize<string>()
   .domain([1, 1000])
   .range([
-    "#C3B6E3",
-    "#B9A8E3",
-    "#AD99E2",
-    "#A38CE1",
-    "#9678E1",
-    "#8967E1",
-    "#7851D8",
-    "#6039C5",
-    "#4316B7",
+    "#B7CBE1",
+    "#A9C5E3",
+    "#9BBCE2",
+    "#89B3E2",
+    "#73A6DF",
+    "#5A98DD",
+    "#4484CB",
+    "#2C6BB0",
+    "#1B4F88",
   ]);
 
 interface CountryMapProps {
@@ -66,13 +66,13 @@ export function CountryMap({ data }: CountryMapProps) {
                     }}
                     style={{
                       default: {
-                        fill: countryData ? colorScale(countryData) : "#B7CBE1",
+                        fill: countryData ? colorScale(countryData) : "#CAC9CC",
                         outline: "none",
                         stroke: "#FFF",
                         strokeWidth: 0.5,
                       },
                       hover: {
-                        fill: countryData ? colorScale(countryData) : "#9AACC0",
+                        fill: countryData ? colorScale(countryData) : "#C0BDC9",
                         outline: "none",
                         stroke: "#FFF",
                         strokeWidth: 0.5,
