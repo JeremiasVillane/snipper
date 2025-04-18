@@ -287,6 +287,10 @@ export function TopCountriesTable({
   data: ShortLinkAnalyticsData["clicksByCountry"];
 }) {
   const tableData = useMemo(() => prepareChartData(data, 10), [data]);
+  const total = useMemo(
+    () => Object.values(data).reduce((sum, value) => sum + value, 0),
+    [data]
+  );
 
   if (tableData.length === 0) {
     return (
@@ -295,11 +299,6 @@ export function TopCountriesTable({
       </div>
     );
   }
-
-  const total = useMemo(
-    () => Object.values(data).reduce((sum, value) => sum + value, 0),
-    [data]
-  );
 
   return (
     <Table>
