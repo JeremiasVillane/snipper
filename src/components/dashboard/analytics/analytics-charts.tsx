@@ -1,6 +1,18 @@
 "use client";
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { getCountryName } from "@/lib/helpers";
+import type { ShortLinkAnalyticsData } from "@/lib/types";
+import { formatNumber } from "@/lib/utils";
 import { useMemo } from "react";
+import ReactCountryFlag from "react-country-flag";
 import {
   Bar,
   BarChart,
@@ -16,16 +28,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { formatNumber } from "@/lib/utils";
-import type { ShortLinkAnalyticsData } from "@/lib/types";
 
 const prepareChartData = (data: Record<string, number>, limit = 5) => {
   return Object.entries(data)
@@ -294,7 +296,10 @@ export function TopCountriesTable({
     );
   }
 
-  const total = Object.values(data).reduce((sum, value) => sum + value, 0);
+  const total = useMemo(
+    () => Object.values(data).reduce((sum, value) => sum + value, 0),
+    [data]
+  );
 
   return (
     <Table>
@@ -306,13 +311,41 @@ export function TopCountriesTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {tableData.map((row) => (
-          <TableRow key={row.name}>
-            <TableCell>{row.name}</TableCell>
-            <TableCell>{formatNumber(row.value)}</TableCell>
-            <TableCell>{((row.value / total) * 100).toFixed(1)}%</TableCell>
-          </TableRow>
-        ))}
+        {tableData.map((row) => {
+          const countryCode = row.name === "Unknown" ? null : row.name;
+          const countryName = !!countryCode
+            ? getCountryName(countryCode)
+            : null;
+
+          return (
+            <TableRow key={row.name}>
+              <TableCell>
+                {!!countryCode ? (
+                  <div className="flex items-end gap-2">
+                    <ReactCountryFlag
+                      countryCode={countryCode}
+                      svg
+                      style={{
+                        width: "1.5em",
+                        height: "1.5em",
+                        lineHeight: "1.5em",
+                      }}
+                      aria-label={countryName!}
+                      title={countryName!}
+                    />
+                    <span>
+                      {countryName} ({countryCode})
+                    </span>
+                  </div>
+                ) : (
+                  row.name
+                )}
+              </TableCell>
+              <TableCell>{formatNumber(row.value)}</TableCell>
+              <TableCell>{((row.value / total) * 100).toFixed(1)}%</TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

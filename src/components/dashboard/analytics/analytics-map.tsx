@@ -59,7 +59,7 @@ export function CountryMap({ data }: CountryMapProps) {
                     geography={geo}
                     onMouseEnter={() => {
                       const clicks = countryData || 0;
-                      setTooltipContent(`${countryName}: ${clicks} clics`);
+                      setTooltipContent(`${countryName}: ${clicks} clicks`);
                     }}
                     onMouseLeave={() => {
                       setTooltipContent("");
