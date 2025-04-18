@@ -4,13 +4,19 @@ import { Button } from "@/components/ui/button";
 import { LogIn, LogOut, User, UserPlus } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import UserMenu from "./user-menu";
 
 interface AuthButtonsProps {
+  avatar: string | null | undefined;
   isMobile?: boolean;
   setOpen: (open: boolean) => void;
 }
 
-export function AuthButtons({ isMobile = false, setOpen }: AuthButtonsProps) {
+export function AuthButtons({
+  avatar,
+  isMobile = false,
+  setOpen,
+}: AuthButtonsProps) {
   const { data: session } = useSession();
   const isAuthenticated = !!session?.user;
 
@@ -69,11 +75,6 @@ export function AuthButtons({ isMobile = false, setOpen }: AuthButtonsProps) {
       </button>
     </>
   ) : (
-    <div className="flex items-center space-x-2">
-      <span className="text-sm font-medium">{session?.user?.name}</span>
-      <Button variant="outline" size="sm" onClick={handleLogout}>
-        <LogOut className="h-4 w-4 mr-1" /> Sign Out
-      </Button>
-    </div>
+    <UserMenu {...{ avatar }} />
   );
 }

@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/simple-toast";
-import { shortenUrl } from "@/actions";
+import { shortenUrl } from "@/lib/actions/short-links";
 import Link from "next/link";
 
 export function ShortenerForm() {

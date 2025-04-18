@@ -1,10 +1,28 @@
 import { prisma } from "@/lib/db/prisma";
 import { usersRepository } from "@/lib/db/repositories";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { getServerSession, NextAuthOptions } from "next-auth";
+import { DefaultSession, getServerSession, NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: {
+      id: string;
+      email: string;
+      emailVerified?: Date;
+      name?: string;
+    } & DefaultSession["user"];
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    emailVerified?: Date;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -13,16 +31,11 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       allowDangerousEmailAccountLinking: true,
-      profile(profile) {
-        return {
-          id: profile.userId,
-          name: `${profile.given_name} ${profile.family_name}`,
-          email: profile.email,
-          image: profile.picture,
-          role: profile.role ? profile.role : "user",
-        };
-      },
     }),
+    // GitHubProvider({
+    //   clientId: process.env.GITHUB_CLIENT_ID!,
+    //   clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    // }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -65,45 +78,14 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.emailVerified = (user as any).emailVerified;
       }
       return token;
     },
     async session({ session, token }) {
       if (session?.user) {
-        session.user.id = token.id;
-        session.user.emailVerified = token.emailVerified;
+        session.user.id = token.id!;
       }
       return session;
-    },
-    async signIn({ user, account, profile }) {
-      try {
-        if (!user.email) return false;
-
-        if (account?.provider !== "credentials") {
-          const existingUser = await prisma.user.findUnique({
-            where: { email: user.email },
-          });
-
-          if (!existingUser) {
-            await usersRepository.create({
-              ...(!!profile && "id" in profile
-                ? { id: profile.id as string }
-                : {}),
-              email: user.email,
-              name: user.name || "",
-              image: (profile as any).picture || "",
-            });
-          }
-
-          return true;
-        }
-
-        return true;
-      } catch (error) {
-        console.error("Error in signIn callback:", error);
-        return false;
-      }
     },
   },
   pages: {
@@ -113,8 +95,9 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+  secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",
 };
 

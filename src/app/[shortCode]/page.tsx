@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { shortLinksRepository } from "@/lib/db/repositories";
 import { parseUserAgentImproved } from "@/lib/helpers";
-import { recordClick } from "@/actions";
+import { recordClick } from "@/lib/actions/short-links";
 import { PasswordProtection } from "@/components/shortCode/password-protection";
 
 interface ShortCodePageProps {
@@ -17,9 +17,7 @@ export default async function ShortCodePage({ params }: ShortCodePageProps) {
 
   const shortLink = await shortLinksRepository.findByShortCode(shortCode);
 
-  if (!shortLink) {
-    notFound();
-  }
+  if (!shortLink) notFound();
 
   if (shortLink.expiresAt && shortLink.expiresAt < new Date()) {
     notFound();
@@ -31,20 +29,25 @@ export default async function ShortCodePage({ params }: ShortCodePageProps) {
 
   const headersList = await headers();
   const userAgent = headersList.get("user-agent") || "";
-  const referer = headersList.get("referer") || "";
-  const ip = headersList.get("x-forwarded-for") || "127.0.0.1";
+  const referrer = headersList.get("referer") || "";
+
+  const xForwardedFor = headersList.get("x-forwarded-for");
+  const ip = xForwardedFor ? xForwardedFor.split(",")[0].trim() : "127.0.0.1";
+
+  const country = headersList.get("x-vercel-ip-country") || "Unknown";
+  const city = headersList.get("x-vercel-ip-city") || "Unknown";
 
   const { browser, os, device } = parseUserAgentImproved(userAgent);
 
   recordClick(shortCode, {
     ipAddress: ip,
     userAgent,
-    referrer: referer,
+    referrer,
     device,
     browser,
     os,
-    country: "Unknown",
-    city: "Unknown",
+    country,
+    city,
   }).catch(console.error);
 
   redirect(shortLink.originalUrl);

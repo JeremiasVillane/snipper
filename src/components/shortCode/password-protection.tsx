@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { verifyPassword } from "@/actions";
+import { verifyPassword } from "@/lib/actions/short-links";
 import { toast } from "@/components/ui/simple-toast";
 
 interface PasswordProtectionProps {

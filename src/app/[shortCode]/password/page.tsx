@@ -14,9 +14,7 @@ export default async function PasswordPage({ params }: PasswordPageProps) {
 
   const shortLink = await shortLinksRepository.findByShortCode(shortCode);
 
-  if (!shortLink) {
-    notFound();
-  }
+  if (!shortLink) notFound();
 
   if (shortLink.expiresAt && shortLink.expiresAt < new Date()) {
     notFound();

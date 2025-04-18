@@ -46,11 +46,11 @@ export default function Home() {
         <div className="mt-12 grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle>What is LinkSnip?</CardTitle>
+              <CardTitle>What is Snipper?</CardTitle>
             </CardHeader>
             <CardContent>
               <p>
-                LinkSnip is a URL shortening service that allows you to create
+                Snipper is a URL shortening service that allows you to create
                 short, memorable links from long URLs. It also provides
                 analytics and tracking features.
               </p>
@@ -62,7 +62,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p>
-                Yes, LinkSnip offers a free tier with basic URL shortening
+                Yes, Snipper offers a free tier with basic URL shortening
                 features. Premium features are available with paid plans.
               </p>
             </CardContent>
