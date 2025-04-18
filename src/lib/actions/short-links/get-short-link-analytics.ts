@@ -5,8 +5,11 @@ import {
   clickEventsRepository,
   shortLinksRepository,
 } from "@/lib/db/repositories";
+import { ShortLinkAnalyticsData } from "@/lib/types";
 
-export async function getShortLinkAnalytics(id: string) {
+export async function getShortLinkAnalytics(
+  id: string
+): Promise<ShortLinkAnalyticsData> {
   const session = await auth();
   if (!session?.user) {
     throw new Error("Authentication required");

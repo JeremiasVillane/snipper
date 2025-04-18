@@ -13,7 +13,7 @@ export default async function ApiKeysPage() {
   const apiKeys = await apiKeysRepository.findByUserId(session.user.id);
 
   return (
-    <main className="flex-1 container py-6">
+    <main className="flex-1 min-h-screen container py-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">API Keys</h1>

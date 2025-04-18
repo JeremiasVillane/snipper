@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatNumber } from "@/lib/utils";
+import type { ShortLinkAnalyticsData } from "@/lib/types";
 
 const prepareChartData = (data: Record<string, number>, limit = 5) => {
   return Object.entries(data)
@@ -44,11 +45,41 @@ const COLORS = [
   "#ff8042",
 ];
 
-export function ClicksOverTime({ data }: { data: Record<string, number> }) {
+export function ClicksOverTime({
+  data,
+  timeRange = 7,
+}: {
+  data: ShortLinkAnalyticsData["clicksByDate"];
+  timeRange?: number;
+}) {
   const chartData = useMemo(() => {
-    return Object.entries(data)
-      .map(([date, clicks]) => ({ date, clicks }))
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const now = new Date();
+    let startDate = new Date();
+
+    if (!!timeRange) {
+      startDate.setDate(now.getDate() - timeRange);
+    } else {
+      // Use the earliest click date
+      const dates = Object.keys(data).sort();
+      if (dates.length > 0) {
+        startDate = new Date(dates[0]);
+      } else {
+        startDate.setDate(now.getDate() - 30);
+      }
+    }
+
+    const dateRange: string[] = [];
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= now) {
+      dateRange.push(currentDate.toISOString().split("T")[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return dateRange.map((date) => ({
+      date,
+      clicks: data[date] || 0,
+    }));
   }, [data]);
 
   if (chartData.length === 0) {
@@ -81,7 +112,11 @@ export function ClicksOverTime({ data }: { data: Record<string, number> }) {
   );
 }
 
-export function TopCountries({ data }: { data: Record<string, number> }) {
+export function TopCountries({
+  data,
+}: {
+  data: ShortLinkAnalyticsData["clicksByCountry"];
+}) {
   const chartData = useMemo(() => prepareChartData(data), [data]);
 
   if (chartData.length === 0) {
@@ -96,12 +131,11 @@ export function TopCountries({ data }: { data: Record<string, number> }) {
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
         data={chartData}
-        layout="vertical"
         margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis type="number" />
-        <YAxis type="category" dataKey="name" />
+        <XAxis type="category" dataKey="name" />
+        <YAxis type="number" />
         <Tooltip />
         <Legend />
         <Bar dataKey="value" fill="#8884d8" name="Clicks" />
@@ -110,7 +144,13 @@ export function TopCountries({ data }: { data: Record<string, number> }) {
   );
 }
 
-export function DeviceTypes({ data }: { data: Record<string, number> }) {
+export function DeviceTypes({
+  data,
+  withLabels = false,
+}: {
+  data: ShortLinkAnalyticsData["clicksByDevice"];
+  withLabels?: boolean;
+}) {
   const chartData = useMemo(() => prepareChartData(data), [data]);
 
   if (chartData.length === 0) {
@@ -122,21 +162,24 @@ export function DeviceTypes({ data }: { data: Record<string, number> }) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={withLabels ? 300 : 250}>
       <PieChart>
         <Pie
           data={chartData}
+          dataKey="value"
+          nameKey="name"
           cx="50%"
           cy="50%"
-          labelLine={false}
-          label={({ name, percent }) =>
-            `${name}: ${(percent * 100).toFixed(0)}%`
-          }
           outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
+          fill="#ffc658"
+          labelLine={false}
+          label={
+            withLabels
+              ? ({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`
+              : true
+          }
         >
-          {chartData.map((entry, index) => (
+          {chartData.map((_, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
@@ -146,7 +189,13 @@ export function DeviceTypes({ data }: { data: Record<string, number> }) {
   );
 }
 
-export function Browsers({ data }: { data: Record<string, number> }) {
+export function Browsers({
+  data,
+  withLabels = false,
+}: {
+  data: ShortLinkAnalyticsData["clicksByBrowser"];
+  withLabels?: boolean;
+}) {
   const chartData = useMemo(() => prepareChartData(data), [data]);
 
   if (chartData.length === 0) {
@@ -158,21 +207,24 @@ export function Browsers({ data }: { data: Record<string, number> }) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={withLabels ? 300 : 250}>
       <PieChart>
         <Pie
           data={chartData}
+          dataKey="value"
+          nameKey="name"
           cx="50%"
           cy="50%"
-          labelLine={false}
-          label={({ name, percent }) =>
-            `${name}: ${(percent * 100).toFixed(0)}%`
-          }
           outerRadius={80}
           fill="#8884d8"
-          dataKey="value"
+          labelLine={false}
+          label={
+            withLabels
+              ? ({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`
+              : true
+          }
         >
-          {chartData.map((entry, index) => (
+          {chartData.map((_, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
@@ -182,7 +234,13 @@ export function Browsers({ data }: { data: Record<string, number> }) {
   );
 }
 
-export function OperatingSystems({ data }: { data: Record<string, number> }) {
+export function OperatingSystems({
+  data,
+  withLabels = false,
+}: {
+  data: ShortLinkAnalyticsData["clicksByOS"];
+  withLabels?: boolean;
+}) {
   const chartData = useMemo(() => prepareChartData(data), [data]);
 
   if (chartData.length === 0) {
@@ -194,21 +252,24 @@ export function OperatingSystems({ data }: { data: Record<string, number> }) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={withLabels ? 300 : 250}>
       <PieChart>
         <Pie
           data={chartData}
+          dataKey="value"
+          nameKey="name"
           cx="50%"
           cy="50%"
-          labelLine={false}
-          label={({ name, percent }) =>
-            `${name}: ${(percent * 100).toFixed(0)}%`
-          }
           outerRadius={80}
-          fill="#8884d8"
-          dataKey="value"
+          fill="#82ca9d"
+          labelLine={false}
+          label={
+            withLabels
+              ? ({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`
+              : true
+          }
         >
-          {chartData.map((entry, index) => (
+          {chartData.map((_, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
@@ -218,15 +279,11 @@ export function OperatingSystems({ data }: { data: Record<string, number> }) {
   );
 }
 
-export function CountryMap({ data }: { data: Record<string, number> }) {
-  return (
-    <div className="flex items-center justify-center h-[300px] bg-muted/20 rounded-md">
-      <p className="text-muted-foreground">Map visualization would go here</p>
-    </div>
-  );
-}
-
-export function TopCountriesTable({ data }: { data: Record<string, number> }) {
+export function TopCountriesTable({
+  data,
+}: {
+  data: ShortLinkAnalyticsData["clicksByCountry"];
+}) {
   const tableData = useMemo(() => prepareChartData(data, 10), [data]);
 
   if (tableData.length === 0) {

@@ -1,2 +1,2 @@
-export * from "./analytics-charts";
-export * from "./clicks-table";
+export * from "./analytics-header";
+export * from "./analytics-tabs";

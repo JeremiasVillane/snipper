@@ -12,7 +12,7 @@ export default async function DashboardPage() {
   const shortLinks = await getUserShortLinks();
 
   return (
-    <main className="flex-1 container py-6">
+    <main className="flex-1 min-h-screen container py-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>

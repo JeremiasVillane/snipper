@@ -1,13 +1,5 @@
 import { Tag } from "@prisma/client";
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  password: string;
-  createdAt: Date;
-}
-
 export interface ShortLink {
   id: string;
   originalUrl: string;
@@ -34,3 +26,36 @@ export interface ClickEvent {
   browser: string | null;
   os: string | null;
 }
+
+export type ShortLinkAnalyticsData = {
+  totalClicks: number;
+  /** date (string) and count (number) */
+  clicksByDate: Record<string, number>;
+  /** country (string) and count (number) */
+  clicksByCountry: Record<string, number>;
+  /** device (string) and count (number) */
+  clicksByDevice: Record<string, number>;
+  /** browser (string) and count (number) */
+  clicksByBrowser: Record<string, number>;
+  /** OS (string) and count (number) */
+  clicksByOS: Record<string, number>;
+  recentClicks: ClickEvent[];
+};
+
+export type ShortLinkFromRepository = {
+  id: string;
+  originalUrl: string;
+  shortCode: string;
+  createdAt: Date;
+  expiresAt: Date | null;
+  password: string | null;
+  userId: string | null;
+  qrCodeUrl: string | null;
+  clicks: number;
+  linkTags: Array<{
+    linkId: string;
+    tagId: string;
+    tag: Tag;
+  }>;
+  tags: Tag[];
+};
