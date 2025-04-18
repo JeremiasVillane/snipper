@@ -47,7 +47,10 @@ export function CountryMap({ data }: CountryMapProps) {
             {({ geographies }) =>
               geographies.map((geo) => {
                 const countryName = geo.properties.NAME;
-                const countryCode = geo.properties.ISO_A2;
+                const countryCode =
+                  geo.properties.ISO_A2 === "-99"
+                    ? geo.properties.ISO_A2_EH
+                    : geo.properties.ISO_A2;
                 const countryData = data[countryCode];
 
                 return (
