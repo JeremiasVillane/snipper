@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../prisma";
+import { ShortLinkFromRepository } from "@/lib/types";
 
 export const shortLinksRepository = {
   async create(data: Prisma.ShortLinkCreateInput) {
@@ -12,7 +13,7 @@ export const shortLinksRepository = {
     return shortLink;
   },
 
-  async findById(id: string) {
+  async findById(id: string): Promise<ShortLinkFromRepository | null> {
     const shortLink = await prisma.shortLink.findUnique({
       where: { id },
       include: {
@@ -24,7 +25,7 @@ export const shortLinksRepository = {
     if (!shortLink) return null;
     return {
       ...shortLink,
-      tags: shortLink.linkTags.map((lt) => lt.tag),
+      tags: shortLink.linkTags.map((lt) => lt.tag.name),
     };
   },
 
@@ -34,7 +35,7 @@ export const shortLinksRepository = {
     });
   },
 
-  async findByUserId(userId: string) {
+  async findByUserId(userId: string): Promise<ShortLinkFromRepository[]> {
     const shortLinks = await prisma.shortLink.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
@@ -46,7 +47,7 @@ export const shortLinksRepository = {
     });
     return shortLinks.map((link) => ({
       ...link,
-      tags: link.linkTags.map((lt) => lt.tag),
+      tags: link.linkTags.map((lt) => lt.tag.name),
     }));
   },
 
@@ -101,7 +102,7 @@ export const shortLinksRepository = {
     });
     return shortLinks.map((link) => ({
       ...link,
-      tags: link.linkTags.map((lt) => lt.tag),
+      tags: link.linkTags.map((lt) => lt.tag.name),
     }));
   },
 };

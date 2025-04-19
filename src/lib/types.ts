@@ -57,5 +57,5 @@ export type ShortLinkFromRepository = {
     tagId: string;
     tag: Tag;
   }>;
-  tags: Tag[];
+  tags: string[];
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React, { useMemo } from "react";
 import { AnalyticsDevicesTable } from "./analytics-devices-table";

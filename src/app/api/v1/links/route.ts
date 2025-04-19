@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     createdAt: link.createdAt,
     expiresAt: link.expiresAt,
     clicks: link.clicks,
-    tags: link.tags ? link.tags.map((t) => t.name) : [],
+    tags: link.tags ?? [],
   }));
 
   return NextResponse.json({ links: formattedLinks });

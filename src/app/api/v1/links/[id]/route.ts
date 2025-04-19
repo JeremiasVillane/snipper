@@ -41,7 +41,7 @@ export async function GET(
     createdAt: link.createdAt,
     expiresAt: link.expiresAt,
     clicks: link.clicks,
-    tags: link.tags ? link.tags.map((t) => t.name) : [],
+    tags: link.tags ?? [],
     qrCodeUrl: link.qrCodeUrl,
   });
 }

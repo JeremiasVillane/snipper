@@ -10,12 +10,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { ShortLink } from "@/lib/types";
-import { toast } from "../ui/simple-toast";
+import type { ShortLinkFromRepository } from "@/lib/types";
 import Image from "next/image";
+import { toast } from "../ui/simple-toast";
 
 interface QrCodeDialogProps {
-  link: ShortLink;
+  link: ShortLinkFromRepository;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -72,8 +72,11 @@ export default function QrCodeDialog({
             Close
           </Button>
           {link.qrCodeUrl && (
-            <Button onClick={handleDownload}>
-              <Download className="mr-2 h-4 w-4" />
+            <Button
+              onClick={handleDownload}
+              iconLeft={<Download />}
+              iconAnimation="translateYDown"
+            >
               Download
             </Button>
           )}

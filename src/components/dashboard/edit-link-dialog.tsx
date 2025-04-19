@@ -2,10 +2,9 @@
 
 import type React from "react";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { CalendarIcon, Loader2, Tag, X } from "lucide-react";
+import { toast } from "@/components//ui/simple-toast";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -17,21 +16,22 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { updateShortLink } from "@/lib/actions/short-links";
+import type { ShortLinkFromRepository } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import type { ShortLink } from "@/lib/types";
-import { toast } from "@/components//ui/simple-toast";
+import { CalendarIcon, Loader2, Tag, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface EditLinkDialogProps {
   children?: React.ReactNode;
-  link?: ShortLink;
+  link?: ShortLinkFromRepository;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
@@ -61,7 +61,7 @@ export default function EditLinkDialog({
       setCustomAlias(link.shortCode);
       setPassword(link.password || "");
       setExpiresAt(link.expiresAt || undefined);
-      setTags(link.tags.map((tag) => tag.name) || []);
+      setTags(link.tags || []);
     }
   }, [link]);
 

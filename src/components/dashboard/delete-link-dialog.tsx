@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,11 +10,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { deleteShortLink } from "@/lib/actions/short-links";
-import type { ShortLink } from "@/lib/types";
+import type { ShortLinkFromRepository } from "@/lib/types";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "../ui/simple-toast";
 
 interface DeleteLinkDialogProps {
-  link: ShortLink;
+  link: ShortLinkFromRepository;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }

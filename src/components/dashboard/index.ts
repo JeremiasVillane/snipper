@@ -1,2 +1,2 @@
 export * from "./create-link-dialog";
-export * from "./link-table";
+export * from "./link-list";
