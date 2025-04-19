@@ -1,16 +1,17 @@
 "use client";
-import { Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+} from "@/components/ui/credenza";
 import type { ShortLinkFromRepository } from "@/lib/types";
+import { Download } from "lucide-react";
 import Image from "next/image";
 import { toast } from "../ui/simple-toast";
 
@@ -42,15 +43,15 @@ export default function QrCodeDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>QR Code</DialogTitle>
-          <DialogDescription>
+    <Credenza open={open} onOpenChange={onOpenChange}>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>QR Code</CredenzaTitle>
+          <CredenzaDescription>
             Scan this QR code to access your shortened URL
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex justify-center py-6">
+          </CredenzaDescription>
+        </CredenzaHeader>
+        <CredenzaBody className="flex justify-center py-6">
           {link.qrCodeUrl ? (
             <Image
               src={link.qrCodeUrl || "/placeholder.svg"}
@@ -66,8 +67,8 @@ export default function QrCodeDialog({
               </p>
             </div>
           )}
-        </div>
-        <DialogFooter>
+        </CredenzaBody>
+        <CredenzaFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Close
           </Button>
@@ -80,8 +81,8 @@ export default function QrCodeDialog({
               Download
             </Button>
           )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }

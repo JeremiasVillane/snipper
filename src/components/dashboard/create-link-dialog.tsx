@@ -107,7 +107,7 @@ export function CreateLinkDialog({
         content: utmContent,
       };
 
-      const result = await shortenUrl(
+      await shortenUrl(
         url,
         customAlias || undefined,
         expiresAt,

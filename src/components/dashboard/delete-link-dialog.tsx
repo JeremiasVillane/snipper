@@ -2,13 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Credenza,
+  CredenzaBody,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+} from "@/components/ui/credenza";
 import { deleteShortLink } from "@/lib/actions/short-links";
 import type { ShortLinkFromRepository } from "@/lib/types";
 import { Loader2 } from "lucide-react";
@@ -56,22 +57,22 @@ export default function DeleteLinkDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete Link</DialogTitle>
-          <DialogDescription>
+    <Credenza open={open} onOpenChange={onOpenChange}>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>Delete Link</CredenzaTitle>
+          <CredenzaDescription>
             Are you sure you want to delete this link? This action cannot be
             undone.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="py-4">
+          </CredenzaDescription>
+        </CredenzaHeader>
+        <CredenzaBody className="py-4">
           <p className="text-sm font-medium">Short URL: {link.shortCode}</p>
           <p className="text-sm text-muted-foreground mt-1 truncate">
             Original URL: {link.originalUrl}
           </p>
-        </div>
-        <DialogFooter>
+        </CredenzaBody>
+        <CredenzaFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
@@ -89,8 +90,8 @@ export default function DeleteLinkDialog({
               "Delete"
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }
