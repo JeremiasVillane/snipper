@@ -1,5 +1,6 @@
 import { shortLinksRepository } from "@/lib/db/repositories";
 import {
+  buildShortUrl,
   generateQRCode,
   generateShortCode,
   validateApiKey,
@@ -67,9 +68,7 @@ export async function POST(request: NextRequest) {
       shortCode = generateShortCode();
     }
 
-    const qrCodeUrl = await generateQRCode(
-      `${process.env.NEXT_PUBLIC_APP_URL}/${shortCode}`
-    );
+    const qrCodeUrl = await generateQRCode(buildShortUrl(shortCode));
 
     const shortLink = await shortLinksRepository.create({
       id: crypto.randomUUID(),

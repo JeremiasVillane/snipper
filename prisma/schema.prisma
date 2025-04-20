@@ -70,7 +70,7 @@ model Session {
 }
 
 model ShortLink {
-  id          String    @id
+  id          String    @id @default(uuid())
   originalUrl String
   shortCode   String    @unique
   createdAt   DateTime  @default(now())
@@ -102,7 +102,7 @@ model ClickEvent {
 }
 
 model Tag {
-  id     String @id
+  id     String @id @default(uuid())
   name   String
   userId String
 

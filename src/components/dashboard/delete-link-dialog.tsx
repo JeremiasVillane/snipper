@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/credenza";
 import { deleteShortLink } from "@/lib/actions/short-links";
 import type { ShortLinkFromRepository } from "@/lib/types";
-import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 import { toast } from "../ui/simple-toast";
 
 interface DeleteLinkDialogProps {
@@ -66,9 +66,13 @@ export default function DeleteLinkDialog({
             undone.
           </CredenzaDescription>
         </CredenzaHeader>
-        <CredenzaBody className="py-4">
+        <CredenzaBody className="py-4 overflow-x-hidden">
           <p className="text-sm font-medium">Short URL: {link.shortCode}</p>
-          <p className="text-sm text-muted-foreground mt-1 truncate">
+          <p
+            data-tooltip-id="url-tooltip"
+            data-tooltip-content={link.originalUrl}
+            className="text-sm text-muted-foreground mt-1 truncate cursor-default"
+          >
             Original URL: {link.originalUrl}
           </p>
         </CredenzaBody>
@@ -79,18 +83,17 @@ export default function DeleteLinkDialog({
           <Button
             variant="destructive"
             onClick={handleDelete}
+            isLoading={isLoading}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Deleting...
-              </>
-            ) : (
-              "Delete"
-            )}
+            {isLoading ? "Deleting..." : "Delete"}
           </Button>
         </CredenzaFooter>
+        <ReactTooltip
+          id="url-tooltip"
+          offset={15}
+          className="max-w-sm md:max-w-md lg:max-w-xl whitespace-normal break-words"
+        />
       </CredenzaContent>
     </Credenza>
   );

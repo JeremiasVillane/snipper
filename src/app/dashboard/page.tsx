@@ -1,4 +1,4 @@
-import { CreateLinkDialog, LinkList } from "@/components/dashboard";
+import { LinkDialog, LinkList } from "@/components/dashboard";
 import { Button } from "@/components/ui/button";
 import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
@@ -21,7 +21,7 @@ export default async function DashboardPage() {
             Manage and track your shortened links
           </p>
         </div>
-        <CreateLinkDialog>
+        <LinkDialog>
           <Button
             iconLeft={<Plus className="size-4" />}
             iconAnimation="zoomIn"
@@ -32,7 +32,7 @@ export default async function DashboardPage() {
           >
             Create Link
           </Button>
-        </CreateLinkDialog>
+        </LinkDialog>
       </div>
 
       <LinkList links={shortLinks} />

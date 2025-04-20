@@ -1,12 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { shortLinksRepository, tagsRepository } from "@/lib/db/repositories";
-import { generateQRCode } from "@/lib/helpers";
+import { buildShortUrl, generateQRCode } from "@/lib/helpers";
+import { CreateLinkFormData, createLinkSchema } from "@/lib/schemas";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-const customAliasSchema = z
+const shortCodeSchema = z
   .string()
   .min(3, "Custom alias must be at least 3 characters")
   .max(20, "Custom alias cannot exceed 20 characters")
@@ -17,13 +18,10 @@ const customAliasSchema = z
 
 export async function updateShortLink(
   id: string,
-  data: {
-    customAlias?: string;
-    expiresAt?: Date | null;
-    password?: string | null;
-    tags?: string[];
-  }
+  formData: CreateLinkFormData
 ) {
+  const parsedData = await createLinkSchema.parseAsync(formData);
+console.log("formData:", formData)
   const session = await auth();
   if (!session?.user) {
     throw new Error("Authentication required");
@@ -34,12 +32,12 @@ export async function updateShortLink(
     throw new Error("Short link not found");
   }
 
-  if (data.customAlias && data.customAlias !== shortLink.shortCode) {
+  if (formData.shortCode && formData.shortCode !== shortLink.shortCode) {
     try {
-      customAliasSchema.parse(data.customAlias);
+      shortCodeSchema.parse(formData.shortCode);
 
       const existingLink = await shortLinksRepository.findByShortCode(
-        data.customAlias
+        formData.shortCode
       );
       if (existingLink && existingLink.id !== id) {
         throw new Error("This custom alias is already taken");
@@ -52,26 +50,44 @@ export async function updateShortLink(
     }
   }
 
+  let finalUrl = parsedData.originalUrl;
+  if (formData.utmParams) {
+    const urlObj = new URL(finalUrl);
+    if (formData.utmParams.source)
+      urlObj.searchParams.append("utm_source", formData.utmParams.source);
+    if (formData.utmParams.medium)
+      urlObj.searchParams.append("utm_medium", formData.utmParams.medium);
+    if (formData.utmParams.campaign)
+      urlObj.searchParams.append("utm_campaign", formData.utmParams.campaign);
+    if (formData.utmParams.term)
+      urlObj.searchParams.append("utm_term", formData.utmParams.term);
+    if (formData.utmParams.content)
+      urlObj.searchParams.append("utm_content", formData.utmParams.content);
+    finalUrl = urlObj.toString();
+  }
+
   const updatedShortLink = await shortLinksRepository.update(id, {
-    shortCode: data.customAlias || shortLink.shortCode,
+    originalUrl: finalUrl,
+    shortCode: formData.shortCode || shortLink.shortCode,
     expiresAt:
-      data.expiresAt !== undefined ? data.expiresAt : shortLink.expiresAt,
-    password: data.password !== undefined ? data.password : shortLink.password,
+      formData.expiresAt !== undefined
+        ? formData.expiresAt
+        : shortLink.expiresAt,
+    password:
+      formData.password !== undefined ? formData.password : shortLink.password,
   });
 
-  if (data.tags) {
+  if (formData.tags) {
     const tagIds = [];
-    for (const tagName of data.tags) {
+    for (const tagName of formData.tags) {
       const tag = await tagsRepository.findOrCreate(tagName, session.user.id);
       tagIds.push(tag.id);
     }
     await tagsRepository.updateLinkTags(id, tagIds);
   }
 
-  if (data.customAlias && data.customAlias !== shortLink.shortCode) {
-    const qrCodeUrl = await generateQRCode(
-      `${process.env.NEXT_PUBLIC_APP_URL}/${data.customAlias}`
-    );
+  if (formData.shortCode && formData.shortCode !== shortLink.shortCode) {
+    const qrCodeUrl = await generateQRCode(buildShortUrl(formData.shortCode));
     await shortLinksRepository.update(id, { qrCodeUrl });
   }
 

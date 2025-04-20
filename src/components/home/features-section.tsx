@@ -61,7 +61,7 @@ export function FeaturesSection() {
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
           Powerful Features
         </h2>
-        <p className="mt-4 text-muted-foreground">
+        <p className="mt-4 text-muted-foreground text-pretty">
           Everything you need to create, share, and track your links.
         </p>
       </div>

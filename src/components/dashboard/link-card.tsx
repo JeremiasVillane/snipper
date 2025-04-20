@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { buildShortUrl } from "@/lib/helpers";
 import { ShortLinkFromRepository } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
@@ -22,6 +23,7 @@ import {
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 interface LinkCardProps {
   link: ShortLinkFromRepository;
@@ -44,12 +46,18 @@ export function LinkCard({
         <div className="flex justify-between items-start">
           <div className="space-y-1">
             <CardTitle className="text-lg">{link.shortCode}</CardTitle>
-            <CardDescription className="truncate max-w-[250px]">
+            <CardDescription
+              data-tooltip-id="card-url-tooltip"
+              data-tooltip-content={link.originalUrl}
+              className="truncate max-w-[200px] md:max-w-[250px] cursor-default"
+            >
               {link.originalUrl}
             </CardDescription>
           </div>
           <div>
-            <Badge variant="outline">{link.clicks} clicks</Badge>
+            <Badge variant="outline" className="whitespace-nowrap">
+              {link.clicks} clicks
+            </Badge>
           </div>
         </div>
       </CardHeader>
@@ -114,7 +122,9 @@ export function LinkCard({
           <LineChart className="h-4 w-4" /> Stats
         </Link>
         <Link
-          href={`${process.env.NEXT_PUBLIC_APP_URL}/${link.shortCode}`}
+          href={buildShortUrl(link.shortCode)}
+          target="_blank"
+          rel="noopener noreferrer"
           className={cn(
             buttonVariants({ size: "sm", variant: "outline" }),
             "w-24"
@@ -142,6 +152,10 @@ export function LinkCard({
           Delete
         </Button>
       </CardFooter>
+      <ReactTooltip
+        id="card-url-tooltip"
+        className="max-w-sm md:max-w-md lg:max-w-xl whitespace-normal break-words"
+      />
     </Card>
   );
 }

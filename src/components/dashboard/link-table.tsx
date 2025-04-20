@@ -30,6 +30,7 @@ import {
   Trash,
 } from "lucide-react";
 import Link from "next/link";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 interface LinkTableProps {
   links: ShortLinkFromRepository[];
@@ -70,7 +71,8 @@ export function LinkTable({
                   <Link
                     href={`/${link.shortCode}`}
                     target="_blank"
-                    className="text-primary hover:underline"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline whitespace-nowrap"
                   >
                     {link.shortCode}
                   </Link>
@@ -84,15 +86,20 @@ export function LinkTable({
                   </Button>
                 </div>
               </TableCell>
-              <TableCell className="max-w-[200px] truncate">
-                <Link
-                  href={link.originalUrl}
-                  target="_blank"
-                  className="flex items-center gap-1 hover:underline"
-                >
-                  {link.originalUrl}
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </Link>
+              <TableCell className="max-w-[200px]">
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={link.originalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline truncate min-w-0"
+                    data-tooltip-id="table-url-tooltip"
+                    data-tooltip-content={link.originalUrl}
+                  >
+                    {link.originalUrl}
+                  </Link>
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                </div>
               </TableCell>
               <TableCell>{formatDate(link.createdAt)}</TableCell>
               <TableCell>
@@ -154,6 +161,10 @@ export function LinkTable({
           ))}
         </TableBody>
       </Table>
+      <ReactTooltip
+        id="table-url-tooltip"
+        className="max-w-md lg:max-w-xl whitespace-normal break-words"
+      />
     </section>
   );
 }

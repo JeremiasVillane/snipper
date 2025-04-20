@@ -64,8 +64,8 @@ export function AnalyticsHeader({
             <Link
               href={shortLink.originalUrl}
               target="_blank"
+              rel="noopener noreferrer"
               className="hover:underline"
-              rel="noreferrer"
             >
               {shortLink.originalUrl}
             </Link>

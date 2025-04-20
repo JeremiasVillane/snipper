@@ -47,10 +47,10 @@ export type ShortLinkFromRepository = {
   originalUrl: string;
   shortCode: string;
   createdAt: Date;
-  expiresAt: Date | null;
-  password: string | null;
-  userId: string | null;
-  qrCodeUrl: string | null;
+  expiresAt: Date | undefined;
+  password: string | undefined;
+  userId: string | undefined;
+  qrCodeUrl: string | undefined;
   clicks: number;
   linkTags: Array<{
     linkId: string;
@@ -59,24 +59,3 @@ export type ShortLinkFromRepository = {
   }>;
   tags: string[];
 };
-
-export interface UtmParams {
-  source: string;
-  medium: string;
-  campaign: string;
-  term?: string;
-  content?: string;
-}
-
-export interface CreateLinkFormData {
-  originalUrl: string;
-  customAlias?: string;
-  expiresAt?: Date;
-  password?: string;
-  tags?: string[];
-  utmParams?: UtmParams;
-}
-
-export interface EditLinkFormData extends CreateLinkFormData {
-  id: string;
-}

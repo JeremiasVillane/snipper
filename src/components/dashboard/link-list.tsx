@@ -4,7 +4,6 @@ import { ShortLinkFromRepository } from "@/lib/types";
 import { useState } from "react";
 import { toast } from "@/components/ui/simple-toast";
 import { LayoutGridIcon, Link2, TableIcon } from "lucide-react";
-import EditLinkDialog from "./edit-link-dialog";
 import {
   Button,
   LeftInsetButton,
@@ -16,6 +15,8 @@ import { LinkTable } from "./link-table";
 import { LinkCard } from "./link-card";
 import { cn } from "@/lib/utils";
 import { parseAsString, useQueryState } from "nuqs";
+import { LinkDialog } from "./link-dialog";
+import { buildShortUrl } from "@/lib/helpers";
 
 interface LinkListProps {
   links: ShortLinkFromRepository[];
@@ -35,7 +36,7 @@ export function LinkList({ links }: LinkListProps) {
     useState<ShortLinkFromRepository | null>(null);
 
   const copyToClipboard = (shortCode: string) => {
-    const shortUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${shortCode}`;
+    const shortUrl = buildShortUrl(shortCode);
     navigator.clipboard.writeText(shortUrl);
     toast({
       title: "Copied!",
@@ -53,9 +54,9 @@ export function LinkList({ links }: LinkListProps) {
         <p className="text-muted-foreground mt-1 mb-4">
           Create your first shortened link to get started
         </p>
-        <EditLinkDialog>
+        <LinkDialog>
           <Button className="flex md:hidden">Create Link</Button>
-        </EditLinkDialog>
+        </LinkDialog>
       </div>
     );
   }
@@ -117,8 +118,8 @@ export function LinkList({ links }: LinkListProps) {
       </section>
 
       {editingLink && (
-        <EditLinkDialog
-          link={editingLink}
+        <LinkDialog
+          initialData={editingLink}
           open={!!editingLink}
           onOpenChange={() => setEditingLink(null)}
         />

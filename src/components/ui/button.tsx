@@ -226,7 +226,7 @@ const Button = React.forwardRef<
       return (
         <div
           className={cn(
-            "inline-flex items-stretch overflow-hidden rounded-md shadow-sm",
+            "inline-flex items-stretch rounded-md shadow-sm",
             className
           )}
           ref={ref as React.Ref<HTMLDivElement>}
