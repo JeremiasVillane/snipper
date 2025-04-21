@@ -73,7 +73,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p>
-                Free links last for 30 days. Premium users can set custom
+                All users can create links without expiration. Premium users can set custom
                 expiration dates or create permanent links.
               </p>
             </CardContent>

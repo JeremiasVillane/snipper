@@ -1,64 +1,63 @@
 "use client";
 
-import type React from "react";
-
-import { Copy, Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/simple-toast";
-import { shortenUrl } from "@/lib/actions/short-links";
+import { buildShortUrl, generateShortCode } from "@/lib/helpers";
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
+import { CopyToClipboardButton } from "../ui/copy-to-clipboard-button";
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export function ShortenerForm() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isDemoProcessing, setIsDemoProcessing] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setShortUrl(null);
 
     if (!url) {
       toast({
         title: "Error",
-        description: "Please enter a URL",
+        description: "Please enter a URL.",
         type: "error",
       });
       return;
     }
 
     try {
-      setIsLoading(true);
-      const result = await shortenUrl(url);
-      setShortUrl(result.shortUrl);
+      new URL(url);
+    } catch (_) {
       toast({
-        title: "Success!",
-        description: "Your URL has been shortened",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to shorten URL. Please try again.",
+        title: "Invalid URL",
+        description: "Please enter a valid URL.",
         type: "error",
       });
-    } finally {
-      setIsLoading(false);
+      return;
     }
-  };
 
-  const copyToClipboard = () => {
-    if (shortUrl) {
-      navigator.clipboard.writeText(shortUrl);
-      toast({
-        title: "Copied!",
-        description: "Short URL copied to clipboard",
-      });
-    }
+    setIsDemoProcessing(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const demoShortCode = generateShortCode();
+    const demoShortUrl = buildShortUrl(demoShortCode);
+
+    setShortUrl(demoShortUrl);
+    setIsDemoProcessing(false);
+
+    toast({
+      title: "Short URL created!",
+      description: "Register or login to save it.",
+    });
   };
 
   return (
@@ -73,38 +72,70 @@ export function ShortenerForm() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               required
+              aria-describedby="url-helper-text"
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Shortening...
-              </>
-            ) : (
-              "Shorten URL"
-            )}
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={isDemoProcessing}
+            disabled={isDemoProcessing}
+          >
+            {isDemoProcessing ? "Shortening..." : "Shorten URL (Demo)"}
           </Button>
         </form>
 
         {shortUrl && (
-          <div className="mt-4 space-y-2">
+          <div className="mt-6 space-y-3 border-t pt-4">
             <Label htmlFor="short-url">Your short URL</Label>
             <div className="flex items-center gap-2">
               <Input
                 id="short-url"
                 value={shortUrl}
                 readOnly
-                className="font-medium"
+                className="font-medium text-primary"
               />
-              <Button size="icon" variant="outline" onClick={copyToClipboard}>
-                <Copy className="h-4 w-4" />
+              <CopyToClipboardButton
+                title="Copy link"
+                content={shortUrl}
+                className={buttonVariants({ variant: "outline", size: "icon" })}
+              />
+              <Button
+                size="icon"
+                variant="outline"
+                title="Open short link (Demo)"
+                className="text-muted-foreground px-2"
+              >
+                <ExternalLink className="size-4" />
               </Button>
             </div>
-            <p className="text-sm text-muted-foreground mt-2">
-              Want more features?{" "}
-              <Link href="/register" className="text-primary hover:underline">
+            <p
+              id="url-helper-text"
+              className="text-sm text-muted-foreground mt-2"
+            >
+              This is a demo link and has not been saved.{" "}
+              <Link
+                href={`/register?redirect=/dashboard&pendingUrl=${encodeURIComponent(
+                  url
+                )}`}
+                className={cn(
+                  buttonVariants({ variant: "link" }),
+                  "p-0 h-auto"
+                )}
+              >
                 Create an account
+              </Link>{" "}
+              o{" "}
+              <Link
+                href={`/login?redirect=/dashboard&pendingUrl=${encodeURIComponent(
+                  url
+                )}`}
+                className={cn(
+                  buttonVariants({ variant: "link" }),
+                  "p-0 h-auto"
+                )}
+              >
+                sign in
               </Link>{" "}
               to customize your links, track analytics, and more.
             </p>
