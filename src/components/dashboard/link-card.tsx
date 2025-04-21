@@ -14,32 +14,19 @@ import { buildShortUrl } from "@/lib/helpers";
 import { ShortLinkFromRepository } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import {
-  Copy,
-  ExternalLink,
-  LineChart,
-  Pencil,
-  QrCode,
-  Trash2,
-} from "lucide-react";
+import { ExternalLink, LineChart, Pencil, QrCode, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { CopyToClipboardButton } from "../ui/copy-to-clipboard-button";
 
 interface LinkCardProps {
   link: ShortLinkFromRepository;
-  onCopy: (shortCode: string) => void;
   onEdit: (link: ShortLinkFromRepository) => void;
   onDelete: (link: ShortLinkFromRepository) => void;
   onQrCode: (link: ShortLinkFromRepository) => void;
 }
 
-export function LinkCard({
-  link,
-  onCopy,
-  onEdit,
-  onDelete,
-  onQrCode,
-}: LinkCardProps) {
+export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
@@ -94,15 +81,16 @@ export function LinkCard({
       </CardContent>
 
       <CardFooter className="pt-2 flex flex-wrap gap-2">
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => onCopy(link.shortCode)}
-          iconLeft={<Copy />}
-          className="w-24"
+        <CopyToClipboardButton
+          content={buildShortUrl(link.shortCode)}
+          className={cn(
+            buttonVariants({ size: "sm", variant: "outline" }),
+            "w-24 text-foreground [&_svg]:left-5"
+          )}
         >
           Copy
-        </Button>
+        </CopyToClipboardButton>
+
         <Button
           size="sm"
           variant="outline"
@@ -112,6 +100,7 @@ export function LinkCard({
         >
           QR
         </Button>
+
         <Link
           href={`/dashboard/analytics/${link.id}`}
           className={cn(
@@ -121,6 +110,7 @@ export function LinkCard({
         >
           <LineChart className="h-4 w-4" /> Stats
         </Link>
+
         <Link
           href={buildShortUrl(link.shortCode)}
           target="_blank"
@@ -133,6 +123,7 @@ export function LinkCard({
           <ExternalLink className="mr-2 h-4 w-4" />
           Visit
         </Link>
+
         <Button
           size="sm"
           variant="outline"
@@ -142,6 +133,7 @@ export function LinkCard({
         >
           Edit
         </Button>
+
         <Button
           size="sm"
           variant="outline"

@@ -47,10 +47,10 @@ export type ShortLinkFromRepository = {
   originalUrl: string;
   shortCode: string;
   createdAt: Date;
-  expiresAt: Date | undefined;
-  password: string | undefined;
-  userId: string | undefined;
-  qrCodeUrl: string | undefined;
+  expiresAt: Date | null;
+  password: string | null;
+  userId: string | null;
+  qrCodeUrl: string | null;
   clicks: number;
   linkTags: Array<{
     linkId: string;

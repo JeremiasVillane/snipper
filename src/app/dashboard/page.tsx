@@ -26,7 +26,7 @@ export default async function DashboardPage() {
             iconLeft={<Plus className="size-4" />}
             iconAnimation="zoomIn"
             className={cn(
-              "hidden md:flex",
+              "hidden md:flex h-9 md:h-10",
               shortLinks.length > 0 ? "flex" : ""
             )}
           >

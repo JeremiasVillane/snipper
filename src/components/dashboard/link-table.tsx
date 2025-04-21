@@ -18,11 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { buildShortUrl } from "@/lib/helpers";
 import type { ShortLinkFromRepository } from "@/lib/types";
 import { cn, formatDate, formatNumber } from "@/lib/utils";
 import {
   BarChart2,
-  Copy,
   ExternalLink,
   MoreHorizontal,
   Pencil,
@@ -31,10 +31,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { CopyToClipboardButton } from "../ui/copy-to-clipboard-button";
 
 interface LinkTableProps {
   links: ShortLinkFromRepository[];
-  onCopy: (shortCode: string) => void;
   onEdit: (link: ShortLinkFromRepository) => void;
   onDelete: (link: ShortLinkFromRepository) => void;
   onQrCode: (link: ShortLinkFromRepository) => void;
@@ -42,7 +42,6 @@ interface LinkTableProps {
 
 export function LinkTable({
   links,
-  onCopy,
   onEdit,
   onDelete,
   onQrCode,
@@ -64,101 +63,110 @@ export function LinkTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {links.map((link) => (
-            <TableRow key={link.id}>
-              <TableCell className="font-medium">
-                <div className="flex items-center gap-2 ms-2">
-                  <Link
-                    href={`/${link.shortCode}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline whitespace-nowrap"
-                  >
-                    {link.shortCode}
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6"
-                    onClick={() => onCopy(link.shortCode)}
-                  >
-                    <Copy className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              </TableCell>
-              <TableCell className="max-w-[200px]">
-                <div className="flex items-center gap-2">
-                  <Link
-                    href={link.originalUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline truncate min-w-0"
-                    data-tooltip-id="table-url-tooltip"
-                    data-tooltip-content={link.originalUrl}
-                  >
-                    {link.originalUrl}
-                  </Link>
-                  <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                </div>
-              </TableCell>
-              <TableCell>{formatDate(link.createdAt)}</TableCell>
-              <TableCell>
-                {link.expiresAt ? formatDate(link.expiresAt) : "Never"}
-              </TableCell>
-              <TableCell>{formatNumber(link.clicks)}</TableCell>
-              <TableCell>
-                <div className="flex flex-wrap gap-1">
-                  {link.tags.map((tag) => (
-                    <Badge key={tag} variant="outline">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {link.tags.length === 0 && (
-                    <span className="text-muted-foreground text-sm">None</span>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => onCopy(link.shortCode)}>
-                      <Copy className="mr-2 h-4 w-4" />
-                      Copy URL
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onQrCode(link)}>
-                      <QrCode className="mr-2 h-4 w-4" />
-                      QR Code
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href={`/dashboard/analytics/${link.id}`}>
-                        <BarChart2 className="mr-2 h-4 w-4" />
-                        Analytics
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => onEdit(link)}>
-                      <Pencil className="mr-2 h-4 w-4" />
-                      Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => onDelete(link)}
-                      className="text-destructive focus:text-destructive"
+          {links.length > 0 ? (
+            links.map((link) => (
+              <TableRow key={link.id}>
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-0.5 ms-2">
+                    <Link
+                      href={`/${link.shortCode}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline whitespace-nowrap"
                     >
-                      <Trash className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                      {link.shortCode}
+                    </Link>
+                    <CopyToClipboardButton
+                      content={buildShortUrl(link.shortCode)}
+                    />
+                  </div>
+                </TableCell>
+                <TableCell className="max-w-[200px]">
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={link.originalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline truncate min-w-0"
+                      data-tooltip-id="table-url-tooltip"
+                      data-tooltip-content={link.originalUrl}
+                    >
+                      {link.originalUrl}
+                    </Link>
+                    <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                  </div>
+                </TableCell>
+                <TableCell>{formatDate(link.createdAt)}</TableCell>
+                <TableCell>
+                  {link.expiresAt ? formatDate(link.expiresAt) : "Never"}
+                </TableCell>
+                <TableCell>{formatNumber(link.clicks)}</TableCell>
+                <TableCell>
+                  <div className="flex flex-wrap gap-1">
+                    {link.tags.map((tag) => (
+                      <Badge key={tag} variant="outline">
+                        {tag}
+                      </Badge>
+                    ))}
+                    {link.tags.length === 0 && (
+                      <span className="text-muted-foreground text-sm">
+                        None
+                      </span>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <CopyToClipboardButton
+                          content={buildShortUrl(link.shortCode)}
+                          className="[&_svg]:size-4 [&_svg]:left-2.5 text-sm gap-3 h-8 py-2 px-2.5 text-foreground hover:text-background"
+                        >
+                          Copy URL
+                        </CopyToClipboardButton>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onQrCode(link)}>
+                        <QrCode className="mr-2 h-4 w-4" />
+                        QR Code
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href={`/dashboard/analytics/${link.id}`}>
+                          <BarChart2 className="mr-2 h-4 w-4" />
+                          Analytics
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => onEdit(link)}>
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => onDelete(link)}
+                        className="text-destructive focus:text-destructive"
+                      >
+                        <Trash className="mr-2 h-4 w-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={7} className="h-24 text-center">
+                No results.
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
       <ReactTooltip
