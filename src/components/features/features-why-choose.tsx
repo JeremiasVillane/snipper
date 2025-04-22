@@ -24,8 +24,9 @@ const WHY_CHOOSE_ITEMS: WhyChooseItem[] = [
     description: "Manage links your way with custom tags and smart filtering",
   },
   {
-    title: "Enterprise-Grade Security",
-    description: "Protect sensitive links with passwords and expiration dates",
+    title: "Open Source & Transparent",
+    description:
+      "Benefit from community contributions and full transparency.",
   },
 ];
 

@@ -26,7 +26,7 @@ export default async function AnalyticsPage({ params }: AnalyticsPageProps) {
 
   return (
     <main className="flex-1 container min-h-screen py-6">
-      <div className="flex items-center gap-2 mb-6">
+      <div className="flex items-start gap-2 mb-6">
         <Button variant="ghost" size="icon" asChild>
           <Link href="/dashboard">
             <ArrowLeft className="h-4 w-4" />

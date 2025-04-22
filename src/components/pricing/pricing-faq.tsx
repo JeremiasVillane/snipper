@@ -1,3 +1,43 @@
+import { BlurFade } from "@/components/ui/blur-fade";
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+const faqData: FAQItem[] = [
+  {
+    question: "Can I upgrade or downgrade my plan?",
+    answer:
+      "Yes, you can upgrade or downgrade your plan at any time. Changes take effect at your next billing cycle.",
+  },
+  {
+    question: "Is there a trial period?",
+    answer:
+      "Yes, all paid plans come with a 14-day free trial so you can test all features before committing.",
+  },
+  {
+    question: "What happens when I reach my link limit?",
+    answer:
+      "You'll need to upgrade to a higher plan to create more links, or you can delete existing links to free up space.",
+  },
+  {
+    question: "Do you offer refunds?",
+    answer:
+      "We offer a 30-day money-back guarantee if you're not satisfied with our service.",
+  },
+  {
+    question: "Can I pay annually?",
+    answer:
+      "Yes, annual billing is available with a 20% discount compared to monthly billing.",
+  },
+  {
+    question: "How does the API access work?",
+    answer:
+      "Business plan customers get API keys to programmatically create and manage short links.",
+  },
+];
+
 export function PricingFAQ() {
   return (
     <section className="py-20 bg-muted/50">
@@ -12,59 +52,14 @@ export function PricingFAQ() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:gap-12 max-w-4xl mx-auto">
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">
-              Can I upgrade or downgrade my plan?
-            </h3>
-            <p className="text-muted-foreground">
-              Yes, you can upgrade or downgrade your plan at any time. Changes
-              take effect at your next billing cycle.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">Is there a trial period?</h3>
-            <p className="text-muted-foreground">
-              Yes, all paid plans come with a 14-day free trial so you can test
-              all features before committing.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">
-              What happens when I reach my link limit?
-            </h3>
-            <p className="text-muted-foreground">
-              You'll need to upgrade to a higher plan to create more links, or
-              you can delete existing links to free up space.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">Do you offer refunds?</h3>
-            <p className="text-muted-foreground">
-              We offer a 30-day money-back guarantee if you're not satisfied
-              with our service.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">Can I pay annually?</h3>
-            <p className="text-muted-foreground">
-              Yes, annual billing is available with a 20% discount compared to
-              monthly billing.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">
-              How does the API access work?
-            </h3>
-            <p className="text-muted-foreground">
-              Business plan customers get API keys to programmatically create
-              and manage short links.
-            </p>
-          </div>
+          {faqData.map((item, index) => (
+            <BlurFade key={index} delay={0.25 + index * 0.05} inView>
+              <div key={index} className="space-y-2">
+                <h3 className="text-lg font-medium">{item.question}</h3>
+                <p className="text-muted-foreground">{item.answer}</p>
+              </div>
+            </BlurFade>
+          ))}
         </div>
       </div>
     </section>

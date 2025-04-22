@@ -4,6 +4,7 @@ import {
   HeroSection,
   ShortenerForm,
 } from "@/components/home";
+import { BlurFade } from "@/components/ui/blur-fade";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Metadata } from "next";
 
@@ -16,19 +17,21 @@ export default function Home() {
     <main className="flex-1">
       <HeroSection />
 
-      <section className="container py-12 md:py-24">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-            Shorten Your URL
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Create a short link in seconds. Sign up for more features.
-          </p>
-        </div>
-        <div className="mx-auto mt-8 max-w-2xl">
-          <ShortenerForm />
-        </div>
-      </section>
+      <BlurFade direction="up" delay={0.2}>
+        <section className="container py-12 md:py-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              Shorten Your URL
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Create a short link in seconds. Sign up for more features.
+            </p>
+          </div>
+          <div className="mx-auto mt-8 max-w-2xl">
+            <ShortenerForm />
+          </div>
+        </section>
+      </BlurFade>
 
       <FeaturesSection />
 

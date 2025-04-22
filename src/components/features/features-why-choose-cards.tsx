@@ -1,3 +1,4 @@
+import { BlurFade } from "@/components/ui/blur-fade";
 import { Card } from "@/components/ui/card";
 import {
   Calendar,
@@ -40,14 +41,23 @@ export default function WhyChooseInfoCards() {
   return (
     <div className="grid grid-cols-2 gap-4">
       {INFO_CARDS.map((card, index) => (
-        <Card
-          key={index}
-          className="rounded-lg p-6 flex flex-col items-center text-center space-y-2"
+        <BlurFade
+          key={card.title}
+          delay={0.25 + index * 0.05}
+          duration={1}
+          inView
         >
-          <card.icon className="h-8 w-8 text-primary mb-2" />
-          <h3 className="font-medium">{card.title}</h3>
-          <p className="text-sm text-muted-foreground">{card.description}</p>
-        </Card>
+          <Card
+            key={index}
+            className="rounded-lg p-6 flex flex-col items-center text-center space-y-2 h-full"
+          >
+            <card.icon className="h-8 w-8 text-primary mb-2" />
+            <h3 className="font-medium">{card.title}</h3>
+            <p className="text-sm text-muted-foreground text-pretty">
+              {card.description}
+            </p>
+          </Card>
+        </BlurFade>
       ))}
     </div>
   );

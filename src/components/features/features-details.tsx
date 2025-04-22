@@ -1,3 +1,4 @@
+import { BlurFade } from "@/components/ui/blur-fade";
 import { Card } from "@/components/ui/card";
 import {
   BarChart3,
@@ -92,21 +93,23 @@ export function FeaturesDetails() {
       <div className="container px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {FEATURE_DETAILS.map((feature, index) => (
-            <Card key={index} className="space-y-4 p-6 rounded-lg">
-              <div className="inline-flex items-center justify-center rounded-lg p-2 bg-primary/10">
-                <feature.icon className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
-              <ul className="space-y-2">
-                {feature.points.map((point, pointIndex) => (
-                  <li key={pointIndex} className="flex items-start">
-                    <CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 flex-shrink-0" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
+            <BlurFade key={feature.title} delay={0.25 + index * 0.05} inView>
+              <Card key={index} className="space-y-4 p-6 rounded-lg">
+                <div className="inline-flex items-center justify-center rounded-lg p-2 bg-primary/10">
+                  <feature.icon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold">{feature.title}</h3>
+                <p className="text-muted-foreground">{feature.description}</p>
+                <ul className="space-y-2">
+                  {feature.points.map((point, pointIndex) => (
+                    <li key={pointIndex} className="flex items-start">
+                      <CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 flex-shrink-0" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </BlurFade>
           ))}
         </div>
       </div>

@@ -202,6 +202,39 @@ const config: Config = {
             width: "0%",
           },
         },
+        "card-shine": {
+          "0%": {
+            "background-position": "0% 0%",
+          },
+          "50%": {
+            "background-position": "100% 100%",
+          },
+          to: {
+            "background-position": "0% 0%",
+          },
+        },
+        aurora: {
+          "0%": {
+            backgroundPosition: "0% 50%",
+            transform: "rotate(-5deg) scale(0.9)",
+          },
+          "25%": {
+            backgroundPosition: "50% 100%",
+            transform: "rotate(5deg) scale(1.1)",
+          },
+          "50%": {
+            backgroundPosition: "100% 50%",
+            transform: "rotate(-3deg) scale(0.95)",
+          },
+          "75%": {
+            backgroundPosition: "50% 0%",
+            transform: "rotate(3deg) scale(1.05)",
+          },
+          "100%": {
+            backgroundPosition: "0% 50%",
+            transform: "rotate(-5deg) scale(0.9)",
+          },
+        },
       },
       animation: {
         "toast-fade-in": "toast-fade-in 0.3s ease-out forwards",
@@ -217,6 +250,8 @@ const config: Config = {
         "toast-slide-out-left": "toast-slide-out-left 0.3s ease-in forwards",
         "toast-zoom-out": "toast-zoom-out 0.3s ease-in forwards",
         "toast-progress-bar": "toast-progress-bar-decrease linear forwards",
+        "card-shine": "card-shine 21s infinite linear",
+        aurora: "aurora 8s ease-in-out infinite alternate",
       },
     },
   },

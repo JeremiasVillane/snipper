@@ -2,23 +2,22 @@
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ShineBorder } from "@/components/ui/shine-border";
 import { toast } from "@/components/ui/simple-toast";
 import { buildShortUrl, generateShortCode } from "@/lib/helpers";
-import { useRouter } from "next/navigation";
-import type React from "react";
-import { useState } from "react";
-import { CopyToClipboardButton } from "../ui/copy-to-clipboard-button";
+import { cn } from "@/lib/utils";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import type React from "react";
+import { useState } from "react";
 
 export function ShortenerForm() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState<string | null>(null);
   const [isDemoProcessing, setIsDemoProcessing] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +60,11 @@ export function ShortenerForm() {
   };
 
   return (
-    <Card className="w-full" id="shorten">
+    <Card
+      id="shorten"
+      className="relative w-full overflow-hidden hover:border-border hover:scale-105 transition-all duration-300"
+    >
+      <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

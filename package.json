@@ -29,7 +29,7 @@
     "d3-scale": "^4.0.2",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.488.0",
-    "motion": "^12.6.3",
+    "motion": "^12.7.3",
     "nanoid": "^5.1.5",
     "next": "15.2.4",
     "next-auth": "^4.24.11",

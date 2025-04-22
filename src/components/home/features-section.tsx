@@ -1,3 +1,5 @@
+import { BlurFade } from "@/components/ui/blur-fade";
+import { Card } from "@/components/ui/card";
 import {
   BarChart3,
   CheckCircle2,
@@ -7,7 +9,6 @@ import {
   Shield,
   Zap,
 } from "lucide-react";
-import { Card } from "../ui/card";
 
 interface FeatureItem {
   icon: LucideIcon;
@@ -68,13 +69,15 @@ export function FeaturesSection() {
 
       <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((feature, index) => (
-          <Card key={index} className="space-y-4 p-6">
-            <div className="inline-flex items-center justify-center rounded-lg p-2 bg-primary/10">
-              <feature.icon className="h-6 w-6 text-primary" />
-            </div>
-            <h3 className="text-xl font-bold">{feature.title}</h3>
-            <p className="text-muted-foreground">{feature.description}</p>
-          </Card>
+          <BlurFade key={feature.title} delay={0.25 + index * 0.05} inView>
+            <Card key={index} className="space-y-4 p-6">
+              <div className="inline-flex items-center justify-center rounded-lg p-2 bg-primary/10">
+                <feature.icon className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold">{feature.title}</h3>
+              <p className="text-muted-foreground">{feature.description}</p>
+            </Card>
+          </BlurFade>
         ))}
       </div>
     </section>

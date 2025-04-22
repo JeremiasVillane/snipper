@@ -1,4 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { HyperText } from "@/components/ui/hyper-text";
+import { NumberTicker } from "@/components/ui/number-ticker";
 import { ShortLinkAnalyticsData, ShortLinkFromRepository } from "@/lib/types";
 import { formatDate, formatNumber } from "@/lib/utils";
 import Link from "next/link";
@@ -20,7 +22,7 @@ export function AnalyticsHeader({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {formatNumber(analytics.totalClicks)}
+            <NumberTicker value={Number(formatNumber(analytics.totalClicks))} />
           </div>
           <p className="text-xs text-muted-foreground">
             Since {formatDate(shortLink.createdAt)}
@@ -33,7 +35,7 @@ export function AnalyticsHeader({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {formatDate(shortLink.createdAt)}
+            <HyperText>{formatDate(shortLink.createdAt)}</HyperText>
           </div>
           <p className="text-xs text-muted-foreground">
             {new Date(shortLink.createdAt).toLocaleTimeString()}
@@ -46,7 +48,9 @@ export function AnalyticsHeader({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {shortLink.expiresAt ? formatDate(shortLink.expiresAt) : "Never"}
+            <HyperText>
+              {shortLink.expiresAt ? formatDate(shortLink.expiresAt) : "Never"}
+            </HyperText>
           </div>
           <p className="text-xs text-muted-foreground">
             {shortLink.expiresAt

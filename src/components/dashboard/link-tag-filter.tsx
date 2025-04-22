@@ -93,9 +93,11 @@ export function LinkTagFilter({
           )}
         </CredenzaBody>
         <CredenzaFooter>
-          <Button variant="outline" onClick={clearTags}>
-            Clear All
-          </Button>
+          {availableTags.length > 0 && (
+            <Button variant="outline" onClick={clearTags}>
+              Clear All
+            </Button>
+          )}
           <Button onClick={applyTags}>
             {currentTags.length > 0 ? "Apply" : "Close"}
           </Button>
