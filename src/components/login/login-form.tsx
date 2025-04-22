@@ -1,102 +1,90 @@
 "use client";
 
-import type React from "react";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Github, Loader2 } from "lucide-react";
-import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "../ui/simple-toast";
+import { toast } from "@/components/ui/simple-toast";
+import { loginFormSchema, LoginFormValues } from "@/lib/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export function LoginForm() {
   const router = useRouter();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isGithubLoading, setIsGithubLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-    if (!email || !password) {
-      toast({
-        title: "Error",
-        description: "Please fill in all fields",
-        type: "error",
-      });
-      return;
-    }
-
+  async function onSubmit(values: LoginFormValues) {
     try {
-      setIsLoading(true);
-
       const result = await signIn("credentials", {
-        email,
-        password,
+        email: values.email,
+        password: values.password,
         redirect: false,
       });
 
       if (result?.error) {
         toast({
-          title: "Error",
-          description: "Invalid email or password",
+          title: "Login error",
+          description:
+            result.error === "CredentialsSignin"
+              ? "Invalid email or password."
+              : "An unexpected error occurred.",
           type: "error",
         });
+        form.resetField("password");
         return;
       }
 
-      toast({
-        title: "Success!",
-        description: "You have been logged in",
-      });
-
-      router.push("/dashboard");
-      router.refresh();
+      if (result?.ok && !result?.error) {
+        toast({
+          title: "Success!",
+          description: "You are successfully logged in.",
+          type: "success",
+        });
+        router.push("/dashboard");
+        router.refresh();
+      }
     } catch (error) {
+      console.error("Login error:", error);
       toast({
         title: "Error",
-        description: "Failed to login",
+        description: "Could not log in. Please try again.",
         type: "error",
       });
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }
 
   const handleGoogleSignIn = async () => {
     try {
       setIsGoogleLoading(true);
       await signIn("google", { callbackUrl: "/dashboard" });
     } catch (error) {
+      console.error("Google Sign-In error:", error);
       toast({
         title: "Error",
-        description: "Failed to login with Google",
+        description: "Could not sign in with Google.",
         type: "error",
       });
-    } finally {
       setIsGoogleLoading(false);
-    }
-  };
-
-  const handleGithubSignIn = async () => {
-    try {
-      setIsGithubLoading(true);
-      await signIn("github", { callbackUrl: "/dashboard" });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to login with GitHub",
-        type: "error",
-      });
-    } finally {
-      setIsGithubLoading(false);
     }
   };
 
@@ -106,7 +94,7 @@ export function LoginForm() {
         <Button
           variant="outline"
           onClick={handleGoogleSignIn}
-          disabled={isGoogleLoading}
+          disabled={isGoogleLoading || form.formState.isSubmitting}
           className="w-full"
         >
           {isGoogleLoading ? (
@@ -133,73 +121,75 @@ export function LoginForm() {
           )}
           Sign in with Google
         </Button>
-        <Button
-          variant="outline"
-          onClick={handleGithubSignIn}
-          disabled={isGithubLoading}
+      </div>
+
+      <div className="py-2">
+        <Separator
+          label="Or continue with"
           className="w-full"
-        >
-          {isGithubLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Github className="mr-2 h-4 w-4" />
-          )}
-          Sign in with GitHub
-        </Button>
+          labelClassName="text-muted-foreground text-xs uppercase"
+        />
       </div>
 
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <Separator className="w-full" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="you@example.com"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="m@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex items-center justify-between">
+                  <FormLabel>Password</FormLabel>
+                  <Link
+                    href="/forgot-password"
+                    className="text-sm font-medium text-primary hover:underline"
+                    tabIndex={-1}
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+                <FormControl>
+                  <Input type="password" placeholder="••••••" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
-            <Link
-              href="/forgot-password"
-              className="text-sm text-primary hover:underline"
-            >
-              Forgot password?
-            </Link>
-          </div>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Logging in...
-            </>
-          ) : (
-            "Login"
-          )}
-        </Button>
-      </form>
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={form.formState.isSubmitting || isGoogleLoading}
+          >
+            {form.formState.isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

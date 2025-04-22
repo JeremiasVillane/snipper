@@ -14,6 +14,9 @@ interface SeparatorProps
   /** Optional text to display in the center of the separator. */
   label?: string
 
+  /** Additional className for the label. */
+  labelClassName?: string
+
   /** If true, displays the label inside a "chip" (rounded capsule).
    * @default false */
   chip?: boolean
@@ -43,6 +46,7 @@ const Separator = React.forwardRef<
   (
     {
       className,
+      labelClassName,
       orientation = "horizontal",
       decorative = true,
       variant,
@@ -69,7 +73,8 @@ const Separator = React.forwardRef<
         : "left-1/2 top-0 -translate-x-1/2 -translate-y-1/2",
       chip
         ? "flex h-8 min-w-8 items-center justify-center rounded-full border bg-muted p-1.5 text-center text-xs"
-        : ""
+        : "",
+        labelClassName
     )
 
     if (!isVertical) {
