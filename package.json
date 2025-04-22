@@ -43,6 +43,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^19",
     "react-hook-form": "^7.55.0",
+    "react-page-tracker": "^0.3.1",
     "react-simple-maps": "^3.0.0",
     "react-tooltip": "^5.28.1",
     "recharts": "^2.15.2",

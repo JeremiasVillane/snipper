@@ -1,10 +1,11 @@
 import Providers from "@/app/providers";
-import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/header/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
 import { Toaster } from "@/components/ui/simple-toast";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
+import { PageTracker } from "react-page-tracker";
 
 const nunito = Nunito_Sans({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default function RootLayout({
             defaultShowProgressBar
             defaultShowCloseButton
           />
+          <PageTracker enableStrictModeHandler={false} />
         </Providers>
       </body>
     </html>
