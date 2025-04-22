@@ -40,7 +40,7 @@ const faqData: FAQItem[] = [
 
 export function PricingFAQ() {
   return (
-    <section className="py-20 bg-muted/50">
+    <section id="faq" className="py-20 bg-muted/50">
       <div className="container px-4 md:px-6">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl font-bold tracking-tighter">
