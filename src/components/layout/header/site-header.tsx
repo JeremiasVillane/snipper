@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -11,28 +12,31 @@ import { Link2, Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
-import { Separator } from "../../ui/separator";
 import { AuthButtons, ThemeToggle } from "./modules";
 
-const NAV_LINKS = [
+type DataLink = {
+  href: string;
+  label: string;
+};
+
+const NAV_LINKS: DataLink[] = [
   { href: "/", label: "Home" },
   { href: "/features", label: "Features" },
   { href: "/pricing", label: "Pricing" },
 ];
 
-// const DASHBOARD_LINKS = [
-//   { href: "/dashboard", label: "Dashboard" },
-//   { href: "/dashboard/api-keys", label: "API Keys" },
-//   { href: "/dashboard/settings", label: "Settings" },
-// ];
+const DASHBOARD_LINKS: DataLink[] = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/dashboard/api-keys", label: "API Keys" },
+  { href: "/dashboard/settings", label: "Settings" },
+];
 
 export function SiteHeader() {
   const { data: session } = useSession();
-  const isAuthenticated = !!session?.user;
   const [open, setOpen] = useState(false);
 
-  const renderNavLinks = (isMobile = false) =>
-    NAV_LINKS.map((link) => (
+  const renderNavLinks = (dataLinks: DataLink[], isMobile = false) =>
+    dataLinks.map((link) => (
       <Link
         key={link.href}
         href={link.href}
@@ -47,26 +51,8 @@ export function SiteHeader() {
       </Link>
     ));
 
-  // const dashboardLinks = (isMobile = false) =>
-  //   isAuthenticated
-  //     ? DASHBOARD_LINKS.map((link) => (
-  //         <Link
-  //           key={link.href}
-  //           href={link.href}
-  //           className={
-  //             isMobile
-  //               ? "flex items-center gap-2 p-2 hover:bg-secondary rounded-md"
-  //               : "text-sm font-medium hover:text-primary transition-colors"
-  //           }
-  //           onClick={isMobile ? () => setOpen(false) : undefined}
-  //         >
-  //           {link.label}
-  //         </Link>
-  //       ))
-  //     : null;
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed top-0 w-full h-16 border-b bg-background z-50">
       <div className="container flex justify-between items-center h-16">
         <Link href="/" className="flex items-center space-x-2">
           <Link2 className="h-6 w-6 text-primary" />
@@ -74,10 +60,7 @@ export function SiteHeader() {
         </Link>
 
         <div className="hidden md:flex items-center space-x-6">
-          <nav className="flex items-center space-x-6">
-            {renderNavLinks()}
-            {/* {dashboardLinks()} */}
-          </nav>
+          <nav className="flex items-center space-x-6">{renderNavLinks(NAV_LINKS)}</nav>
 
           <div className="flex items-center space-x-2">
             <AuthButtons avatar={session?.user.image} setOpen={setOpen} />
@@ -95,8 +78,8 @@ export function SiteHeader() {
           </SheetTrigger>
           <SheetContent side="right" className="w-[300px] sm:w-[400px]">
             <nav className="flex flex-col gap-4 mt-8">
-              {renderNavLinks(true)}
-              {/* {dashboardLinks(true)} */}
+              {renderNavLinks(NAV_LINKS,true)}
+              {renderNavLinks(DASHBOARD_LINKS,true)}
 
               <Separator className="my-1" />
 

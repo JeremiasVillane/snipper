@@ -24,11 +24,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={nunito.className}>
         <Providers>
-          <div className="flex min-h-screen flex-col">
-            <SiteHeader />
-            {children}
-            <SiteFooter />
+          <SiteHeader />
+
+          <div className="fixed top-16 bottom-0 left-0 right-0 overflow-y-auto">
+            <div className="min-h-[calc(100vh-4rem)] flex flex-col">
+              {children}
+              <SiteFooter />
+            </div>
           </div>
+
           <Toaster
             defaultDuration={3000}
             defaultEnterAnimationType="slide-down"
