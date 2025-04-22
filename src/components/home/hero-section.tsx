@@ -68,7 +68,7 @@ export function HeroSection() {
               <CardBody className="relative w-full max-w-[500px] aspect-[4/3] overflow-hidden rounded-xl border bg-background shadow-xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-purple-700 opacity-20"></div>
                 <div className="relative p-6 flex flex-col h-full justify-center">
-                  <BlurFade direction="up" delay={0.6} duration={1}>
+                  <BlurFade direction="down" delay={0.6} duration={1}>
                     <div className="bg-white dark:bg-slate-900 rounded-lg p-4 shadow-lg mb-4 transform rotate-[-2deg]">
                       <div className="h-6 w-3/4 bg-slate-200 dark:bg-slate-700 rounded mb-2"></div>
                       <div className="h-10 bg-slate-100 dark:bg-slate-800 rounded flex items-center px-3">
