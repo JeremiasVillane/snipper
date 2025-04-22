@@ -32,6 +32,7 @@ import {
 import Link from "next/link";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { CopyToClipboardButton } from "../ui/copy-to-clipboard-button";
+import { LinkPreview } from "../ui/link-preview";
 
 interface LinkTableProps {
   links: ShortLinkFromRepository[];
@@ -82,17 +83,17 @@ export function LinkTable({
                   </div>
                 </TableCell>
                 <TableCell className="max-w-[200px]">
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={link.originalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                  <div
+                    data-tooltip-id="table-url-tooltip"
+                    data-tooltip-content={link.originalUrl}
+                    className="flex items-center gap-2"
+                  >
+                    <LinkPreview
+                      url={link.originalUrl}
                       className="hover:underline truncate min-w-0"
-                      data-tooltip-id="table-url-tooltip"
-                      data-tooltip-content={link.originalUrl}
                     >
                       {link.originalUrl}
-                    </Link>
+                    </LinkPreview>
                     <ExternalLink className="h-3.5 w-3.5 shrink-0" />
                   </div>
                 </TableCell>
@@ -171,6 +172,9 @@ export function LinkTable({
       </Table>
       <ReactTooltip
         id="table-url-tooltip"
+        place="bottom"
+        offset={15}
+        float
         className="max-w-md lg:max-w-xl whitespace-normal break-words"
       />
     </section>
