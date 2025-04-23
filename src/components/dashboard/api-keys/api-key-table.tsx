@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Copy, Key, MoreHorizontal, Plus, Trash } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
+import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "@/components/ui/simple-toast";
 import {
   Table,
   TableBody,
@@ -21,9 +20,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatDate } from "@/lib/utils";
-import DeleteApiKeyDialog from "./delete-api-key-dialog";
-import { toast } from "@/components/ui/simple-toast";
+import { Copy, Key, MoreHorizontal, Trash } from "lucide-react";
+import { useState } from "react";
 import CreateApiKeyDialog from "./create-api-key-dialog";
+import DeleteApiKeyDialog from "./delete-api-key-dialog";
 
 interface ApiKey {
   id: string;
@@ -67,12 +67,12 @@ export function ApiKeyTable({ apiKeys }: ApiKeyTableProps) {
   }
 
   return (
-    <>
-      <div className="rounded-md border">
+    <div className="space-y-6">
+      <section className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead className="flex items-center ms-2">Name</TableHead>
               <TableHead>Key</TableHead>
               <TableHead>Created</TableHead>
               <TableHead>Last Used</TableHead>
@@ -81,63 +81,71 @@ export function ApiKeyTable({ apiKeys }: ApiKeyTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {apiKeys.map((apiKey) => (
-              <TableRow key={apiKey.id}>
-                <TableCell className="font-medium">{apiKey.name}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono">
-                      {apiKey.key.substring(0, 8)}...
-                      {apiKey.key.substring(apiKey.key.length - 4)}
+            {apiKeys.map((apiKey) => {
+              const isExpired =
+                !!apiKey.expiresAt && new Date() >= apiKey.expiresAt;
+              return (
+                <TableRow
+                  key={apiKey.id}
+                  className={isExpired ? "line-through text-destructive" : ""}
+                >
+                  <TableCell className="font-medium">
+                    <span className="flex items-center ms-2">
+                      {apiKey.name}
                     </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => copyToClipboard(apiKey.key)}
-                    >
-                      <Copy className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                </TableCell>
-                <TableCell>{formatDate(apiKey.createdAt)}</TableCell>
-                <TableCell>
-                  {apiKey.lastUsed ? formatDate(apiKey.lastUsed) : "Never"}
-                </TableCell>
-                <TableCell>
-                  {apiKey.expiresAt ? formatDate(apiKey.expiresAt) : "Never"}
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => copyToClipboard(apiKey.key)}
-                      >
-                        <Copy className="mr-2 h-4 w-4" />
-                        Copy Key
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => setDeletingApiKey(apiKey)}
-                        className="text-destructive focus:text-destructive"
-                      >
-                        <Trash className="mr-2 h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-0.5">
+                      <span className="font-mono">
+                        {apiKey.key.substring(0, 8)}...
+                        {apiKey.key.substring(apiKey.key.length - 4)}
+                      </span>
+                      <CopyToClipboardButton
+                        content={apiKey.key}
+                        disabled={isExpired}
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell>{formatDate(apiKey.createdAt)}</TableCell>
+                  <TableCell>
+                    {apiKey.lastUsed ? formatDate(apiKey.lastUsed) : "Never"}
+                  </TableCell>
+                  <TableCell>
+                    {apiKey.expiresAt ? formatDate(apiKey.expiresAt) : "Never"}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => copyToClipboard(apiKey.key)}
+                          disabled={isExpired}
+                        >
+                          <Copy className="mr-2 h-4 w-4" />
+                          Copy Key
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => setDeletingApiKey(apiKey)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
-      </div>
+      </section>
 
       {deletingApiKey && (
         <DeleteApiKeyDialog
@@ -146,6 +154,6 @@ export function ApiKeyTable({ apiKeys }: ApiKeyTableProps) {
           onOpenChange={() => setDeletingApiKey(null)}
         />
       )}
-    </>
+    </div>
   );
 }

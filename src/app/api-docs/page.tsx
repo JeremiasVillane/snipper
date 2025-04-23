@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default function ApiDocsPage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" asChild>
@@ -349,7 +349,7 @@ createShortLink('https://example.com', {
 import json
 from datetime import datetime, timedelta
 
-API_KEY = 'lsk_your_api_key'
+API_KEY = 'your_api_key'
 API_URL = '${process.env.NEXT_PUBLIC_APP_URL}/api/v1'
 
 # Create a short link

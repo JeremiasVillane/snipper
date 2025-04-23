@@ -18,7 +18,7 @@ export const CopyToClipboardButton = ({
     onCopy: () =>
       toast({
         title: "Copied!",
-        description: "Short URL copied to clipboard",
+        description: "Copied to clipboard",
       }),
   });
 
@@ -34,7 +34,7 @@ export const CopyToClipboardButton = ({
       )}
       onClick={() => copyToClipboard(content)}
       aria-label={
-        isCopied ? "Copied to clipboard" : "Copy command to clipboard"
+        isCopied ? "Copied to clipboard" : "Copy to clipboard"
       }
     >
       <span className="sr-only">{isCopied ? "Copied" : "Copy"}</span>

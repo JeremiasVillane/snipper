@@ -2,6 +2,7 @@ export * from "./delete-short-link";
 export * from "./get-short-link";
 export * from "./get-short-link-analytics";
 export * from "./get-user-short-links";
+export * from "./process-short-link";
 export * from "./record-click";
 export * from "./shorten-url";
 export * from "./update-short-link";

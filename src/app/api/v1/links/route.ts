@@ -1,4 +1,4 @@
-import { shortLinksRepository } from "@/lib/db/repositories";
+import { shortLinksRepository, tagsRepository } from "@/lib/db/repositories";
 import {
   buildShortUrl,
   generateQRCode,
@@ -71,7 +71,6 @@ export async function POST(request: NextRequest) {
     const qrCodeUrl = await generateQRCode(buildShortUrl(shortCode));
 
     const shortLink = await shortLinksRepository.create({
-      id: crypto.randomUUID(),
       originalUrl: validatedData.url,
       shortCode,
       expiresAt: validatedData.expiresAt || null,
@@ -79,6 +78,22 @@ export async function POST(request: NextRequest) {
       user: { connect: { id: apiKeyRecord.userId } },
       qrCodeUrl,
     });
+
+    let createdTags: string[] = [];
+
+    if (validatedData.tags && validatedData.tags.length > 0) {
+      const tagOperationsPromises = validatedData.tags.map(async (tagName) => {
+        const tag = await tagsRepository.findOrCreate(
+          tagName,
+          apiKeyRecord.user.id
+        );
+
+        await tagsRepository.addTagToLink(shortLink.id, tag.id);
+        return tag.name;
+      });
+
+      createdTags = await Promise.all(tagOperationsPromises);
+    }
 
     return NextResponse.json({
       id: shortLink.id,
@@ -88,6 +103,7 @@ export async function POST(request: NextRequest) {
       createdAt: shortLink.createdAt,
       expiresAt: shortLink.expiresAt,
       qrCodeUrl: shortLink.qrCodeUrl,
+      tags: createdTags,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

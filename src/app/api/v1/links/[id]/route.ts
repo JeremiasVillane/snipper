@@ -1,5 +1,5 @@
-import { shortLinksRepository } from "@/lib/db/repositories";
-import { generateQRCode, validateApiKey } from "@/lib/helpers";
+import { shortLinksRepository, tagsRepository } from "@/lib/db/repositories";
+import { buildShortUrl, generateQRCode, validateApiKey } from "@/lib/helpers";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -10,6 +10,7 @@ const updateLinkSchema = z.object({
     .optional()
     .transform((val) => (val ? new Date(val) : null)),
   password: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 // GET /api/v1/links/[id] - Get a specific link
@@ -97,19 +98,33 @@ export async function PATCH(
       validatedData.customAlias !== link.shortCode
     ) {
       const qrCodeUrl = await generateQRCode(
-        `${process.env.NEXT_PUBLIC_APP_URL}/${validatedData.customAlias}`
+        buildShortUrl(validatedData.customAlias)
       );
       await shortLinksRepository.update(id, { qrCodeUrl });
+    }
+
+    if (validatedData.tags) {
+      const tagIdPromises = validatedData.tags.map(async (tagName) => {
+        const tag = await tagsRepository.findOrCreate(
+          tagName,
+          apiKeyRecord.user.id
+        );
+        return tag.id;
+      });
+
+      const tagIds = await Promise.all(tagIdPromises);
+      await tagsRepository.updateLinkTags(id, tagIds);
     }
 
     return NextResponse.json({
       id: updatedLink.id,
       originalUrl: updatedLink.originalUrl,
-      shortUrl: `${process.env.NEXT_PUBLIC_APP_URL}/${updatedLink.shortCode}`,
+      shortUrl: buildShortUrl(updatedLink.shortCode),
       shortCode: updatedLink.shortCode,
       createdAt: updatedLink.createdAt,
       expiresAt: updatedLink.expiresAt,
       qrCodeUrl: updatedLink.qrCodeUrl,
+      tags: validatedData.tags || updatedLink.tags,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {

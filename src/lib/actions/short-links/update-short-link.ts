@@ -21,7 +21,7 @@ export async function updateShortLink(
   formData: CreateLinkFormData
 ) {
   const parsedData = await createLinkSchema.parseAsync(formData);
-console.log("formData:", formData)
+
   const session = await auth();
   if (!session?.user) {
     throw new Error("Authentication required");

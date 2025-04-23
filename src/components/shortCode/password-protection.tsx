@@ -1,11 +1,5 @@
 "use client";
 
-import type React from "react";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Lock, Loader2 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,49 +10,48 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { verifyPassword } from "@/lib/actions/short-links";
-import { toast } from "@/components/ui/simple-toast";
+import { Loader2, Lock } from "lucide-react";
+import { useFormStatus } from "react-dom";
+
+import {
+  verifyPasswordAndRecordClick,
+  type VerifyPasswordState,
+} from "@/lib/actions/short-links";
+import { useActionState } from "react";
 
 interface PasswordProtectionProps {
   shortCode: string;
 }
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" className="w-full" disabled={pending}>
+      {pending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Verifying...
+        </>
+      ) : (
+        "Continue"
+      )}
+    </Button>
+  );
+}
+
 export function PasswordProtection({ shortCode }: PasswordProtectionProps) {
-  const router = useRouter();
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const initialState: VerifyPasswordState = { message: null, success: false };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const verifyPasswordWithShortCode = verifyPasswordAndRecordClick.bind(
+    null,
+    shortCode
+  );
 
-    if (!password) {
-      toast({
-        title: "Error",
-        description: "Please enter a password",
-        type: "error",
-      });
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-
-      const result = await verifyPassword(shortCode, password);
-
-      if (result.success) {
-        router.push(result.url);
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          error instanceof Error ? error.message : "Failed to verify password",
-        type: "error",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [state, formAction] = useActionState(
+    verifyPasswordWithShortCode,
+    initialState
+  );
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900 p-4">
@@ -74,28 +67,23 @@ export function PasswordProtection({ shortCode }: PasswordProtectionProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form action={formAction} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Verifying...
-                </>
-              ) : (
-                "Continue"
-              )}
-            </Button>
+            {state?.message && !state.success && (
+              <p className="text-sm font-medium text-destructive">
+                {state.message}
+              </p>
+            )}
+            <SubmitButton />
           </form>
         </CardContent>
       </Card>

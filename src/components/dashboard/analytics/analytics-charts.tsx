@@ -101,7 +101,7 @@ export function ClicksOverTime({
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
         <YAxis />
-        <Tooltip />
+        <Tooltip labelClassName="text-gray-500" />
         <Legend />
         <Line
           type="monotone"
@@ -138,7 +138,7 @@ export function TopCountries({
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis type="category" dataKey="name" />
         <YAxis type="number" />
-        <Tooltip />
+        <Tooltip labelClassName="text-gray-500" />
         <Legend />
         <Bar dataKey="value" fill="#8884d8" name="Clicks" />
       </BarChart>

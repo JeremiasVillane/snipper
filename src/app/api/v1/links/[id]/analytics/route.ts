@@ -42,6 +42,12 @@ export async function GET(
     return acc;
   }, {} as Record<string, number>);
 
+  const clickByCity = clickEvents.reduce((acc, click) => {
+    const city = click.city || "Unknown";
+    acc[city] = (acc[city] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
   const clicksByDevice = clickEvents.reduce((acc, click) => {
     const device = click.device || "Unknown";
     acc[device] = (acc[device] || 0) + 1;
@@ -64,6 +70,7 @@ export async function GET(
     totalClicks,
     clicksByDate,
     clicksByCountry,
+    clickByCity,
     clicksByDevice,
     clicksByBrowser,
     clicksByOS,

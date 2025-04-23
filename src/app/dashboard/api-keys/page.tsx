@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { apiKeysRepository } from "@/lib/db/repositories";
 import { ApiKeyTable } from "@/components/dashboard/api-keys";
 import CreateApiKeyDialog from "@/components/dashboard/api-keys/create-api-key-dialog";
+import { cn } from "@/lib/utils";
 
 export default async function ApiKeysPage() {
   const session = await auth();
@@ -14,7 +15,7 @@ export default async function ApiKeysPage() {
 
   return (
     <main className="flex-1 min-h-screen container py-6">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-3 md:gap-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">API Keys</h1>
           <p className="text-muted-foreground">
@@ -25,16 +26,17 @@ export default async function ApiKeysPage() {
           <Button
             iconLeft={<Plus className="size-4" />}
             iconAnimation="zoomIn"
-            className="hidden md:flex"
+            className={cn(
+              "hidden md:flex h-9 md:h-10",
+              apiKeys.length > 0 ? "flex" : ""
+            )}
           >
             Create API Key
           </Button>
         </CreateApiKeyDialog>
       </div>
 
-      <div className="space-y-6">
-        <ApiKeyTable apiKeys={apiKeys} />
-      </div>
+      <ApiKeyTable apiKeys={apiKeys} />
     </main>
   );
 }

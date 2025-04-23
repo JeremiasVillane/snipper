@@ -52,10 +52,19 @@ export const shortLinksRepository = {
   },
 
   async update(id: string, data: Prisma.ShortLinkUpdateInput) {
-    return await prisma.shortLink.update({
+    const shortLink = await prisma.shortLink.update({
       where: { id },
       data,
+      include: {
+        linkTags: {
+          include: { tag: true },
+        },
+      },
     });
+    return {
+      ...shortLink,
+      tags: shortLink.linkTags.map((lt) => lt.tag.name),
+    };
   },
 
   async incrementClicks(id: string) {

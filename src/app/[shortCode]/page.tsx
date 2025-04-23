@@ -44,17 +44,38 @@ export default async function ShortCodePage({ params }: ShortCodePageProps) {
     try {
       country = decodeURIComponent(rawCountry);
     } catch (e) {
-      console.error("Failed to decode country header:", rawCountry, e);
       country = rawCountry;
     }
+  } else {
+    try {
+      const realIP = await fetch("https://api.ipify.org/?format=json")
+        .then((res) => res.json())
+        .then((res) => res?.ip);
+      const res = await fetch(`http://ip-api.com/json/${realIP}`)
+        .then((res) => res.json())
+        .then((res) => res);
+      country = res?.countryCode ?? "Unknown";
+    } catch (e) {
+      country = "Unknown";
+    }
   }
-
   if (rawCity) {
     try {
       city = decodeURIComponent(rawCity);
     } catch (e) {
-      console.error("Failed to decode city header:", rawCity, e);
       city = rawCity;
+    }
+  } else {
+    try {
+      const realIP = await fetch("https://api.ipify.org/?format=json")
+        .then((res) => res.json())
+        .then((res) => res?.ip);
+      const res = await fetch(`http://ip-api.com/json/${realIP}`)
+        .then((res) => res.json())
+        .then((res) => res);
+      city = decodeURIComponent(res?.city ?? "Unknown");
+    } catch (e) {
+      city = "Unknown";
     }
   }
 
