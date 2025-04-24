@@ -54,7 +54,7 @@ export function HeroSection() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full sm:w-auto hover:scale-105 transition-all"
+                    className="w-full sm:w-auto"
                   >
                     Learn More
                   </Button>

@@ -1,5 +1,6 @@
-import { Link2, Twitter, Facebook, Instagram, Github } from "lucide-react";
+import { Facebook, Github, Instagram, Twitter } from "lucide-react";
 import Link from "next/link";
+import { SnipperLogo } from "../../../public/snipper-logo";
 
 export function SiteFooter() {
   return (
@@ -7,8 +8,8 @@ export function SiteFooter() {
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Link2 className="h-6 w-6 text-primary" />
+            <div className="flex items-center space-x-1.5">
+              <SnipperLogo className="size-5 text-primary" />
               <span className="text-xl font-bold">Snipper</span>
             </div>
             <p className="text-sm text-muted-foreground">

@@ -13,6 +13,8 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { AuthButtons, ThemeToggle } from "./modules";
+import Image from "next/image";
+import { SnipperLogo } from "../../../../public/snipper-logo";
 
 type DataLink = {
   href: string;
@@ -54,13 +56,15 @@ export function SiteHeader() {
   return (
     <header className="fixed top-0 w-full h-16 border-b bg-background z-50">
       <div className="container flex justify-between items-center h-16">
-        <Link href="/" className="flex items-center space-x-2">
-          <Link2 className="h-6 w-6 text-primary" />
+        <Link href="/" className="flex items-center space-x-1.5">
+          <SnipperLogo className="size-5 text-primary" />
           <span className="text-xl font-bold">Snipper</span>
         </Link>
 
         <div className="hidden md:flex items-center space-x-6">
-          <nav className="flex items-center space-x-6">{renderNavLinks(NAV_LINKS)}</nav>
+          <nav className="flex items-center space-x-6">
+            {renderNavLinks(NAV_LINKS)}
+          </nav>
 
           <div className="flex items-center space-x-2">
             <AuthButtons avatar={session?.user.image} setOpen={setOpen} />
@@ -78,8 +82,8 @@ export function SiteHeader() {
           </SheetTrigger>
           <SheetContent side="right" className="w-[300px] sm:w-[400px]">
             <nav className="flex flex-col gap-4 mt-8">
-              {renderNavLinks(NAV_LINKS,true)}
-              {renderNavLinks(DASHBOARD_LINKS,true)}
+              {renderNavLinks(NAV_LINKS, true)}
+              {renderNavLinks(DASHBOARD_LINKS, true)}
 
               <Separator className="my-1" />
 
