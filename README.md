@@ -15,7 +15,7 @@
 
 **Snipper** is a powerful, open-source URL shortening application built with [Next.js](https://nextjs.org). It provides a comprehensive solution for creating, sharing, tracking, and managing your links effectively.
 
-Built with a modern tech stack including [TypeScript](https://www.typescriptlang.org), [NextAuth.js](https://next-auth.js.org) for authentication, [Prisma](https://www.prisma.io) ORM with [PostgreSQL](https://www.postgresql.org), [Tailwind CSS](https://tailwindcss.com), and UI components from [shadcn/ui](https://ui.shadcn.com/), [shadcn/ui variants](https://shadcn-ui-variants.vercel.app/), [MagicUI](https://magicui.design/), [AceternityUI](https://ui.aceternity.com/). Animations are powered by [Framer Motion](https://www.framer.com/motion) and themes managed by [Next-Themes](https://www.npmjs.com/package/next-themes).
+Built with a modern tech stack including [TypeScript](https://www.typescriptlang.org), [NextAuth.js](https://next-auth.js.org) for authentication, [Prisma](https://www.prisma.io) ORM with [PostgreSQL](https://www.postgresql.org), [Tailwind CSS](https://tailwindcss.com), and UI components from [shadcn/ui](https://ui.shadcn.com/), [shadcn/ui variants](https://shadcn-ui-variants.vercel.app/), [MagicUI](https://magicui.design/), [AceternityUI](https://ui.aceternity.com/), [CultUI](https://www.cult-ui.com/). Animations are powered by [Motion](https://motion.dev/) and themes managed by [Next-Themes](https://www.npmjs.com/package/next-themes).
 
 ## ✨ Features
 
@@ -44,9 +44,9 @@ Snipper offers everything you need to manage your links efficiently:
   - Secure authentication powered by NextAuth.js (supports Google OAuth).
   - Dedicated user profiles and link management sections.
 - **Modern UI/UX:**
-  - Clean, intuitive interface built with TailwindCSS and shadcn/ui.
+  - Clean, intuitive interface built with TailwindCSS.
   - Full responsivity ensures a seamless experience on desktop and mobile.
-  - Switch between Light and Dark modes easily.
+  - Light and Dark modes enabled.
 
 ## 🚀 Getting Started
 
@@ -102,41 +102,6 @@ npm run dev
 ```
 
 Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) with your browser to see the result.
-
-## 📸 Screenshots
-
-<details>
-<summary>Show Application Screenshots</summary>
-
-### Analytics Overview
-
-![screen01](./public/screen01.png)
-
-![screen02](./public/screen02.png)
-
-### Recent Clicks Table (Dark Mode)
-
-![screen03](./public/screen03.png)
-
-### Geography Location
-
-![screen04](./public/screen04.png)
-
-### Create New Link Modal
-
-![screen05](./public/screen05.png)
-
-### Dashboard (Grid View)
-
-![screen06](./public/screen06a.png)
-
-![screen06](./public/screen06b.png)
-
-### Dashboard (Table View)
-
-![screen07](./public/screen07.png)
-
-</details>
 
 ## 📜 License
 

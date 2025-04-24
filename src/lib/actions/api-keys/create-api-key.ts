@@ -7,8 +7,13 @@ import { revalidatePath } from "next/cache";
 
 export async function createApiKey(data: { name: string; expiresAt?: Date }) {
   const session = await auth();
+
   if (!session?.user) {
     throw new Error("Authentication required");
+  }
+
+  if (session.user.email === "demo@example.com") {
+    throw new Error("Not available on demo account");
   }
 
   const key = generateApiKey();

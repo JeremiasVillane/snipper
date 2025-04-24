@@ -20,10 +20,17 @@ const shortCodeSchema = z
   );
 
 export async function shortenUrl(formData: CreateLinkFormData) {
-  const parsedData = await createLinkSchema.parseAsync(formData);
-
   const session = await auth();
-  const user = session?.user;
+
+  if (!session?.user) {
+    throw new Error("Authentication required");
+  }
+
+  if (session.user.email === "demo@example.com") {
+    throw new Error("Not available on demo account");
+  }
+
+  const parsedData = await createLinkSchema.parseAsync(formData);
 
   let finalUrl = parsedData.originalUrl;
   if (formData.utmParams) {
@@ -42,7 +49,7 @@ export async function shortenUrl(formData: CreateLinkFormData) {
   }
 
   let shortCode: string;
-  if (user && formData.shortCode) {
+  if (session.user && formData.shortCode) {
     try {
       shortCodeSchema.parse(formData.shortCode);
 
@@ -65,7 +72,7 @@ export async function shortenUrl(formData: CreateLinkFormData) {
   }
 
   let qrCodeUrl: string | null = null;
-  if (user) {
+  if (session.user) {
     qrCodeUrl = await generateQRCode(buildShortUrl(shortCode));
   }
 
@@ -74,13 +81,13 @@ export async function shortenUrl(formData: CreateLinkFormData) {
     shortCode,
     expiresAt: parsedData.expiresAt || null,
     password: parsedData.password || null,
-    user: user?.id ? { connect: { id: user.id } } : undefined,
+    user: session?.user?.id ? { connect: { id: session.user.id } } : undefined,
     qrCodeUrl,
   });
 
-  if (user && formData.tags && formData.tags.length > 0) {
+  if (session.user && formData.tags && formData.tags.length > 0) {
     for (const tagName of formData.tags) {
-      const tag = await tagsRepository.findOrCreate(tagName, user.id);
+      const tag = await tagsRepository.findOrCreate(tagName, session.user.id);
       await tagsRepository.addTagToLink(shortLink.id, tag.id);
     }
   }

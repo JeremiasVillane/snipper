@@ -78,7 +78,7 @@ export function LinkList({ links }: LinkListProps) {
     const currentSelectedTags = Array.isArray(selectedTags) ? selectedTags : [];
     if (currentSelectedTags.length > 0) {
       result = result.filter((link) =>
-        currentSelectedTags.every((tag) => link.tags?.includes(tag))
+        currentSelectedTags.some((tag) => link.tags?.includes(tag))
       );
     }
 

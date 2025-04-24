@@ -218,6 +218,7 @@ export function LinkDialog({
                             <FormControl>
                               <Input
                                 placeholder="https://example.com/your-very-long-url..."
+                                autoComplete="off"
                                 {...field}
                               />
                             </FormControl>
@@ -235,6 +236,7 @@ export function LinkDialog({
                             <FormControl>
                               <Input
                                 placeholder="my-custom-link"
+                                autoComplete="off"
                                 {...field}
                                 value={field.value ?? ""}
                               />

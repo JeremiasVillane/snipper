@@ -15,6 +15,18 @@ interface ShortCodePageProps {
 export default async function ShortCodePage({ params }: ShortCodePageProps) {
   const { shortCode } = await params;
 
+  if (["ggl", "ghub", "lkdn", "demo", "blog"].includes(shortCode)) {
+    const demoUrlsMap: Record<string, string> = {
+      ggl: "https://google.com",
+      ghub: "https://github.com",
+      lkdn: "https://linkedin.com",
+      demo: "https://example.com",
+      blog: "https://medium.com",
+    };
+
+    redirect(demoUrlsMap[shortCode]);
+  }
+
   const shortLink = await shortLinksRepository.findByShortCode(shortCode);
 
   if (!shortLink) notFound();

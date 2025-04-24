@@ -11,6 +11,10 @@ export async function deleteShortLink(id: string) {
     throw new Error("Authentication required");
   }
 
+  if (session.user.email === "demo@example.com") {
+    throw new Error("Not available on demo account")
+  }
+
   const shortLink = await shortLinksRepository.findById(id);
   if (!shortLink || shortLink.userId !== session.user.id) {
     throw new Error("Short link not found");

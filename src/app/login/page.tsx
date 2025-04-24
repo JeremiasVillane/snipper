@@ -39,6 +39,12 @@ export default async function LoginPage() {
               Sign up
             </Link>
           </div>
+
+          <div className="flex items-center justify-center mt-6 h-9 bg-muted rounded-md w-full">
+            <p className="text-sm text-muted-foreground text-center">
+              <strong>Demo Account:</strong> demo@example.com / password123
+            </p>
+          </div>
           <Button variant="outline" className="w-full md:hidden" asChild>
             <Link href="/">Back to Home</Link>
           </Button>

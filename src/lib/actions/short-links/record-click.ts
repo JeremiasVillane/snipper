@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import {
   clickEventsRepository,
   shortLinksRepository,
@@ -18,6 +19,16 @@ export async function recordClick(
     os?: string;
   }
 ) {
+  const session = await auth();
+
+  if (!session?.user) {
+    throw new Error("Authentication required");
+  }
+
+  if (session.user.email === "demo@example.com") {
+    throw new Error("Not available on demo account");
+  }
+
   const shortLink = await shortLinksRepository.findByShortCode(shortCode);
   if (!shortLink) {
     throw new Error("Short link not found");

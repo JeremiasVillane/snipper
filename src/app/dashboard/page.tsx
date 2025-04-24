@@ -1,4 +1,5 @@
 import { LinkDialog, LinkList } from "@/components/dashboard";
+import { Tour } from "@/components/dashboard/tour";
 import { Button } from "@/components/ui/button";
 import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
@@ -36,6 +37,7 @@ export default async function DashboardPage() {
       </div>
 
       <LinkList links={shortLinks} />
+      <Tour />
     </main>
   );
 }

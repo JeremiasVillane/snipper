@@ -20,12 +20,17 @@ export async function updateShortLink(
   id: string,
   formData: CreateLinkFormData
 ) {
-  const parsedData = await createLinkSchema.parseAsync(formData);
-
   const session = await auth();
+
   if (!session?.user) {
     throw new Error("Authentication required");
   }
+
+  if (session.user.email === "demo@example.com") {
+    throw new Error("Not available on demo account");
+  }
+
+  const parsedData = await createLinkSchema.parseAsync(formData);
 
   const shortLink = await shortLinksRepository.findById(id);
   if (!shortLink || shortLink.userId !== session.user.id) {

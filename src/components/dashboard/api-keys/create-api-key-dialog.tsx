@@ -134,7 +134,11 @@ export default function CreateApiKeyDialog({
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="My API Key" {...field} />
+                        <Input
+                          placeholder="My API Key"
+                          autoComplete="off"
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescription>
                         A descriptive name for your key.

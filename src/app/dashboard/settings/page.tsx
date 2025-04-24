@@ -1,3 +1,4 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,70 +25,88 @@ export default async function SettingsPage() {
         </div>
       </div>
 
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Profile</CardTitle>
-            <CardDescription>Update your personal information</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue={session.user.name ?? ""} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                defaultValue={session.user.email}
-              />
-            </div>
-            <Button>Save Changes</Button>
-          </CardContent>
-        </Card>
+      {session.user.email === "demo@example.com" ? (
+        <Alert
+          variant="warning"
+          styleVariant="bootstrap"
+          withIcon
+          className="w-full md:w-2/3 lg:w-1/2"
+        >
+          <AlertTitle className="py-0.5">
+            Not available on demo account.
+          </AlertTitle>
+          <AlertDescription className="hidden md:flex">
+            Create an account to proceed.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Profile</CardTitle>
+              <CardDescription>
+                Update your personal information
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input id="name" defaultValue={session.user.name ?? ""} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  defaultValue={session.user.email}
+                />
+              </div>
+              <Button>Save Changes</Button>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Password</CardTitle>
-            <CardDescription>Update your password</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="current-password">Current Password</Label>
-              <Input id="current-password" type="password" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-password">New Password</Label>
-              <Input id="new-password" type="password" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm New Password</Label>
-              <Input id="confirm-password" type="password" />
-            </div>
-            <Button>Update Password</Button>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Password</CardTitle>
+              <CardDescription>Update your password</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="current-password">Current Password</Label>
+                <Input id="current-password" type="password" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="new-password">New Password</Label>
+                <Input id="new-password" type="password" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm New Password</Label>
+                <Input id="confirm-password" type="password" />
+              </div>
+              <Button>Update Password</Button>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Danger Zone</CardTitle>
-            <CardDescription>
-              Irreversible actions for your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="rounded-md border border-destructive/50 p-4">
-              <h3 className="text-lg font-medium">Delete Account</h3>
-              <p className="text-sm text-muted-foreground mt-1 mb-4">
-                Once you delete your account, there is no going back. All your
-                data will be permanently removed.
-              </p>
-              <Button variant="destructive">Delete Account</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Danger Zone</CardTitle>
+              <CardDescription>
+                Irreversible actions for your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="rounded-md border border-destructive/50 p-4">
+                <h3 className="text-lg font-medium">Delete Account</h3>
+                <p className="text-sm text-muted-foreground mt-1 mb-4">
+                  Once you delete your account, there is no going back. All your
+                  data will be permanently removed.
+                </p>
+                <Button variant="destructive">Delete Account</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </main>
   );
 }
