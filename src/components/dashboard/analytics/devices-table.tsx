@@ -13,11 +13,11 @@ interface ProcessedItem {
   percentage: number;
 }
 
-interface AnalyticsTableProps {
+interface DevicesTableProps {
   data: ProcessedItem[];
 }
 
-export function AnalyticsDevicesTable({ data }: AnalyticsTableProps) {
+export function DevicesTable({ data }: DevicesTableProps) {
   return (
     <Table>
       <TableHeader>

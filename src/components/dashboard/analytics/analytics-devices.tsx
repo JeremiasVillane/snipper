@@ -1,9 +1,9 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React, { useMemo } from "react";
-import { AnalyticsDevicesTable } from "./analytics-devices-table";
 import type { ShortLinkAnalyticsData } from "@/lib/types";
+import { useMemo } from "react";
+import { DevicesTable } from "./devices-table";
 
 interface AnalyticsDevicesProps {
   clicksByBrowser: ShortLinkAnalyticsData["clicksByBrowser"];
@@ -51,7 +51,7 @@ export function AnalyticsDevices({
   );
 
   return (
-    <Tabs variant="segmented" defaultValue="browser" className="w-full">
+    <Tabs variant="underlined" defaultValue="browser">
       <TabsList className="grid w-full grid-cols-3 mb-4">
         <TabsTrigger value="browser">By Browser</TabsTrigger>
         <TabsTrigger value="os">By OS</TabsTrigger>
@@ -59,13 +59,13 @@ export function AnalyticsDevices({
       </TabsList>
 
       <TabsContent value="browser">
-        <AnalyticsDevicesTable data={browserData} />
+        <DevicesTable data={browserData} />
       </TabsContent>
       <TabsContent value="os">
-        <AnalyticsDevicesTable data={osData} />
+        <DevicesTable data={osData} />
       </TabsContent>
       <TabsContent value="device">
-        <AnalyticsDevicesTable data={deviceData} />
+        <DevicesTable data={deviceData} />
       </TabsContent>
     </Tabs>
   );

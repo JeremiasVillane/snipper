@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HyperText } from "@/components/ui/hyper-text";
 import { NumberTicker } from "@/components/ui/number-ticker";
+import { buildShortUrl } from "@/lib/helpers";
 import { ShortLinkAnalyticsData, ShortLinkFromRepository } from "@/lib/types";
 import { formatDate, formatNumber } from "@/lib/utils";
 import Link from "next/link";
@@ -59,23 +60,23 @@ export function AnalyticsHeader({
           </p>
         </CardContent>
       </Card>
-      <Card>
+      <Card className="min-w-0">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium">Original URL</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-sm font-medium truncate">
+          <div className="text-sm font-medium min-w-0">
             <Link
               href={shortLink.originalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:underline"
+              className="hover:underline block truncate"
             >
               {shortLink.originalUrl}
             </Link>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Short URL: {process.env.NEXT_PUBLIC_APP_URL}/{shortLink.shortCode}
+            Short URL: {buildShortUrl(shortLink.shortCode)}
           </p>
         </CardContent>
       </Card>

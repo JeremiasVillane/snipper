@@ -28,36 +28,66 @@ export async function getShortLinkAnalytics(
     const date = click.timestamp.toISOString().split("T")[0];
     acc[date] = (acc[date] || 0) + 1;
     return acc;
-  }, {} as Record<string, number>);
+  }, {} as ShortLinkAnalyticsData["clicksByDate"]);
 
   const clicksByCountry = clickEvents.reduce((acc, click) => {
     const country = click.country || "Unknown";
     acc[country] = (acc[country] || 0) + 1;
     return acc;
-  }, {} as Record<string, number>);
+  }, {} as ShortLinkAnalyticsData["clicksByCountry"]);
+
+  const clicksByCity = clickEvents.reduce((acc, click) => {
+    const city = click.city || "Unknown";
+    acc[city] = (acc[city] || 0) + 1;
+    return acc;
+  }, {} as ShortLinkAnalyticsData["clicksByCity"]);
+
+  const clicksByCountryWithCities = clickEvents.reduce((acc, click) => {
+    const country = click.country || "Unknown";
+    const city = click.city || "Unknown";
+
+    if (!acc[country]) {
+      acc[country] = {
+        totalClicks: 0,
+        cities: {},
+      };
+    }
+
+    acc[country].totalClicks += 1;
+
+    if (!acc[country].cities[city]) {
+      acc[country].cities[city] = 0;
+    }
+
+    acc[country].cities[city] += 1;
+
+    return acc;
+  }, {} as ShortLinkAnalyticsData["clicksByCountryWithCities"]);
 
   const clicksByDevice = clickEvents.reduce((acc, click) => {
     const device = click.device || "Unknown";
     acc[device] = (acc[device] || 0) + 1;
     return acc;
-  }, {} as Record<string, number>);
+  }, {} as ShortLinkAnalyticsData["clicksByDevice"]);
 
   const clicksByBrowser = clickEvents.reduce((acc, click) => {
     const browser = click.browser || "Unknown";
     acc[browser] = (acc[browser] || 0) + 1;
     return acc;
-  }, {} as Record<string, number>);
+  }, {} as ShortLinkAnalyticsData["clicksByBrowser"]);
 
   const clicksByOS = clickEvents.reduce((acc, click) => {
     const os = click.os || "Unknown";
     acc[os] = (acc[os] || 0) + 1;
     return acc;
-  }, {} as Record<string, number>);
+  }, {} as ShortLinkAnalyticsData["clicksByOS"]);
 
   return {
     totalClicks,
     clicksByDate,
     clicksByCountry,
+    clicksByCity,
+    clicksByCountryWithCities,
     clicksByDevice,
     clicksByBrowser,
     clicksByOS,

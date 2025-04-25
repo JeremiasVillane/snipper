@@ -79,6 +79,9 @@
     "tsx": "^4.19.3",
     "typescript": "^5"
   },
+  "overrides": {
+    "react-is": "^19"
+  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@prisma/client",

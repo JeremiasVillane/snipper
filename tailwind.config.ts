@@ -78,6 +78,13 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        "fade-in": {
+          from: {
+            opacity: "0",
+            transform: "translate(10px, 10px) scale(0.95)",
+          },
+          to: { opacity: "1", transform: "translate(10px, 10px) scale(1)" },
+        },
         "toast-fade-in": {
           "0%": {
             opacity: "0",
@@ -237,6 +244,7 @@ const config: Config = {
         },
       },
       animation: {
+        "fade-in": "fade-in 0.1s ease-out",
         "toast-fade-in": "toast-fade-in 0.3s ease-out forwards",
         "toast-slide-down": "toast-slide-down 0.3s ease-out forwards",
         "toast-slide-up": "toast-slide-up 0.3s ease-out forwards",

@@ -13,11 +13,11 @@ import {
   DeviceTypes,
   OperatingSystems,
   TopCountries,
-  TopCountriesTable,
 } from "./analytics-charts";
-import { CountryMap } from "./analytics-map";
-import { ClicksTable } from "./clicks-table";
 import { AnalyticsDevices } from "./analytics-devices";
+import { ClicksTable } from "./clicks-table";
+import { CountryMap } from "./country-map";
+import { TopRegionsTable } from "./top-regions-table";
 
 interface AnalyticsTabsProps {
   analytics: ShortLinkAnalyticsData;
@@ -87,9 +87,12 @@ export function AnalyticsTabs({ analytics }: AnalyticsTabsProps) {
               Detailed information about geographic location
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <CountryMap data={analytics.clicksByCountry} />
-            <TopCountriesTable data={analytics.clicksByCountry} />
+          <CardContent className="space-y-4">
+            <CountryMap data={analytics.clicksByCountryWithCities} />
+            <TopRegionsTable
+              countryData={analytics.clicksByCountry}
+              cityData={analytics.clicksByCity}
+            />
           </CardContent>
         </Card>
       </TabsContent>

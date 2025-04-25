@@ -29,15 +29,25 @@ export interface ClickEvent {
 
 export type ShortLinkAnalyticsData = {
   totalClicks: number;
-  /** date (string) and count (number) */
+  /** Date (string), Count (number) */
   clicksByDate: Record<string, number>;
-  /** country (string) and count (number) */
+  /** Country (string), Count (number) */
   clicksByCountry: Record<string, number>;
-  /** device (string) and count (number) */
+  /** City (string), Count (number) */
+  clicksByCity: Record<string, number>;
+  /** City clicks (number), Cities (City[string], Count [number]) */
+  clicksByCountryWithCities: Record<
+    string,
+    {
+      totalClicks: number;
+      cities: Record<string, number>; // City name -> click count
+    }
+  >;
+  /** Device (string), Count (number) */
   clicksByDevice: Record<string, number>;
-  /** browser (string) and count (number) */
+  /** Browser (string), Count (number) */
   clicksByBrowser: Record<string, number>;
-  /** OS (string) and count (number) */
+  /** OS (string), Count (number) */
   clicksByOS: Record<string, number>;
   recentClicks: ClickEvent[];
 };
