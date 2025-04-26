@@ -14,10 +14,10 @@ interface AnalyticsPageProps {
   params: Promise<{
     id: string;
   }>;
-  searchParams?: {
+  searchParams?: Promise<{
     from?: string;
     to?: string;
-  };
+  }>;
 }
 
 export default async function AnalyticsPage({
@@ -28,11 +28,10 @@ export default async function AnalyticsPage({
   if (!session?.user) redirect("/login");
 
   const { id } = await params;
+  const rangeParams = await searchParams;
 
-  const startDate = searchParams?.from
-    ? new Date(searchParams.from)
-    : undefined;
-  const endDate = searchParams?.to ? new Date(searchParams.to) : undefined;
+  const startDate = rangeParams?.from ? new Date(rangeParams.from) : undefined;
+  const endDate = rangeParams?.to ? new Date(rangeParams.to) : undefined;
 
   const shortLink = await getShortLink(id);
   const analytics = await getShortLinkAnalytics({ id, startDate, endDate });
