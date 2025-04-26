@@ -32,31 +32,27 @@ const COLORS = [
 
 export function ClicksOverTime({
   data,
-  timeRange = 7,
 }: {
   data: ShortLinkAnalyticsData["clicksByDate"];
-  timeRange?: number;
 }) {
   const chartData = useMemo(() => {
     const now = new Date();
     let startDate = new Date();
+    let endDate = new Date();
 
-    if (!!timeRange) {
-      startDate.setDate(now.getDate() - timeRange);
+    const dates = Object.keys(data).sort();
+    if (dates.length > 0) {
+      startDate = new Date(dates[0]);
+      endDate = new Date(dates.at(-1)!);
     } else {
-      // Use the earliest click date
-      const dates = Object.keys(data).sort();
-      if (dates.length > 0) {
-        startDate = new Date(dates[0]);
-      } else {
-        startDate.setDate(now.getDate() - 30);
-      }
+      startDate.setDate(now.getDate() - 30);
+      endDate = now;
     }
 
     const dateRange: string[] = [];
     const currentDate = new Date(startDate);
 
-    while (currentDate <= now) {
+    while (currentDate <= endDate) {
       dateRange.push(currentDate.toISOString().split("T")[0]);
       currentDate.setDate(currentDate.getDate() + 1);
     }
@@ -65,7 +61,7 @@ export function ClicksOverTime({
       date,
       clicks: data[date] || 0,
     }));
-  }, [data, timeRange]);
+  }, [data]);
 
   if (chartData.length === 0) {
     return (

@@ -64,7 +64,7 @@ export default async function AnalyticsPage({
       </div>
 
       <AnalyticsHeader {...{ analytics, shortLink, startDate, endDate }} />
-      <AnalyticsTabs {...{ analytics }} />
+      <AnalyticsTabs {...{ analytics, startDate, endDate }} />
     </main>
   );
 }

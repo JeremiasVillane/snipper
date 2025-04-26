@@ -19,12 +19,19 @@ import { ClicksTable } from "./clicks-table";
 import { CountryMap } from "./country-map";
 import { TopRegionsTable } from "./top-regions-table";
 import { ReferrersTable } from "./referrers-tables";
+import { formatDate } from "@/lib/utils";
 
 interface AnalyticsTabsProps {
   analytics: ShortLinkAnalyticsData;
+  startDate?: Date;
+  endDate?: Date;
 }
 
-export function AnalyticsTabs({ analytics }: AnalyticsTabsProps) {
+export function AnalyticsTabs({
+  analytics,
+  startDate,
+  endDate,
+}: AnalyticsTabsProps) {
   return (
     <Tabs variant="segmented" defaultValue="overview" className="mt-6">
       <TabsList>
@@ -39,7 +46,12 @@ export function AnalyticsTabs({ analytics }: AnalyticsTabsProps) {
         <Card>
           <CardHeader>
             <CardTitle>Clicks Over Time</CardTitle>
-            <CardDescription>Number of clicks per day</CardDescription>
+            <CardDescription>
+              Number of clicks{" "}
+              {!!startDate && !!endDate
+                ? `from ${formatDate(startDate)} to ${formatDate(endDate)}`
+                : "per day"}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ClicksOverTime data={analytics.clicksByDate} />
@@ -142,7 +154,9 @@ export function AnalyticsTabs({ analytics }: AnalyticsTabsProps) {
         <Card>
           <CardHeader>
             <CardTitle>Recent Referrers</CardTitle>
-            <CardDescription>Detailed information about referrers</CardDescription>
+            <CardDescription>
+              Detailed information about referrers
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ReferrersTable referrersData={analytics.clicksByReferrer} />
