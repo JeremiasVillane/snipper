@@ -82,6 +82,12 @@ export async function getShortLinkAnalytics(
     return acc;
   }, {} as ShortLinkAnalyticsData["clicksByOS"]);
 
+  const clicksByReferrer = clickEvents.reduce((acc, click) => {
+    const referrer = click.referrer || "Direct";
+    acc[referrer] = (acc[referrer] || 0) + 1;
+    return acc;
+  }, {} as ShortLinkAnalyticsData["clicksByReferrer"]);
+
   return {
     totalClicks,
     clicksByDate,
@@ -91,6 +97,7 @@ export async function getShortLinkAnalytics(
     clicksByDevice,
     clicksByBrowser,
     clicksByOS,
+    clicksByReferrer,
     recentClicks: clickEvents.slice(0, 10),
   };
 }

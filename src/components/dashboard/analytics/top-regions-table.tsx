@@ -14,7 +14,7 @@ import type { ShortLinkAnalyticsData } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
 import { useMemo } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { prepareChartData } from "./analytics-charts";
+import { prepareChartData } from "./analytics-helpers";
 
 interface TopRegionsTable {
   countryData: ShortLinkAnalyticsData["clicksByCountry"];

@@ -49,6 +49,8 @@ export type ShortLinkAnalyticsData = {
   clicksByBrowser: Record<string, number>;
   /** OS (string), Count (number) */
   clicksByOS: Record<string, number>;
+  /** Referrer (string), Count (number) */
+  clicksByReferrer: Record<string, number>;
   recentClicks: ClickEvent[];
 };
 

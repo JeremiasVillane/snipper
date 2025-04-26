@@ -17,13 +17,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-
-export const prepareChartData = (data: Record<string, number>, limit = 5) => {
-  return Object.entries(data)
-    .map(([name, value]) => ({ name, value }))
-    .sort((a, b) => b.value - a.value)
-    .slice(0, limit);
-};
+import { prepareChartData } from "./analytics-helpers";
 
 const COLORS = [
   "#8884d8",

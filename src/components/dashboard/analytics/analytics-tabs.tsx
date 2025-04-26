@@ -18,6 +18,7 @@ import { AnalyticsDevices } from "./analytics-devices";
 import { ClicksTable } from "./clicks-table";
 import { CountryMap } from "./country-map";
 import { TopRegionsTable } from "./top-regions-table";
+import { ReferrersTable } from "./referrers-tables";
 
 interface AnalyticsTabsProps {
   analytics: ShortLinkAnalyticsData;
@@ -31,6 +32,7 @@ export function AnalyticsTabs({ analytics }: AnalyticsTabsProps) {
         <TabsTrigger value="clicks">Clicks</TabsTrigger>
         <TabsTrigger value="geography">Geography</TabsTrigger>
         <TabsTrigger value="devices">Devices & Browsers</TabsTrigger>
+        <TabsTrigger value="referrers">Referrers</TabsTrigger>
       </TabsList>
 
       <TabsContent value="overview" className="space-y-6 mt-6">
@@ -132,6 +134,18 @@ export function AnalyticsTabs({ analytics }: AnalyticsTabsProps) {
               clicksByDevice={analytics.clicksByDevice}
               clicksByOS={analytics.clicksByOS}
             />
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      <TabsContent value="referrers" className="mt-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Referrers</CardTitle>
+            <CardDescription>Tracking referrers</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ReferrersTable referrersData={analytics.clicksByReferrer} />
           </CardContent>
         </Card>
       </TabsContent>

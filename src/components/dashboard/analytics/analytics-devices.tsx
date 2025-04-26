@@ -3,6 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ShortLinkAnalyticsData } from "@/lib/types";
 import { useMemo } from "react";
+import { processAndSortData } from "./analytics-helpers";
 import { DevicesTable } from "./devices-table";
 
 interface AnalyticsDevicesProps {
@@ -10,30 +11,6 @@ interface AnalyticsDevicesProps {
   clicksByOS: ShortLinkAnalyticsData["clicksByOS"];
   clicksByDevice: ShortLinkAnalyticsData["clicksByDevice"];
 }
-
-interface ProcessedItem {
-  name: string;
-  clicks: number;
-  percentage: number;
-}
-
-const processAndSortData = (data: Record<string, number>): ProcessedItem[] => {
-  const totalClicks = Object.values(data).reduce(
-    (sum, clicks) => sum + clicks,
-    0
-  );
-  if (totalClicks === 0) return [];
-
-  const processedData = Object.entries(data).map(([name, clicks]) => ({
-    name,
-    clicks,
-    percentage: (clicks / totalClicks) * 100,
-  }));
-
-  processedData.sort((a, b) => b.clicks - a.clicks);
-
-  return processedData;
-};
 
 export function AnalyticsDevices({
   clicksByBrowser,
