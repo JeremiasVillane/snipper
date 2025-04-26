@@ -138,8 +138,8 @@ export function DateRangePicker({
               disabled={[{ after: today }]}
             />
 
-            <div className="relative py-4 max-sm:order-1 max-sm:border-t sm:w-32 md:border-l">
-              <div className="h-full sm:border-e">
+            <div className="relative py-4 max-sm:order-1 max-sm:border-t sm:w-32">
+              <div className="h-full sm:border-s">
                 <div className="flex flex-col px-2">
                   <Button
                     variant="ghost"
