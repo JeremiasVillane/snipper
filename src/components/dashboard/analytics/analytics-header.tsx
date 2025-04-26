@@ -9,12 +9,23 @@ import Link from "next/link";
 interface AnalyticsHeaderProps {
   analytics: ShortLinkAnalyticsData;
   shortLink: ShortLinkFromRepository;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 export function AnalyticsHeader({
   analytics,
   shortLink,
+  startDate,
+  endDate,
 }: AnalyticsHeaderProps) {
+  const dateRangeText = () => {
+    if (startDate && endDate) {
+      return `From ${formatDate(startDate)} to ${formatDate(endDate)}`;
+    }
+    return `Since ${formatDate(shortLink.createdAt)}`;
+  };
+
   return (
     <div className="grid gap-6 md:grid-cols-4">
       <Card>
@@ -25,9 +36,7 @@ export function AnalyticsHeader({
           <div className="text-2xl font-bold">
             <NumberTicker value={Number(formatNumber(analytics.totalClicks))} />
           </div>
-          <p className="text-xs text-muted-foreground">
-            Since {formatDate(shortLink.createdAt)}
-          </p>
+          <p className="text-xs text-muted-foreground">{dateRangeText()}</p>
         </CardContent>
       </Card>
       <Card>

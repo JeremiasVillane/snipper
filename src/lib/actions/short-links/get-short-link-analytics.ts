@@ -6,10 +6,19 @@ import {
   shortLinksRepository,
 } from "@/lib/db/repositories";
 import { ShortLinkAnalyticsData } from "@/lib/types";
+import { ClickEvent } from "@prisma/client";
 
-export async function getShortLinkAnalytics(
-  id: string
-): Promise<ShortLinkAnalyticsData> {
+interface GetAnalyticsParams {
+  id: string;
+  startDate?: Date;
+  endDate?: Date;
+}
+
+export async function getShortLinkAnalytics({
+  id,
+  startDate,
+  endDate,
+}: GetAnalyticsParams): Promise<ShortLinkAnalyticsData> {
   const session = await auth();
   if (!session?.user) {
     throw new Error("Authentication required");
@@ -20,7 +29,20 @@ export async function getShortLinkAnalytics(
     throw new Error("Short link not found");
   }
 
-  const clickEvents = await clickEventsRepository.findByShortLinkId(id);
+  let clickEvents: ClickEvent[];
+
+  if (startDate && endDate) {
+    const adjustedEndDate = new Date(endDate);
+    adjustedEndDate.setHours(23, 59, 59, 999);
+
+    clickEvents = await clickEventsRepository.findByDateRange(
+      id,
+      startDate,
+      adjustedEndDate
+    );
+  } else {
+    clickEvents = await clickEventsRepository.findByShortLinkId(id);
+  }
 
   const totalClicks = clickEvents.length;
 
@@ -52,15 +74,11 @@ export async function getShortLinkAnalytics(
         cities: {},
       };
     }
-
     acc[country].totalClicks += 1;
-
     if (!acc[country].cities[city]) {
       acc[country].cities[city] = 0;
     }
-
     acc[country].cities[city] += 1;
-
     return acc;
   }, {} as ShortLinkAnalyticsData["clicksByCountryWithCities"]);
 
@@ -88,6 +106,10 @@ export async function getShortLinkAnalytics(
     return acc;
   }, {} as ShortLinkAnalyticsData["clicksByReferrer"]);
 
+  const recentClicks = clickEvents
+    .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+    .slice(0, 10);
+
   return {
     totalClicks,
     clicksByDate,
@@ -98,6 +120,6 @@ export async function getShortLinkAnalytics(
     clicksByBrowser,
     clicksByOS,
     clicksByReferrer,
-    recentClicks: clickEvents.slice(0, 10),
+    recentClicks,
   };
 }

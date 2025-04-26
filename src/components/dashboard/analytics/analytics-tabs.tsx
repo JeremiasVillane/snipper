@@ -141,8 +141,8 @@ export function AnalyticsTabs({ analytics }: AnalyticsTabsProps) {
       <TabsContent value="referrers" className="mt-6">
         <Card>
           <CardHeader>
-            <CardTitle>Referrers</CardTitle>
-            <CardDescription>Tracking referrers</CardDescription>
+            <CardTitle>Recent Referrers</CardTitle>
+            <CardDescription>Detailed information about referrers</CardDescription>
           </CardHeader>
           <CardContent>
             <ReferrersTable referrersData={analytics.clicksByReferrer} />
