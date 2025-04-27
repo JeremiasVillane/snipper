@@ -5,8 +5,6 @@ import { Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-export const dynamic = "auto"
-
 interface BubbleMenuProps {
   /**
    * The content of the bubble menu, typically interactive elements like buttons or links.

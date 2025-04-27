@@ -364,12 +364,13 @@ function StepContent({
           <div className="flex items-center space-x-2 pb-4 px-4">
             <Checkbox
               id="skipNextTime"
+              variant="appear"
               checked={skipNextTime}
               onCheckedChange={(checked) => setSkipNextTime(checked as boolean)}
             />
             <label
               htmlFor="skipNextTime"
-              className="text-sm text-muted-foreground"
+              className="text-sm text-muted-foreground select-none"
             >
               Don't show this again
             </label>
