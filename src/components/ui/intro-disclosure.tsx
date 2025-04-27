@@ -364,7 +364,7 @@ function StepContent({
           <div className="flex items-center space-x-2 pb-4 px-4">
             <Checkbox
               id="skipNextTime"
-              variant="appear"
+              variant="draw"
               checked={skipNextTime}
               onCheckedChange={(checked) => setSkipNextTime(checked as boolean)}
             />
