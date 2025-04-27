@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,26 +9,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { buildShortUrl } from "@/lib/helpers";
 import { ShortLinkFromRepository } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import {
-  ExternalLink,
-  LineChart,
-  Pencil,
-  Plus,
-  QrCode,
-  Trash2,
-  X,
-} from "lucide-react";
+import { ExternalLink, LineChart, Pencil, QrCode, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { BubbleMenu } from "../ui/bubble-menu";
 
 interface LinkCardProps {
   link: ShortLinkFromRepository;
@@ -41,7 +27,7 @@ interface LinkCardProps {
 export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
   return (
     <Card className="relative h-full flex flex-col">
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 overflow-hidden">
         <div className="flex justify-between items-start">
           <div className="space-y-1">
             <CardTitle className="text-lg">{link.shortCode}</CardTitle>
@@ -92,90 +78,44 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
         </div>
       </CardContent>
 
-      <Popover>
-        <PopoverTrigger
-          className={cn(
-            buttonVariants({ size: "icon" }),
-            "bg-muted text-muted-foreground hover:bg-accent/50 hover:text-white",
-            "absolute bottom-2 right-2 rounded-full size-7 shadow shadow-foreground/15",
-            "group"
-          )}
+      <BubbleMenu className="mt-1 mb-2 mr-auto xl:mr-2 ml-auto">
+        <CopyToClipboardButton
+          content={buildShortUrl(link.shortCode)}
+          className="text-foreground [&_svg]:left-3.5 size-full p-3"
+        />
+        <QrCode
+          role="button"
+          onClick={() => onQrCode(link)}
+          className="size-full p-3"
+          aria-label="View QR Code"
+        />
+        <Link
+          href={`/dashboard/analytics/${link.id}`}
+          aria-label="View Link Analytics"
         >
-          <Plus className="size-4 group-data-[state=open]:-rotate-45 translate-x-3 transition-transform duration-200 ease-in-out" />
-          <X className="size-4 scale-0 group-data-[state=open]:scale-100 -translate-x-3 transition-transform duration-200 ease-in-out" />
-          <span className="sr-only">Toggle menu</span>
-        </PopoverTrigger>
-        <PopoverContent
-          side="top"
-          align="end"
-          className="grid grid-cols-2 gap-2 justify-center w-fit p-2"
+          <LineChart className="size-full p-3" />
+        </Link>
+        <Link
+          href={buildShortUrl(link.shortCode)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Visit Short Link"
         >
-          <CopyToClipboardButton
-            content={buildShortUrl(link.shortCode)}
-            className={cn(
-              buttonVariants({ size: "sm", variant: "outline" }),
-              "w-24 text-foreground [&_svg]:left-5"
-            )}
-          >
-            Copy
-          </CopyToClipboardButton>
-
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => onQrCode(link)}
-            iconLeft={<QrCode className="-ms-5" />}
-            className="w-24"
-          >
-            QR
-          </Button>
-
-          <Link
-            href={`/dashboard/analytics/${link.id}`}
-            className={cn(
-              buttonVariants({ size: "sm", variant: "outline" }),
-              "w-24"
-            )}
-          >
-            <LineChart className="h-4 w-4" /> Stats
-          </Link>
-
-          <Link
-            href={buildShortUrl(link.shortCode)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              size="sm"
-              variant="outline"
-              iconLeft={<ExternalLink className="-ms-2.5" />}
-              className="w-24"
-            >
-              Visit
-            </Button>
-          </Link>
-
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => onEdit(link)}
-            iconLeft={<Pencil className="-ms-2" />}
-            className="w-24"
-          >
-            Edit
-          </Button>
-
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => onDelete(link)}
-            iconLeft={<Trash2 className="-mr-0.5" />}
-            className="text-destructive w-24"
-          >
-            Delete
-          </Button>
-        </PopoverContent>
-      </Popover>
+          <ExternalLink className="size-full p-3" />
+        </Link>
+        <Pencil
+          role="button"
+          onClick={() => onEdit(link)}
+          className="size-full p-3"
+          aria-label="Update Short Link"
+        />
+        <Trash2
+          role="button"
+          onClick={() => onDelete(link)}
+          className="text-destructive size-full p-3"
+          aria-label="Delete Short Link"
+        />
+      </BubbleMenu>
 
       <ReactTooltip
         id="card-url-tooltip"
