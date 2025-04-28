@@ -43,6 +43,7 @@
     "nanoid": "^5.1.5",
     "next": "15.2.4",
     "next-auth": "^4.24.11",
+    "next-safe-action": "^7.10.7",
     "next-themes": "latest",
     "nuqs": "^2.4.3",
     "qrcode": "^1.5.4",

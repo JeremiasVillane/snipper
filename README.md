@@ -70,7 +70,6 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 # NextAuth configuration
 NEXTAUTH_SECRET="your-secure-random-secret" # Generate a strong secret key
-NEXTAUTH_URL="http://localhost:3000" # Use NEXT_PUBLIC_APP_URL in production
 
 # Google OAuth Credentials (Optional - for Google login)
 # Visit: [https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)
