@@ -1,8 +1,9 @@
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { publicUrl } from "@/env.mjs";
 
 export default function ApiDocsPage() {
   return (
@@ -48,7 +49,7 @@ export default function ApiDocsPage() {
                 requests:
               </p>
               <pre className="bg-muted p-4 rounded-md overflow-x-auto">
-                <code>Authorization: Bearer lsk_your_api_key</code>
+                <code>Authorization: Bearer your_api_key</code>
               </pre>
             </div>
 
@@ -312,8 +313,8 @@ export default function ApiDocsPage() {
                 <TabsContent value="javascript" className="mt-4">
                   <pre className="bg-muted p-4 rounded-md overflow-x-auto">
                     <code>
-                      {`const API_KEY = 'lsk_your_api_key';
-const API_URL = '${process.env.NEXT_PUBLIC_APP_URL}/api/v1';
+                      {`const API_KEY = 'your_api_key';
+const API_URL = '${publicUrl}/api/v1';
 
 // Create a short link
 async function createShortLink(url, options = {}) {
@@ -350,7 +351,7 @@ import json
 from datetime import datetime, timedelta
 
 API_KEY = 'your_api_key'
-API_URL = '${process.env.NEXT_PUBLIC_APP_URL}/api/v1'
+API_URL = '${publicUrl}/api/v1'
 
 # Create a short link
 def create_short_link(url, **options):
@@ -382,8 +383,8 @@ print(json.dumps(result, indent=2))`}
                   <pre className="bg-muted p-4 rounded-md overflow-x-auto">
                     <code>
                       {`# Create a short link
-curl -X POST '${process.env.NEXT_PUBLIC_APP_URL}/api/v1/links' \\
-  -H 'Authorization: Bearer lsk_your_api_key' \\
+curl -X POST '${publicUrl}/api/v1/links' \\
+  -H 'Authorization: Bearer your_api_key' \\
   -H 'Content-Type: application/json' \\
   -d '{
     "url": "https://example.com",
@@ -392,12 +393,12 @@ curl -X POST '${process.env.NEXT_PUBLIC_APP_URL}/api/v1/links' \\
   }'
 
 # Get all links
-curl -X GET '${process.env.NEXT_PUBLIC_APP_URL}/api/v1/links' \\
-  -H 'Authorization: Bearer lsk_your_api_key'
+curl -X GET '${publicUrl}/api/v1/links' \\
+  -H 'Authorization: Bearer your_api_key'
 
 # Get analytics for a link
-curl -X GET '${process.env.NEXT_PUBLIC_APP_URL}/api/v1/links/link_id/analytics' \\
-  -H 'Authorization: Bearer lsk_your_api_key'`}
+curl -X GET '${publicUrl}/api/v1/links/link_id/analytics' \\
+  -H 'Authorization: Bearer your_api_key'`}
                     </code>
                   </pre>
                 </TabsContent>

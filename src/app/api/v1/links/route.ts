@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   const formattedLinks = links.map((link) => ({
     id: link.id,
     originalUrl: link.originalUrl,
-    shortUrl: `${process.env.NEXT_PUBLIC_APP_URL}/${link.shortCode}`,
+    shortUrl: buildShortUrl(link.shortCode),
     shortCode: link.shortCode,
     createdAt: link.createdAt,
     expiresAt: link.expiresAt,
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       id: shortLink.id,
       originalUrl: shortLink.originalUrl,
-      shortUrl: `${process.env.NEXT_PUBLIC_APP_URL}/${shortLink.shortCode}`,
+      shortUrl: buildShortUrl(shortLink.shortCode),
       shortCode: shortLink.shortCode,
       createdAt: shortLink.createdAt,
       expiresAt: shortLink.expiresAt,

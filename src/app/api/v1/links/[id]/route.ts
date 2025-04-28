@@ -37,7 +37,7 @@ export async function GET(
   return NextResponse.json({
     id: link.id,
     originalUrl: link.originalUrl,
-    shortUrl: `${process.env.NEXT_PUBLIC_APP_URL}/${link.shortCode}`,
+    shortUrl: buildShortUrl(link.shortCode),
     shortCode: link.shortCode,
     createdAt: link.createdAt,
     expiresAt: link.expiresAt,
