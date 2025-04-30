@@ -5,11 +5,36 @@ import {
   ShortenerForm,
 } from "@/components/home";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Metadata } from "next";
+import { publicUrl } from "@/env.mjs";
+import { constructMetadata } from "@/lib/metadata";
+import { generateOgImageUrl } from "@/lib/og";
 
-export const metadata: Metadata = {
-  title: "Snipper: URL shortnener",
+export const generateMetadata = async () => {
+  const title = "Snipper: URL shortnener | Landing Page";
+
+  const description =
+    "Create personalized, branded links and track its performance with comprehensive statistics and insights.";
+
+  return constructMetadata({
+    title,
+    description,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImageUrl({
+            title,
+            type: "website",
+          }),
+          width: 1200,
+          height: 630,
+          alt: "Create and track short links",
+        },
+      ],
+    },
+    alternates: {
+      canonical: publicUrl,
+    },
+  });
 };
 
 export default function Home() {

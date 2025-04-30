@@ -1,13 +1,20 @@
 import { createMiddleware } from "next-safe-action";
 import * as Sentry from "@sentry/nextjs";
+import { env } from "@/env.mjs";
 
 export const sentryMiddleware = createMiddleware<{
   metadata: { name: string };
 }>().define(async ({ next, metadata }) => {
-  return Sentry.withServerActionInstrumentation(metadata.name, async () => {
-    return next({
-      ctx: {},
+  if (!!env.NEXT_PUBLIC_SENTRY_DSN) {
+    return Sentry.withServerActionInstrumentation(metadata.name, async () => {
+      return next({
+        ctx: {},
+      });
     });
+  }
+
+  return next({
+    ctx: {},
   });
 });
 

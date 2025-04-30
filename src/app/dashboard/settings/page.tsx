@@ -11,6 +11,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { auth } from "@/lib/auth";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Account Settings - Snipper",
+  description:
+    "Manage your Snipper account settings, including email, password, subscription plan, and account deletion options.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function SettingsPage() {
   const session = await auth();

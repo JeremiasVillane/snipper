@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -479,6 +480,7 @@ function IntroDisclosure({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
+        <DialogDescription className="sr-only">Feature Tour</DialogDescription>
         <DialogContent
           className="max-w-7xl p-0 gap-0 overflow-hidden "
           onKeyDown={handleKeyDown}

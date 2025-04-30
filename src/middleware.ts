@@ -6,41 +6,45 @@ import { aj } from "./lib/arcjet";
 
 export default withAuth(
   async function middleware(req: NextRequestWithAuth) {
-    try {
-      const decision: ArcjetDecision = await aj.protect(req, { requested: 5 });
+    if (!!aj) {
+      try {
+        const decision: ArcjetDecision = await aj.protect(req, {
+          requested: 5,
+        });
 
-      if (decision.isDenied()) {
-        if (decision.reason.isRateLimit()) {
-          return NextResponse.json(
-            { error: "Too Many Requests", reason: decision.reason },
-            { status: 429 }
-          );
-        } else if (decision.reason.isBot()) {
-          return NextResponse.json(
-            { error: "No bots allowed", reason: decision.reason },
-            { status: 403 }
-          );
-        } else {
+        if (decision.isDenied()) {
+          if (decision.reason.isRateLimit()) {
+            return NextResponse.json(
+              { error: "Too Many Requests", reason: decision.reason },
+              { status: 429 }
+            );
+          } else if (decision.reason.isBot()) {
+            return NextResponse.json(
+              { error: "No bots allowed", reason: decision.reason },
+              { status: 403 }
+            );
+          } else {
+            return NextResponse.json(
+              { error: "Forbidden", reason: decision.reason },
+              { status: 403 }
+            );
+          }
+        }
+
+        // https://docs.arcjet.com/bot-protection/reference#bot-verification
+        if (decision.results.some(isSpoofedBot)) {
           return NextResponse.json(
             { error: "Forbidden", reason: decision.reason },
             { status: 403 }
           );
         }
-      }
-
-      // https://docs.arcjet.com/bot-protection/reference#bot-verification
-      if (decision.results.some(isSpoofedBot)) {
+      } catch (error) {
+        console.error("Arcjet middleware error:", error);
         return NextResponse.json(
-          { error: "Forbidden", reason: decision.reason },
-          { status: 403 }
+          { error: "Security check failed" },
+          { status: 500 }
         );
       }
-    } catch (error) {
-      console.error("Arcjet middleware error:", error);
-      return NextResponse.json(
-        { error: "Security check failed" },
-        { status: 500 }
-      );
     }
 
     return NextResponse.next();

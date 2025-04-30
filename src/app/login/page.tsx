@@ -12,6 +12,31 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { constructMetadata } from "@/lib/metadata";
+import { generateOgImageUrl } from "@/lib/og";
+
+export const generateMetadata = async () => {
+  const title = "Login - Snipper Account | Access your Links";
+  const description =
+    "Log in to your Snipper account to access your dashboard, manage your shortened URLs and view click-through analytics.";
+
+  return constructMetadata({
+    title,
+    description,
+    openGraph: {
+      title: title,
+      description: description,
+      images: [
+        {
+          url: generateOgImageUrl({ title: "Snipper Login", type: "website" }),
+          width: 1200,
+          height: 630,
+          alt: "Snipper Login Page",
+        },
+      ],
+    },
+  });
+};
 
 export default async function LoginPage() {
   const session = await auth();

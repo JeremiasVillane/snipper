@@ -1,6 +1,6 @@
 import { env } from "@/env.mjs";
 import type { NextConfig } from "next";
-const { withSentryConfig } = require("@sentry/nextjs");
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   images: {
@@ -21,13 +21,18 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(nextConfig, {
-  org: "snipper-21",
-  project: "javascript-nextjs",
-  authToken: env.SENTRY_AUTH_TOKEN,
-  // Only print logs for uploading source maps in CI
-  // Set to `true` to suppress logs
-  silent: !process.env.CI,
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
-});
+const config =
+  env.SENTRY_ORG && env.SENTRY_PROJECT && env.SENTRY_AUTH_TOKEN
+    ? withSentryConfig(nextConfig, {
+        org: env.SENTRY_ORG,
+        project: env.SENTRY_PROJECT,
+        authToken: env.SENTRY_AUTH_TOKEN,
+        // Only print logs for uploading source maps in CI
+        // Set to `true` to suppress logs
+        silent: !process.env.CI,
+        // Automatically tree-shake Sentry logger statements to reduce bundle size
+        disableLogger: true,
+      })
+    : nextConfig;
+
+export default config;

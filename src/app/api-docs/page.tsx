@@ -4,6 +4,46 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { publicUrl } from "@/env.mjs";
+import { constructMetadata } from "@/lib/metadata";
+import { generateOgImageUrl } from "@/lib/og";
+
+export const generateMetadata = async () => {
+  const title = "Snipper API Documentation | Automate Link Shortening";
+
+  const description =
+    "Explore the official Snipper API documentation. Learn how to programmatically create, manage, and retrieve analytics for your short links using your API key. Includes endpoint details, request/response examples, and authentication guides.";
+
+  return constructMetadata({
+    title,
+    description,
+    keywords: [
+      "snipper api",
+      "url shortener api",
+      "link shortener api docs",
+      "rest api",
+      "developer documentation",
+      "programmatic links",
+      "api key",
+      "link management api",
+    ],
+    robots: { index: true, follow: true },
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: generateOgImageUrl({
+            title: "Snipper API Documentation",
+            type: "article",
+          }),
+          width: 1200,
+          height: 630,
+          alt: "Snipper API Documentation for Developers - Automate Link Creation",
+        },
+      ],
+    },
+  });
+};
 
 export default function ApiDocsPage() {
   return (

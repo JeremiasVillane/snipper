@@ -8,9 +8,69 @@ import { Button } from "@/components/ui/button";
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getShortLink, getShortLinkAnalytics } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
+import { format } from "date-fns";
 import { ArrowLeft } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+interface GenerateMetadataProps {
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ from?: string; to?: string }>;
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: GenerateMetadataProps): Promise<Metadata> {
+  const { id } = await params;
+  const rangeParams = await searchParams;
+
+  const fromDateStr = rangeParams?.from
+    ? format(new Date(rangeParams?.from), "PP")
+    : null;
+  const toDateStr = rangeParams?.to
+    ? format(new Date(rangeParams?.to), "PP")
+    : null;
+
+  const shortLinkResponse = await getShortLink({ id }).then((res) =>
+    getSafeActionResponse(res)
+  );
+  const shortCode = shortLinkResponse.success
+    ? shortLinkResponse.data.shortCode
+    : "Link";
+  const originalUrl = shortLinkResponse.success
+    ? shortLinkResponse.data.originalUrl
+    : "";
+
+  let dateRangeTitlePart = "";
+  let dateRangeDescPart = "";
+
+  if (fromDateStr && toDateStr) {
+    dateRangeTitlePart = ` (${fromDateStr} - ${toDateStr})`;
+    dateRangeDescPart = ` from ${fromDateStr} to ${toDateStr}`;
+  } else if (fromDateStr) {
+    dateRangeTitlePart = ` (from ${fromDateStr})`;
+    dateRangeDescPart = ` from ${fromDateStr}`;
+  } else if (toDateStr) {
+    dateRangeTitlePart = ` (until ${toDateStr})`;
+    dateRangeDescPart = ` until ${toDateStr}`;
+  }
+
+  const pageTitle = `Analytics for ${shortCode}${dateRangeTitlePart} - Snipper`;
+  const pageDescription = `View detailed statistics for short link ${shortCode}${dateRangeDescPart}. ${
+    originalUrl ? `Targets ${originalUrl}.` : ""
+  }`;
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
+}
 
 interface AnalyticsPageProps {
   params: Promise<{

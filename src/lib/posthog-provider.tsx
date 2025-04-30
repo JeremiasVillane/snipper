@@ -8,20 +8,27 @@ import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { env } from "@/env.mjs";
 
+const isPosthogConfigured =
+  !!env.NEXT_PUBLIC_POSTHOG_KEY && !!env.NEXT_PUBLIC_POSTHOG_HOST;
+
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
-      api_host: env.NEXT_PUBLIC_POSTHOG_HOST,
-      person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
-      capture_pageview: false, // Disable automatic pageview capture, as we capture manually
-    });
+    isPosthogConfigured
+      ? posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY!, {
+          api_host: env.NEXT_PUBLIC_POSTHOG_HOST!,
+          person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
+          capture_pageview: false, // Disable automatic pageview capture, as we capture manually
+        })
+      : null;
   }, []);
 
-  return (
+  return isPosthogConfigured ? (
     <PHProvider client={posthog}>
       <SuspendedPostHogPageView />
       {children}
     </PHProvider>
+  ) : (
+    <></>
   );
 }
 
@@ -32,7 +39,7 @@ function PostHogPageView() {
 
   // Track pageviews
   useEffect(() => {
-    if (pathname && posthog) {
+    if (isPosthogConfigured && pathname && posthog) {
       let url = window.origin + pathname;
       if (searchParams.toString()) {
         url = url + "?" + searchParams.toString();
@@ -49,9 +56,9 @@ function PostHogPageView() {
 // from de-opting the whole app into client-side rendering
 // See: https://nextjs.org/docs/messages/deopted-into-client-rendering
 function SuspendedPostHogPageView() {
-  return (
+  return isPosthogConfigured ? (
     <Suspense fallback={null}>
       <PostHogPageView />
     </Suspense>
-  );
+  ) : null;
 }

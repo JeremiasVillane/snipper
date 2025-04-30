@@ -12,6 +12,34 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { constructMetadata } from "@/lib/metadata";
+import { generateOgImageUrl } from "@/lib/og";
+
+export const generateMetadata = async () => {
+  const title = "Create Account - Snipper | Sign Up Free";
+  const description =
+    "Sign up for Snipper to start creating custom short links, track clicks with detailed analytics and use the UTM builder.";
+
+  return constructMetadata({
+    title,
+    description,
+    openGraph: {
+      title: title,
+      description: description,
+      images: [
+        {
+          url: generateOgImageUrl({
+            title: "Snipper Sign Up",
+            type: "website",
+          }),
+          width: 1200,
+          height: 630,
+          alt: "Snipper Account Registration Page",
+        },
+      ],
+    },
+  });
+};
 
 export default async function RegisterPage() {
   const session = await auth();

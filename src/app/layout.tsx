@@ -2,17 +2,62 @@ import Providers from "@/app/providers";
 import { SiteHeader } from "@/components/layout/header/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Toaster } from "@/components/ui/simple-toast";
+import { publicUrl } from "@/env.mjs";
+import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import { PageTracker } from "react-page-tracker";
+import { WebSite, WithContext } from "schema-dts";
 
 const nunito = Nunito_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Snipper - Modern URL Shortener",
+  title: "Snipper - Modern Open Source URL Shortener",
   description:
     "Shorten, customize, and track your links with advanced analytics",
+  keywords: [
+    "URL Shortener",
+    "Short Link",
+    "Open Source Link Shortener",
+    "URL Shortener with Analytics",
+    "UTM Campaign Tracker",
+    "Self-Hosted URL Shortener",
+    "Link Analytics Tool",
+    "Custom Domain Link Shortener",
+    "Link Shortener API",
+    "Open Source Link Tracking",
+    "Track Link Clicks Software",
+    "Branded Links Open Source",
+    "Campaign Tracking Link Shortener",
+    "Free URL Shortener Analytics",
+  ],
+  icons: [
+    {
+      url: "/apple-touch-icon.png",
+      type: "image/png",
+      rel: "apple-touch-icon",
+    },
+    {
+      sizes: "96x96",
+      url: "/favicon-96x96.png",
+      type: "image/png",
+      rel: "icon",
+    },
+  ],
+  openGraph: {
+    title: "Snipper - Open Source URL Shortener",
+    description: "URL Shortener with Analytics and UTM Campaign Tracker",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        height: 630,
+        width: 1200,
+        alt: "URL Shortener with Analytics and UTM Campaign Tracker",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -20,9 +65,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd: WithContext<WebSite> = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Snipper - URL Shortener",
+    url: publicUrl,
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={nunito.className}>
+      <body className={cn(nunito.className, "antialiased")}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd),
+          }}
+        />
+
         <Providers>
           <SiteHeader />
 

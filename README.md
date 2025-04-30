@@ -61,6 +61,8 @@ Snipper offers everything you need to manage your links efficiently:
 Create a `.env` file in the root directory and add the following environment variables:
 
 ```dotenv
+# === Required Variables ===
+
 # Database URLs (ensure both point to your PostgreSQL instance)
 POSTGRES_PRISMA_URL="postgresql://username:password@host:port/database?schema=public"
 POSTGRES_URL_NON_POOLING="postgresql://username:password@host:port/database?schema=public"
@@ -69,12 +71,36 @@ POSTGRES_URL_NON_POOLING="postgresql://username:password@host:port/database?sche
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 # NextAuth configuration
-NEXTAUTH_SECRET="your-secure-random-secret" # Generate a strong secret key
+NEXTAUTH_SECRET="your-secure-random-secret" # Generate a strong secret key (e.g., using `openssl rand -base64 32`)
 
-# Google OAuth Credentials (Optional - for Google login)
+# === Optional: Authentication Providers ===
+
+# Google OAuth Credentials (Required ONLY if you want Google login)
 # Visit: [https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+# === Optional: Monitoring, Analytics & Security Services ===
+# These variables integrate with third-party services for enhanced monitoring, analytics,
+# and security. They are NOT strictly required for the core functionality of Snipper
+# if you are self-hosting, but are recommended for production environments.
+
+# Arcjet (Bot Protection, Rate Limiting, etc.)
+# Visit: [https://arcjet.com/](https://arcjet.com/)
+ARCJET_KEY="your-arcjet-key"
+
+# Sentry (Error Monitoring & Performance Tracking)
+# Visit: [https://sentry.io/](https://sentry.io/)
+SENTRY_ORG="your-sentry-org-name"
+SENTRY_PROJECT="your-sentry-project-name"
+SENTRY_AUTH_TOKEN="your-sentry-auth-token"     # Required for build-time operations like source map uploads
+NEXT_PUBLIC_SENTRY_DSN="your-sentry-public-dsn" # Public DSN for client/server error reporting
+
+# PostHog (Product Analytics)
+# Visit: [https://posthog.com/](https://posthog.com/)
+NEXT_PUBLIC_POSTHOG_KEY="your-posthog-public-key"  # Public API Key for sending events
+NEXT_PUBLIC_POSTHOG_HOST="[https://app.posthog.com](https://app.posthog.com)" # Your PostHog instance URL (Cloud default or self-hosted)
+
 ```
 
 ### Setup Prisma
@@ -100,13 +126,13 @@ npm run dev
 # or yarn dev / pnpm dev
 ```
 
-Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## 📜 License
 
 Distributed under the [**MIT License**](https://www.google.com/search?q=./LICENSE). See the `LICENSE` file for more information.
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper?ref=badge_large&issueType=license)
+[](https://app.fossa.com/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper?ref=badge_large&issueType=license)
 
 ## 📧 Contact
 

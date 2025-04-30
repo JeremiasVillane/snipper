@@ -7,7 +7,20 @@ import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Snipper Dashboard | Manage Your Links & Analytics",
+  description: "Access your personal Snipper dashboard...",
+  robots: {
+    index: false,
+    follow: false,
+  },
+  openGraph: {
+    title: "Snipper Dashboard",
+  },
+};
 
 export default async function DashboardPage() {
   const session = await auth();

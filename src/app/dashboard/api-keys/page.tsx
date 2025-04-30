@@ -6,6 +6,17 @@ import { apiKeysRepository } from "@/lib/db/repositories";
 import { ApiKeyTable } from "@/components/dashboard/api-keys";
 import CreateApiKeyDialog from "@/components/dashboard/api-keys/create-api-key-dialog";
 import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Manage API Keys - Snipper",
+  description:
+    "Create, view, and manage your API keys for programmatic access to the Snipper service.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function ApiKeysPage() {
   const session = await auth();
