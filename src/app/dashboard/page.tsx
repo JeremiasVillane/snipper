@@ -1,6 +1,8 @@
 import { LinkDialog, LinkList } from "@/components/dashboard";
 import { Tour } from "@/components/dashboard/tour";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -11,7 +13,19 @@ export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  const shortLinks = await getUserShortLinks();
+  const { data, success, error } = await getUserShortLinks().then((res) =>
+    getSafeActionResponse(res)
+  );
+
+  if (!success) {
+    return (
+      <main className="flex-1 container min-h-screen py-6">
+        <Alert variant="destructive" styleVariant="fill" withIcon>
+          {error}
+        </Alert>
+      </main>
+    );
+  }
 
   return (
     <main className="flex-1 min-h-screen container py-6">
@@ -28,7 +42,7 @@ export default async function DashboardPage() {
             iconAnimation="zoomIn"
             className={cn(
               "hidden md:flex h-9 md:h-10",
-              shortLinks.length > 0 ? "flex" : ""
+              data.length > 0 ? "flex" : ""
             )}
           >
             Create Link
@@ -36,7 +50,7 @@ export default async function DashboardPage() {
         </LinkDialog>
       </div>
 
-      <LinkList links={shortLinks} />
+      <LinkList links={data} />
       <Tour />
     </main>
   );

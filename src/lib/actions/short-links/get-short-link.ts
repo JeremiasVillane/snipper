@@ -1,21 +1,26 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { shortLinksRepository } from "@/lib/db/repositories";
-import { ShortLinkFromRepository } from "@/lib/types";
+import { z } from "zod";
+import { authActionClient } from "../safe-action";
 
-export async function getShortLink(
-  id: string
-): Promise<ShortLinkFromRepository> {
-  const session = await auth();
-  if (!session?.user) {
-    throw new Error("Authentication required");
-  }
+const getShortLinkSchema = z.object({
+  id: z.string().min(1, "Short link ID is required"),
+});
 
-  const shortLink = await shortLinksRepository.findById(id);
-  if (!shortLink || shortLink.userId !== session.user.id) {
-    throw new Error("Short link not found");
-  }
+export const getShortLink = authActionClient({})
+  .metadata({
+    name: "get-short-link",
+  })
+  .schema(getShortLinkSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    const { id } = parsedInput;
+    const { userId } = ctx;
 
-  return shortLink;
-}
+    const shortLink = await shortLinksRepository.findById(id);
+    if (!shortLink || shortLink.userId !== userId) {
+      throw new Error("Short link not found");
+    }
+
+    return shortLink;
+  });

@@ -3,7 +3,9 @@ import {
   AnalyticsTabs,
   DateRangePicker,
 } from "@/components/dashboard/analytics";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getShortLink, getShortLinkAnalytics } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
 import { ArrowLeft } from "lucide-react";
@@ -33,11 +35,38 @@ export default async function AnalyticsPage({
   const startDate = rangeParams?.from ? new Date(rangeParams.from) : undefined;
   const endDate = rangeParams?.to ? new Date(rangeParams.to) : undefined;
 
-  const shortLink = await getShortLink(id);
-  const analytics = await getShortLinkAnalytics({ id, startDate, endDate });
+  const shortLink = await getShortLink({ id }).then((res) =>
+    getSafeActionResponse(res)
+  );
 
-  if (!shortLink) {
-    redirect("/dashboard");
+  if (!shortLink.success) {
+    console.warn(
+      `Short link ${id} not found or user ${session.user.id} lacks permission.`
+    );
+    return (
+      <main className="flex-1 container min-h-screen py-6">
+        <Alert variant="destructive" styleVariant="fill" withIcon>
+          {shortLink.error}
+        </Alert>
+      </main>
+    );
+  }
+
+  const ShortLinkAnalytics = await getShortLinkAnalytics({
+    id,
+    startDate,
+    endDate,
+  }).then((res) => getSafeActionResponse(res));
+
+  if (!ShortLinkAnalytics.success) {
+    console.error(`Failed to get analytics: ${ShortLinkAnalytics.error}`);
+    return (
+      <main className="flex-1 container min-h-screen py-6">
+        <Alert variant="destructive" styleVariant="fill" withIcon>
+          {ShortLinkAnalytics.error}
+        </Alert>
+      </main>
+    );
   }
 
   return (
@@ -54,7 +83,7 @@ export default async function AnalyticsPage({
               Link Analytics
             </h1>
             <p className="text-muted-foreground">
-              Detailed statistics for {shortLink.shortCode}
+              Detailed statistics for {shortLink.data.shortCode}
             </p>
           </div>
         </section>
@@ -62,8 +91,17 @@ export default async function AnalyticsPage({
         <DateRangePicker className="w-full md:w-fit" />
       </div>
 
-      <AnalyticsHeader {...{ analytics, shortLink, startDate, endDate }} />
-      <AnalyticsTabs {...{ analytics, startDate, endDate }} />
+      <AnalyticsHeader
+        analytics={ShortLinkAnalytics.data}
+        shortLink={shortLink.data}
+        startDate={startDate}
+        endDate={endDate}
+      />
+      <AnalyticsTabs
+        analytics={ShortLinkAnalytics.data}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </main>
   );
 }

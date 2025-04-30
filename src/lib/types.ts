@@ -71,3 +71,13 @@ export type ShortLinkFromRepository = {
   }>;
   tags: string[];
 };
+
+export type genericAuthorizationMiddlewareProps =
+  | {
+      // plans: Plan[] | "ALL";
+      // roles: Role[] | "ALL";
+    }
+  | {
+      plans?: never;
+      roles?: never;
+    };
