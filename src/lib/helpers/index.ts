@@ -1,4 +1,5 @@
-export * from "./build-shorl-url";
+export * from "./build-short-url";
+export * from "./build-url-with-utm";
 export * from "./extract-utm-params";
 export * from "./generate-api-key";
 export * from "./generate-qr-code";

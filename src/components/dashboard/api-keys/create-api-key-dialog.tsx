@@ -34,7 +34,7 @@ import { createApiKey } from "@/lib/actions/api-keys";
 import {
   CreateApiKeyFormData,
   createApiKeySchema,
-} from "@/lib/schemas/api-key-schema";
+} from "@/lib/schemas/api-key.schema";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";

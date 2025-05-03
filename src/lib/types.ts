@@ -52,6 +52,21 @@ export type ShortLinkAnalyticsData = {
   /** Referrer (string), Count (number) */
   clicksByReferrer: Record<string, number>;
   recentClicks: ClickEvent[];
+  definedCampaigns: UTMParamData[];
+  clicksByCampaign: Record<string, number>;
+  clicksBySource: Record<string, number>;
+  clicksByMedium: Record<string, number>;
+  clicksByTerm: Record<string, number>;
+  clicksByContent: Record<string, number>;
+};
+
+export type UTMParamData = {
+  id: string;
+  source: string | null;
+  medium: string | null;
+  campaign: string;
+  term: string | null;
+  content: string | null;
 };
 
 export type ShortLinkFromRepository = {
@@ -70,6 +85,7 @@ export type ShortLinkFromRepository = {
     tag: Tag;
   }>;
   tags: string[];
+  utmParams: UTMParamData[];
 };
 
 export type genericAuthorizationMiddlewareProps =

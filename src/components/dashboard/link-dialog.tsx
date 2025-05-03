@@ -38,16 +38,20 @@ import { toast } from "@/components/ui/simple-toast";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { shortenUrl, updateShortLink } from "@/lib/actions/short-links";
-import { extractUtmParams, removeUtmParams } from "@/lib/helpers";
-import { CreateLinkFormData, createLinkSchema } from "@/lib/schemas";
+import {
+  CreateLinkFormData,
+  createLinkSchema,
+  UtmSetFormData,
+} from "@/lib/schemas";
 import { ShortLinkFromRepository } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { UtmBuilder } from "./utm-builder";
+import { useFieldArray, useForm } from "react-hook-form";
+import { UtmSetDisplay } from "./utm-set-display";
+import { UtmSetForm } from "./utm-set-form";
 
 interface LinkDialogProps {
   children?: React.ReactNode;
@@ -69,24 +73,28 @@ export function LinkDialog({
     controlledOpen !== undefined && setControlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : internalOpen;
   const onOpenChange = isControlled ? setControlledOpen : setInternalOpen;
-
   const [newTag, setNewTag] = useState("");
+  const [editingUtmIndex, setEditingUtmIndex] = useState<number | null>(null);
 
   const calculateFormValues = (
     data: ShortLinkFromRepository | undefined
   ): CreateLinkFormData => {
-    const strippedUrl = removeUtmParams(data?.originalUrl);
-    const extractedUtm = extractUtmParams(data?.originalUrl);
-
     return {
-      originalUrl: strippedUrl ?? "",
+      originalUrl: data?.originalUrl ?? "",
       shortCode: data?.shortCode ?? undefined,
       tags: data?.tags ?? [],
       isExpirationEnabled: !!data?.expiresAt,
       expiresAt: data?.expiresAt ?? undefined,
       isPasswordEnabled: !!data?.password,
       password: data?.password ?? undefined,
-      utmParams: data?.originalUrl ? extractedUtm : undefined,
+      utmSets:
+        data?.utmParams?.map((p) => ({
+          source: p.source,
+          medium: p.medium,
+          campaign: p.campaign,
+          term: p.term,
+          content: p.content,
+        })) ?? [],
     };
   };
 
@@ -108,6 +116,16 @@ export function LinkDialog({
     formState: { isSubmitting, errors },
   } = form;
 
+  const {
+    fields: utmSetFields,
+    append: appendUtmSet,
+    remove: removeUtmSet,
+    update: updateUtmSet,
+  } = useFieldArray({
+    control,
+    name: "utmSets",
+  });
+
   const isExpirationEnabled = watch("isExpirationEnabled");
   const isPasswordEnabled = watch("isPasswordEnabled");
   const currentTags = watch("tags");
@@ -116,6 +134,7 @@ export function LinkDialog({
     if (isOpen) {
       reset(calculateFormValues(initialData));
       setNewTag("");
+      setEditingUtmIndex(null);
     }
   }, [initialData, isOpen, reset]);
 
@@ -160,22 +179,68 @@ export function LinkDialog({
         description: `Link ${
           initialData?.id ? "updated" : "created"
         } successfully.`,
+        type: "success",
       });
 
       onOpenChange(false);
       router.refresh();
     } catch (error: any) {
       console.error("Error submitting form:", error);
-      let errorMessage = "An unexpected error occurred. Please try again.";
-      if (error?.message) errorMessage = error.message;
-
       toast({
         title: "Error",
-        description: errorMessage,
+        description: error.message || "Failed to save link.",
         type: "error",
       });
     }
   };
+
+  const handleStartEditUtm = (index: number) => {
+    setEditingUtmIndex(index);
+  };
+
+  const handleCancelEditUtm = () => {
+    setEditingUtmIndex(null);
+  };
+
+  const handleAddUtmSet = (newSet: UtmSetFormData) => {
+    const existingNames = (getValues("utmSets") ?? []).map(
+      (set) => set.campaign
+    );
+    if (existingNames.includes(newSet.campaign)) {
+      toast({
+        title: "Duplicate Campaign Name",
+        description: `A set with campaign name "${newSet.campaign}" already exists.`,
+        type: "warning",
+      });
+      return;
+    }
+
+    appendUtmSet(newSet);
+    toast({ title: `Campaign "${newSet.campaign}" added.`, type: "success" });
+  };
+
+  const handleUpdateUtmSet = (index: number, updatedSet: UtmSetFormData) => {
+    const existingNames = (getValues("utmSets") ?? [])
+      .filter((_, i) => i !== index)
+      .map((set) => set.campaign);
+    if (existingNames.includes(updatedSet.campaign)) {
+      toast({
+        title: "Duplicate Campaign Name",
+        description: `Another set with campaign name "${updatedSet.campaign}" already exists.`,
+        type: "warning",
+      });
+      return;
+    }
+    updateUtmSet(index, updatedSet);
+    setEditingUtmIndex(null);
+    toast({
+      title: `Campaign "${updatedSet.campaign}" updated.`,
+      type: "success",
+    });
+  };
+
+  const currentEditData =
+    editingUtmIndex !== null ? getValues(`utmSets.${editingUtmIndex}`) : null;
 
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
@@ -192,7 +257,7 @@ export function LinkDialog({
           </CredenzaDescription>
         </CredenzaHeader>
 
-        <CredenzaBody className="overflow-y-auto">
+        <CredenzaBody className="overflow-y-auto flex-grow">
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <Tabs variant="segmented" defaultValue="basic">
@@ -424,7 +489,47 @@ export function LinkDialog({
                 </TabsContent>
 
                 <TabsContent value="tracking">
-                  <UtmBuilder control={control} setValue={setValue} />
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>UTM Campaign Sets</CardTitle>
+                      <CardDescription>
+                        Define reusable UTM parameter sets. Add sets below. The
+                        generated links can be copied from the main links table.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {utmSetFields.length > 0 && (
+                        <div className="space-y-3 pt-2">
+                          <h4 className="font-medium text-sm text-muted-foreground">
+                            {initialData ? "Saved Sets" : "Added Sets"} (
+                            {utmSetFields.length}):
+                          </h4>
+                          {utmSetFields.map((field, index) => (
+                            <UtmSetDisplay
+                              key={field.id}
+                              index={index}
+                              utmSet={getValues(`utmSets.${index}`)}
+                              onRemove={removeUtmSet}
+                              onEdit={handleStartEditUtm}
+                            />
+                          ))}
+                        </div>
+                      )}
+                      {utmSetFields.length === 0 && (
+                        <p className="text-sm text-muted-foreground text-center py-4 italic">
+                          No UTM sets added yet.
+                        </p>
+                      )}
+
+                      <UtmSetForm
+                        editingIndex={editingUtmIndex}
+                        editingSet={currentEditData}
+                        onAddSet={handleAddUtmSet}
+                        onUpdateSet={handleUpdateUtmSet}
+                        onCancelEdit={handleCancelEditUtm}
+                      />
+                    </CardContent>
+                  </Card>
                 </TabsContent>
               </Tabs>
 

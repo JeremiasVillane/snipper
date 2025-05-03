@@ -6,20 +6,26 @@ import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { Button, ButtonProps } from "./button";
-import { toast } from "./simple-toast";
+import { toast, ToastProps } from "./simple-toast";
 
 export const CopyToClipboardButton = ({
   content,
   className,
+  successToastOptions,
   children,
   ...props
-}: ButtonProps & { content: string }) => {
+}: ButtonProps & {
+  content: string;
+  successToastOptions?: Omit<ToastProps, "id">;
+}) => {
   const { copyToClipboard, isCopied } = useCopyToClipboard({
     onCopy: () =>
-      toast({
-        title: "Copied!",
-        description: "Copied to clipboard",
-      }),
+      toast(
+        successToastOptions ?? {
+          title: "Copied!",
+          description: "Copied to clipboard",
+        }
+      ),
   });
 
   return (
@@ -33,9 +39,7 @@ export const CopyToClipboardButton = ({
         className
       )}
       onClick={() => copyToClipboard(content)}
-      aria-label={
-        isCopied ? "Copied to clipboard" : "Copy to clipboard"
-      }
+      aria-label={isCopied ? "Copied to clipboard" : "Copy to clipboard"}
     >
       <span className="sr-only">{isCopied ? "Copied" : "Copy"}</span>
       <Copy

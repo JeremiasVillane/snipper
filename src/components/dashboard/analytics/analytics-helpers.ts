@@ -5,9 +5,11 @@ interface ProcessedItem {
 }
 
 export const processAndSortData = (
-  data: Record<string, number>,
+  data?: Record<string, number> | null,
   limit?: number
 ): ProcessedItem[] => {
+  if (!data) return [];
+
   const totalClicks = Object.values(data).reduce(
     (sum, clicks) => sum + clicks,
     0

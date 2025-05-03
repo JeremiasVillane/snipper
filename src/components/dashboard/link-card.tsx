@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
 import { buildShortUrl } from "@/lib/helpers";
 import { ShortLinkFromRepository } from "@/lib/types";
 import { formatDistanceToNow } from "date-fns";
@@ -16,6 +15,7 @@ import { ExternalLink, LineChart, Pencil, QrCode, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { BubbleMenu } from "../ui/bubble-menu";
+import { CopyOptionsMenu } from "./copy-options-menu";
 
 interface LinkCardProps {
   link: ShortLinkFromRepository;
@@ -25,6 +25,8 @@ interface LinkCardProps {
 }
 
 export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
+  const isExpired = !!link.expiresAt && new Date() >= link.expiresAt;
+
   return (
     <Card className="relative h-full flex flex-col">
       <CardHeader className="pb-2 overflow-hidden">
@@ -75,14 +77,17 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
               Password Protected
             </Badge>
           )}
+
+          {link.utmParams.length > 0 && (
+            <Badge variant="outline" className="text-xs">
+              UTM Params
+            </Badge>
+          )}
         </div>
       </CardContent>
 
       <BubbleMenu className="mt-1 mb-2 mr-auto xl:mr-2 ml-auto">
-        <CopyToClipboardButton
-          content={buildShortUrl(link.shortCode)}
-          className="text-foreground [&_svg]:left-3.5 size-full p-3"
-        />
+        <CopyOptionsMenu {...{ link, isExpired }} />
         <QrCode
           role="button"
           onClick={() => onQrCode(link)}

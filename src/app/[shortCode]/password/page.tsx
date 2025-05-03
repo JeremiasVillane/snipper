@@ -65,10 +65,15 @@ interface PasswordPageProps {
   params: Promise<{
     shortCode: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function PasswordPage({ params }: PasswordPageProps) {
+export default async function PasswordPage({
+  params,
+  searchParams,
+}: PasswordPageProps) {
   const { shortCode } = await params;
+  const resolvedSearchParams = await searchParams;
 
   const shortLink = await shortLinksRepository.findByShortCode(shortCode);
 
@@ -82,5 +87,5 @@ export default async function PasswordPage({ params }: PasswordPageProps) {
     redirect(`/${shortCode}`);
   }
 
-  return <PasswordProtection shortCode={shortCode} />;
+  return <PasswordProtection {...{ shortCode, resolvedSearchParams }} />;
 }

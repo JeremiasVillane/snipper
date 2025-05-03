@@ -6,7 +6,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShortLinkAnalyticsData } from "@/lib/types";
+import { ShortLinkAnalyticsData, UTMParamData } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
 import {
   Browsers,
   ClicksOverTime,
@@ -17,12 +18,12 @@ import {
 import { AnalyticsDevices } from "./analytics-devices";
 import { ClicksTable } from "./clicks-table";
 import { CountryMap } from "./country-map";
-import { TopRegionsTable } from "./top-regions-table";
 import { ReferrersTable } from "./referrers-tables";
-import { formatDate } from "@/lib/utils";
+import { TopRegionsTable } from "./top-regions-table";
+import { UtmValueTable } from "./utm-value-table";
 
 interface AnalyticsTabsProps {
-  analytics: ShortLinkAnalyticsData;
+  analytics: ShortLinkAnalyticsData | null;
   startDate?: Date;
   endDate?: Date;
 }
@@ -32,6 +33,34 @@ export function AnalyticsTabs({
   startDate,
   endDate,
 }: AnalyticsTabsProps) {
+  if (!analytics) {
+    return (
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Analytics not available</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <CardDescription>
+            The analytics data could not be loaded.
+          </CardDescription>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const names = new Set<string>();
+  analytics.definedCampaigns?.forEach((c) => names.add(c.campaign));
+  Object.keys(analytics.clicksByCampaign || {})
+    .filter((name) => name !== "Unknown")
+    .forEach((name) => names.add(name));
+
+  const map = new Map<string, UTMParamData>();
+  analytics.definedCampaigns?.forEach((def) => {
+    if (def.campaign) {
+      map.set(def.campaign, def);
+    }
+  });
+
   return (
     <Tabs variant="segmented" defaultValue="overview" className="mt-6">
       <TabsList>
@@ -39,7 +68,7 @@ export function AnalyticsTabs({
         <TabsTrigger value="clicks">Clicks</TabsTrigger>
         <TabsTrigger value="geography">Geography</TabsTrigger>
         <TabsTrigger value="devices">Devices & Browsers</TabsTrigger>
-        <TabsTrigger value="referrers">Referrers</TabsTrigger>
+        <TabsTrigger value="traffic">Traffic Sources</TabsTrigger>
       </TabsList>
 
       <TabsContent value="overview" className="space-y-6 mt-6">
@@ -150,18 +179,61 @@ export function AnalyticsTabs({
         </Card>
       </TabsContent>
 
-      <TabsContent value="referrers" className="mt-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Referrers</CardTitle>
-            <CardDescription>
-              Detailed information about referrers
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+      <TabsContent value="traffic" className="mt-6">
+        <Tabs variant="underlined" defaultValue="campaigns">
+          <TabsList className="flex flex-wrap h-auto justify-start mb-4 border-b-0 md:w-auto">
+            <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
+            <TabsTrigger value="sources">Sources</TabsTrigger>
+            <TabsTrigger value="mediums">Mediums</TabsTrigger>
+            <TabsTrigger value="terms">Terms</TabsTrigger>
+            <TabsTrigger value="contents">Contents</TabsTrigger>
+            <TabsTrigger value="referrers">Referrers</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="campaigns">
+            <UtmValueTable
+              title="Campaign Values"
+              paramName="utm_campaign"
+              data={analytics.clicksByCampaign}
+            />
+          </TabsContent>
+
+          <TabsContent value="sources">
+            <UtmValueTable
+              title="Source Values"
+              paramName="utm_source"
+              data={analytics.clicksBySource}
+            />
+          </TabsContent>
+
+          <TabsContent value="mediums">
+            <UtmValueTable
+              title="Medium Values"
+              paramName="utm_medium"
+              data={analytics.clicksByMedium}
+            />
+          </TabsContent>
+
+          <TabsContent value="terms">
+            <UtmValueTable
+              title="Term Values"
+              paramName="utm_term"
+              data={analytics.clicksByTerm}
+            />
+          </TabsContent>
+
+          <TabsContent value="contents">
+            <UtmValueTable
+              title="Content Values"
+              paramName="utm_content"
+              data={analytics.clicksByContent}
+            />
+          </TabsContent>
+
+          <TabsContent value="referrers">
             <ReferrersTable referrersData={analytics.clicksByReferrer} />
-          </CardContent>
-        </Card>
+          </TabsContent>
+        </Tabs>
       </TabsContent>
     </Tabs>
   );

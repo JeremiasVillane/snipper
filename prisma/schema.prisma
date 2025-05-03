@@ -11,20 +11,88 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+enum UserRole {
+  USER
+  DEMO
+}
+
 model User {
-  id            String      @id @default(uuid())
+  id            String    @id @default(uuid())
   name          String?
-  email         String      @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  accounts      Account[]
-  apiKeys       ApiKey[]
-  sessions      Session[]
-  shortLinks    ShortLink[]
-  tags          Tag[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  role     UserRole  @default(USER)
+  accounts Account[]
+  sessions Session[]
+
+  tags       Tag[]
+  shortLinks ShortLink[]
+  apiKeys    ApiKey[]
+
+  subscriptions Subscription[]
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  PAST_DUE
+  CANCELED
+  EXPIRED
+  TRIALING
+}
+
+model Subscription {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId Int
+  plan   Plan   @relation(fields: [planId], references: [id])
+
+  status             SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime?
+
+  cancelAtPeriodEnd Boolean   @default(false)
+  canceledAt        DateTime?
+  endedAt           DateTime?
+  trialStart        DateTime?
+  trialEnd          DateTime?
+
+  stripeSubscriptionId String? @unique
+  stripeCustomerId     String?
+  stripePriceId        String?
+  stripePaymentStatus  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([planId])
+  @@index([status])
+}
+
+enum PlanType {
+  FREE
+  PREMIUM
+}
+
+model Plan {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  type        PlanType
+  description String?
+  maxLinks    Int?
+  maxUtmSets  Int?
+  price       Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subscriptions Subscription[]
 }
 
 model Account {
@@ -69,20 +137,38 @@ model Session {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model UTMParam {
+  id       String  @id @default(cuid())
+  source   String?
+  medium   String?
+  campaign String
+  term     String?
+  content  String?
+
+  shortLinkId String
+  shortLink   ShortLink @relation(fields: [shortLinkId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([shortLinkId])
+}
+
 model ShortLink {
-  id          String    @id @default(uuid())
+  id          String       @id @default(uuid())
   originalUrl String
-  shortCode   String    @unique
-  createdAt   DateTime  @default(now())
+  shortCode   String       @unique
   expiresAt   DateTime?
   password    String?
   userId      String?
-  qrCodeUrl   String?
-  clicks      Int       @default(0)
-
   user        User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  qrCodeUrl   String?
+  clicks      Int          @default(0)
   clickEvents ClickEvent[]
   linkTags    LinkTag[]
+  utmParams   UTMParam[]
+  description String?
+  createdAt   DateTime     @default(now())
 }
 
 model ClickEvent {
@@ -92,6 +178,11 @@ model ClickEvent {
   ipAddress   String?
   userAgent   String?
   referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmTerm     String?
+  utmContent  String?
   country     String?
   city        String?
   device      String?
@@ -108,6 +199,8 @@ model Tag {
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   linkTags LinkTag[]
+
+  @@unique([userId, name])
 }
 
 model LinkTag {

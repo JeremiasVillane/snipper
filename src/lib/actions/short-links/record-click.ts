@@ -6,18 +6,25 @@ import {
   shortLinksRepository,
 } from "@/lib/db/repositories";
 
+type ClickEventInputData = {
+  ipAddress?: string;
+  userAgent?: string;
+  referrer?: string;
+  country?: string;
+  city?: string;
+  device?: string;
+  browser?: string;
+  os?: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmTerm?: string;
+  utmContent?: string;
+};
+
 export async function recordClick(
   shortCode: string,
-  data: {
-    ipAddress?: string;
-    userAgent?: string;
-    referrer?: string;
-    country?: string;
-    city?: string;
-    device?: string;
-    browser?: string;
-    os?: string;
-  }
+  data: ClickEventInputData
 ) {
   const session = await auth();
 
@@ -48,9 +55,14 @@ export async function recordClick(
     device: data.device || null,
     browser: data.browser || null,
     os: data.os || null,
+    utmSource: data.utmSource || null,
+    utmMedium: data.utmMedium || null,
+    utmCampaign: data.utmCampaign || null,
+    utmTerm: data.utmTerm || null,
+    utmContent: data.utmContent || null,
   });
 
   await shortLinksRepository.incrementClicks(shortLink.id);
 
-  return shortLink.originalUrl;
+  return;
 }

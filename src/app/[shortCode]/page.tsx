@@ -107,10 +107,15 @@ interface ShortCodePageProps {
   params: Promise<{
     shortCode: string;
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function ShortCodePage({ params }: ShortCodePageProps) {
+export default async function ShortCodePage({
+  params,
+  searchParams,
+}: ShortCodePageProps) {
   const { shortCode } = await params;
+  const resolvedSearchParams = await searchParams;
 
   if (["ggl", "ghub", "lkdn", "demo", "blog"].includes(shortCode)) {
     const demoUrlsMap: Record<string, string> = {
@@ -126,14 +131,12 @@ export default async function ShortCodePage({ params }: ShortCodePageProps) {
 
   const shortLink = await shortLinksRepository.findByShortCode(shortCode);
 
-  if (!shortLink) notFound();
-
-  if (shortLink.expiresAt && shortLink.expiresAt < new Date()) {
+  if (!shortLink || (shortLink.expiresAt && shortLink.expiresAt < new Date())) {
     notFound();
   }
 
   if (shortLink.password) {
-    return <PasswordProtection shortCode={shortCode} />;
+    return <PasswordProtection {...{ shortCode, resolvedSearchParams }} />;
   }
 
   const headersList = await headers();
@@ -146,8 +149,8 @@ export default async function ShortCodePage({ params }: ShortCodePageProps) {
   const rawCountry = headersList.get("x-vercel-ip-country");
   const rawCity = headersList.get("x-vercel-ip-city");
 
-  let country = "Unknown";
-  let city = "Unknown";
+  let country = "Unknown",
+    city = "Unknown";
 
   if (rawCountry) {
     try {
@@ -190,6 +193,17 @@ export default async function ShortCodePage({ params }: ShortCodePageProps) {
 
   const { browser, os, device } = parseUserAgentImproved(userAgent);
 
+  const getQueryParam = (key: string): string | undefined => {
+    const value = resolvedSearchParams[key];
+    return Array.isArray(value) ? value[0] : value;
+  };
+
+  const utmSource = getQueryParam("utm_source");
+  const utmMedium = getQueryParam("utm_medium");
+  const utmCampaign = getQueryParam("utm_campaign");
+  const utmTerm = getQueryParam("utm_term");
+  const utmContent = getQueryParam("utm_content");
+
   recordClick(shortCode, {
     ipAddress: ip,
     userAgent,
@@ -199,6 +213,11 @@ export default async function ShortCodePage({ params }: ShortCodePageProps) {
     os,
     country,
     city,
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    utmTerm,
+    utmContent,
   }).catch(console.error);
 
   redirect(shortLink.originalUrl);

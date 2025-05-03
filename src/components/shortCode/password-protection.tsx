@@ -21,6 +21,9 @@ import { useActionState } from "react";
 
 interface PasswordProtectionProps {
   shortCode: string;
+  resolvedSearchParams: {
+    [key: string]: string | string[] | undefined;
+  };
 }
 
 function SubmitButton() {
@@ -40,12 +43,16 @@ function SubmitButton() {
   );
 }
 
-export function PasswordProtection({ shortCode }: PasswordProtectionProps) {
+export function PasswordProtection({
+  shortCode,
+  resolvedSearchParams,
+}: PasswordProtectionProps) {
   const initialState: VerifyPasswordState = { message: null, success: false };
 
   const verifyPasswordWithShortCode = verifyPasswordAndRecordClick.bind(
     null,
-    shortCode
+    shortCode,
+    resolvedSearchParams
   );
 
   const [state, formAction] = useActionState(

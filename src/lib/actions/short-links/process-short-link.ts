@@ -18,6 +18,9 @@ export interface VerifyPasswordState {
 
 export async function verifyPasswordAndRecordClick(
   shortCode: string,
+  resolvedSearchParams: {
+    [key: string]: string | string[] | undefined;
+  },
   _previousState: VerifyPasswordState,
   formData: FormData
 ): Promise<VerifyPasswordState> {
@@ -56,8 +59,10 @@ export async function verifyPasswordAndRecordClick(
     const headersList = await headers();
     const userAgent = headersList.get("user-agent") || "";
     const referrer = headersList.get("referer") || "";
+
     const xForwardedFor = headersList.get("x-forwarded-for");
     const ip = xForwardedFor ? xForwardedFor.split(",")[0].trim() : "127.0.0.1";
+
     const rawCountry = headersList.get("x-vercel-ip-country");
     const rawCity = headersList.get("x-vercel-ip-city");
 
@@ -78,9 +83,9 @@ export async function verifyPasswordAndRecordClick(
         const res = await fetch(`http://ip-api.com/json/${realIP}`)
           .then((res) => res.json())
           .then((res) => res);
-        country = res?.countryCode;
+        country = res?.countryCode ?? "Unknown";
       } catch (e) {
-        country = country;
+        country = "Unknown";
       }
     }
     if (rawCity) {
@@ -105,6 +110,17 @@ export async function verifyPasswordAndRecordClick(
 
     const { browser, os, device } = parseUserAgentImproved(userAgent);
 
+    const getQueryParam = (key: string): string | undefined => {
+      const value = resolvedSearchParams[key];
+      return Array.isArray(value) ? value[0] : value;
+    };
+
+    const utmSource = getQueryParam("utm_source");
+    const utmMedium = getQueryParam("utm_medium");
+    const utmCampaign = getQueryParam("utm_campaign");
+    const utmTerm = getQueryParam("utm_term");
+    const utmContent = getQueryParam("utm_content");
+
     recordClick(shortCode, {
       ipAddress: ip,
       userAgent,
@@ -114,6 +130,11 @@ export async function verifyPasswordAndRecordClick(
       os,
       country,
       city,
+      utmSource,
+      utmMedium,
+      utmCampaign,
+      utmTerm,
+      utmContent,
     }).catch(console.error);
   } catch (error) {
     console.error("Password verification or click recording failed:", error);

@@ -47,7 +47,7 @@ const tabsListVariants = cva(
         "pill-outlined": "h-auto gap-1",
         "pill-boxed": "rounded-2xl p-1 h-auto gap-1 border",
         segmented: "rounded-md border overflow-hidden divide-x",
-        bootstrap: "border-b",
+        bootstrap: "",
         vercel: "relative h-[30px]"
       }
     },

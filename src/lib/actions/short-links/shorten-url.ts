@@ -1,13 +1,15 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { shortLinksRepository, tagsRepository } from "@/lib/db/repositories";
+import { prisma } from "@/lib/db/prisma";
 import {
   buildShortUrl,
   generateQRCode,
   generateShortCode,
 } from "@/lib/helpers";
 import { CreateLinkFormData, createLinkSchema } from "@/lib/schemas";
+import { Prisma } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const shortCodeSchema = z
@@ -25,73 +27,117 @@ export async function shortenUrl(formData: CreateLinkFormData) {
   if (!session?.user) {
     throw new Error("Authentication required");
   }
-
   if (session.user.email === "demo@example.com") {
-    throw new Error("Not available on demo account");
+    throw new Error("This feature is not available for demo accounts.");
   }
 
   const parsedData = await createLinkSchema.parseAsync(formData);
 
-  let finalUrl = parsedData.originalUrl;
-  if (formData.utmParams) {
-    const urlObj = new URL(finalUrl);
-    if (formData.utmParams.source)
-      urlObj.searchParams.append("utm_source", formData.utmParams.source);
-    if (formData.utmParams.medium)
-      urlObj.searchParams.append("utm_medium", formData.utmParams.medium);
-    if (formData.utmParams.campaign)
-      urlObj.searchParams.append("utm_campaign", formData.utmParams.campaign);
-    if (formData.utmParams.term)
-      urlObj.searchParams.append("utm_term", formData.utmParams.term);
-    if (formData.utmParams.content)
-      urlObj.searchParams.append("utm_content", formData.utmParams.content);
-    finalUrl = urlObj.toString();
-  }
+  const originalUrl = parsedData.originalUrl;
 
   let shortCode: string;
-  if (session.user && formData.shortCode) {
-    try {
-      shortCodeSchema.parse(formData.shortCode);
+  if (parsedData.shortCode) {
+    shortCodeSchema.parse(parsedData.shortCode);
 
-      const existingLink = await shortLinksRepository.findByShortCode(
-        formData.shortCode
+    const existingLink = await prisma.shortLink.findUnique({
+      where: { shortCode: parsedData.shortCode },
+      select: { id: true },
+    });
+    if (existingLink) {
+      throw new Error(
+        `The alias "${parsedData.shortCode}" is already taken. Please choose another one.`
       );
-      if (existingLink) {
-        throw new Error("This custom alias is already taken");
-      }
-
-      shortCode = formData.shortCode;
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        throw new Error(error.errors[0].message);
-      }
-      throw error;
     }
+    shortCode = parsedData.shortCode;
   } else {
     shortCode = generateShortCode();
   }
 
-  let qrCodeUrl: string | null = null;
-  if (session.user) {
-    qrCodeUrl = await generateQRCode(buildShortUrl(shortCode));
-  }
+  const qrCodeUrl = await generateQRCode(buildShortUrl(shortCode));
 
-  const shortLink = await shortLinksRepository.create({
-    originalUrl: finalUrl,
-    shortCode,
-    expiresAt: parsedData.expiresAt || null,
-    password: parsedData.password || null,
-    user: session?.user?.id ? { connect: { id: session.user.id } } : undefined,
-    qrCodeUrl,
-  });
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      const shortLink = await tx.shortLink.create({
+        data: {
+          originalUrl: originalUrl,
+          shortCode: shortCode,
+          userId: session.user.id!,
+          expiresAt: parsedData.expiresAt,
+          password: parsedData.password,
+          qrCodeUrl: qrCodeUrl,
+          // description: formData.description || null,
+          clicks: 0,
+        },
+        select: { id: true, shortCode: true },
+      });
 
-  if (session.user && formData.tags && formData.tags.length > 0) {
-    for (const tagName of formData.tags) {
-      const tag = await tagsRepository.findOrCreate(tagName, session.user.id);
-      await tagsRepository.addTagToLink(shortLink.id, tag.id);
+      if (parsedData.utmSets && parsedData.utmSets.length > 0) {
+        const utmParamsToCreate = parsedData.utmSets.map((utmSet) => ({
+          shortLinkId: shortLink.id,
+          source: utmSet.source || null,
+          medium: utmSet.medium || null,
+          campaign: utmSet.campaign,
+          term: utmSet.term || null,
+          content: utmSet.content || null,
+        }));
+
+        await tx.uTMParam.createMany({
+          data: utmParamsToCreate,
+        });
+        console.log(
+          `Created ${utmParamsToCreate.length} UTMParam sets for link ${shortLink.id}`
+        );
+      }
+
+      if (parsedData.tags && parsedData.tags.length > 0) {
+        const tagOperations = parsedData.tags.map(async (tagName) => {
+          return await tx.tag.upsert({
+            where: {
+              userId_name: { userId: session.user.id!, name: tagName.trim() },
+            },
+            update: {},
+            create: { name: tagName.trim(), userId: session.user.id! },
+            select: { id: true },
+          });
+        });
+        const tags = await Promise.all(tagOperations);
+
+        await tx.linkTag.createMany({
+          data: tags.map((tag) => ({
+            linkId: shortLink.id,
+            tagId: tag.id,
+          })),
+          skipDuplicates: true,
+        });
+        console.log(`Associated ${tags.length} tags with link ${shortLink.id}`);
+      }
+
+      return shortLink;
+    });
+
+    revalidatePath("/dashboard/links");
+
+    return {
+      shortUrl: buildShortUrl(result.shortCode),
+      shortCode: result.shortCode,
+      qrCodeUrl,
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error in shortenUrl transaction:", error);
+
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      if ((error.meta as any)?.target?.includes("shortCode")) {
+        throw new Error(
+          `The alias "${shortCode}" is already taken or was generated concurrently. Please try again.`
+        );
+      }
     }
-  }
 
-  const shortUrl = buildShortUrl(shortCode);
-  return { shortUrl, shortCode, qrCodeUrl };
+    if (error instanceof Error) throw error;
+    throw new Error("Failed to create the short link due to a database error.");
+  }
 }

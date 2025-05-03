@@ -1,6 +1,6 @@
+import { ShortLinkFromRepository } from "@/lib/types";
 import { Prisma } from "@prisma/client";
 import { prisma } from "../prisma";
-import { ShortLinkFromRepository } from "@/lib/types";
 
 export const shortLinksRepository = {
   async create(data: Prisma.ShortLinkCreateInput) {
@@ -20,6 +20,7 @@ export const shortLinksRepository = {
         linkTags: {
           include: { tag: true },
         },
+        utmParams: true,
       },
     });
     if (!shortLink) return null;
@@ -43,6 +44,7 @@ export const shortLinksRepository = {
         linkTags: {
           include: { tag: true },
         },
+        utmParams: true,
       },
     });
     return shortLinks.map((link) => ({

@@ -1,12 +1,3 @@
-"use client";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -15,39 +6,51 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ShortLinkAnalyticsData } from "@/lib/types";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useMemo } from "react";
 import { processAndSortData } from "./analytics-helpers";
 
-interface ReferrersTable {
-  referrersData: ShortLinkAnalyticsData["clicksByReferrer"];
+interface UtmValueTableProps {
+  title: string;
+  paramName: string;
+  data: Record<string, number> | null | undefined;
 }
 
-export function ReferrersTable({ referrersData }: ReferrersTable) {
-  const data = useMemo(
-    () => processAndSortData(referrersData, 10),
-    [referrersData]
-  );
+type SortedUtmValue = {
+  value: string;
+  clicks: number;
+};
+
+export function UtmValueTable({ title, paramName, data }: UtmValueTableProps) {
+  const sortedData = useMemo(() => processAndSortData(data), [data]);
 
   return (
     <Card>
       <CardHeader className="pb-4">
-        <CardTitle>Top Referrers</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <CardDescription>
-          Websites and sources referring traffic
+          {sortedData.length > 0
+            ? `Unique values captured for the '${paramName}' parameter, sorted by click count.`
+            : `No clicks were recorded with a defined '${paramName}' parameter for this link in the selected period.`}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Referrer</TableHead>
+              <TableHead>Value</TableHead>
               <TableHead className="w-[100px] text-center">Clicks</TableHead>
               <TableHead className="w-[100px] text-right">Percentage</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.length === 0 ? (
+            {sortedData.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={3}
@@ -57,9 +60,11 @@ export function ReferrersTable({ referrersData }: ReferrersTable) {
                 </TableCell>
               </TableRow>
             ) : (
-              data.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">{item.name}</TableCell>
+              sortedData.map((item) => (
+                <TableRow key={item.name}>
+                  <TableCell className="font-medium break-words">
+                    {item.name}
+                  </TableCell>
                   <TableCell className="text-center">{item.clicks}</TableCell>
                   <TableCell className="text-right">
                     {item.percentage.toFixed(1)} %
