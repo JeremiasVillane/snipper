@@ -315,7 +315,6 @@ async function main() {
     );
 
     const randomCreatedAt = faker.date.past({ years: 1, refDate: new Date() });
-    const qrCodeUrl = await generateQRCode(buildShortUrl(linkData.shortCode));
 
     // --- 6a. Create the ShortLink using the clean URL ---
     const shortLink = await prisma.shortLink.create({
@@ -326,7 +325,6 @@ async function main() {
         description: linkData.description,
         clicks: 0,
         expiresAt: linkData.expiresAt,
-        qrCodeUrl: qrCodeUrl,
         createdAt: randomCreatedAt,
       },
     });

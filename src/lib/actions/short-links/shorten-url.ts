@@ -53,8 +53,6 @@ export async function shortenUrl(formData: CreateLinkFormData) {
     shortCode = generateShortCode();
   }
 
-  const qrCodeUrl = await generateQRCode(buildShortUrl(shortCode));
-
   try {
     const result = await prisma.$transaction(async (tx) => {
       const shortLink = await tx.shortLink.create({
@@ -64,7 +62,6 @@ export async function shortenUrl(formData: CreateLinkFormData) {
           userId: session.user.id!,
           expiresAt: parsedData.expiresAt,
           password: parsedData.password,
-          qrCodeUrl: qrCodeUrl,
           // description: formData.description || null,
           clicks: 0,
         },
@@ -120,7 +117,6 @@ export async function shortenUrl(formData: CreateLinkFormData) {
     return {
       shortUrl: buildShortUrl(result.shortCode),
       shortCode: result.shortCode,
-      qrCodeUrl,
       success: true,
     };
   } catch (error) {

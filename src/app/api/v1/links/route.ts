@@ -68,15 +68,12 @@ export async function POST(request: NextRequest) {
       shortCode = generateShortCode();
     }
 
-    const qrCodeUrl = await generateQRCode(buildShortUrl(shortCode));
-
     const shortLink = await shortLinksRepository.create({
       originalUrl: validatedData.url,
       shortCode,
       expiresAt: validatedData.expiresAt || null,
       password: validatedData.password || null,
       user: { connect: { id: apiKeyRecord.userId } },
-      qrCodeUrl,
     });
 
     let createdTags: string[] = [];
@@ -95,6 +92,8 @@ export async function POST(request: NextRequest) {
       createdTags = await Promise.all(tagOperationsPromises);
     }
 
+    const qrCodeUrl = await generateQRCode(buildShortUrl(shortLink.shortCode));
+
     return NextResponse.json({
       id: shortLink.id,
       originalUrl: shortLink.originalUrl,
@@ -102,7 +101,7 @@ export async function POST(request: NextRequest) {
       shortCode: shortLink.shortCode,
       createdAt: shortLink.createdAt,
       expiresAt: shortLink.expiresAt,
-      qrCodeUrl: shortLink.qrCodeUrl,
+      qrCodeUrl,
       tags: createdTags,
     });
   } catch (error) {

@@ -34,6 +34,8 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
+  const qrCodeUrl = await generateQRCode(buildShortUrl(link.shortCode));
+
   return NextResponse.json({
     id: link.id,
     originalUrl: link.originalUrl,
@@ -43,7 +45,7 @@ export async function GET(
     expiresAt: link.expiresAt,
     clicks: link.clicks,
     tags: link.tags ?? [],
-    qrCodeUrl: link.qrCodeUrl,
+    qrCodeUrl,
   });
 }
 
@@ -93,16 +95,6 @@ export async function PATCH(
       password: validatedData.password,
     });
 
-    if (
-      validatedData.customAlias &&
-      validatedData.customAlias !== link.shortCode
-    ) {
-      const qrCodeUrl = await generateQRCode(
-        buildShortUrl(validatedData.customAlias)
-      );
-      await shortLinksRepository.update(id, { qrCodeUrl });
-    }
-
     if (validatedData.tags) {
       const tagIdPromises = validatedData.tags.map(async (tagName) => {
         const tag = await tagsRepository.findOrCreate(
@@ -116,6 +108,10 @@ export async function PATCH(
       await tagsRepository.updateLinkTags(id, tagIds);
     }
 
+    const qrCodeUrl = await generateQRCode(
+      buildShortUrl(updatedLink.shortCode)
+    );
+
     return NextResponse.json({
       id: updatedLink.id,
       originalUrl: updatedLink.originalUrl,
@@ -123,7 +119,7 @@ export async function PATCH(
       shortCode: updatedLink.shortCode,
       createdAt: updatedLink.createdAt,
       expiresAt: updatedLink.expiresAt,
-      qrCodeUrl: updatedLink.qrCodeUrl,
+      qrCodeUrl,
       tags: validatedData.tags || updatedLink.tags,
     });
   } catch (error) {

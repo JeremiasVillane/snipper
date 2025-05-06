@@ -9,7 +9,6 @@ export interface ShortLink {
   password: string | null;
   userId: string | null;
   tags: Tag[];
-  qrCodeUrl: string | null;
   clicks: number;
 }
 
@@ -77,7 +76,6 @@ export type ShortLinkFromRepository = {
   expiresAt: Date | null;
   password: string | null;
   userId: string | null;
-  qrCodeUrl: string | null;
   clicks: number;
   linkTags: Array<{
     linkId: string;

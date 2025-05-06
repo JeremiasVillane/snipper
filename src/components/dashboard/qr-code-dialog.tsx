@@ -10,9 +10,11 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui/credenza";
+import { buildShortUrl, generateQRCode } from "@/lib/helpers";
 import type { ShortLinkFromRepository } from "@/lib/types";
 import { Download } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { toast } from "../ui/simple-toast";
 
 interface QrCodeDialogProps {
@@ -26,11 +28,18 @@ export default function QrCodeDialog({
   open,
   onOpenChange,
 }: QrCodeDialogProps) {
-  const handleDownload = () => {
-    if (!link.qrCodeUrl) return;
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () =>
+      setQrCodeUrl(await generateQRCode(buildShortUrl(link.shortCode))))();
+  }, []);
+
+  const handleDownload = async () => {
+    if (!qrCodeUrl) return;
 
     const a = document.createElement("a");
-    a.href = link.qrCodeUrl;
+    a.href = qrCodeUrl;
     a.download = `qrcode-${link.shortCode}.png`;
     document.body.appendChild(a);
     a.click();
@@ -52,9 +61,9 @@ export default function QrCodeDialog({
           </CredenzaDescription>
         </CredenzaHeader>
         <CredenzaBody className="flex justify-center py-6">
-          {link.qrCodeUrl ? (
+          {qrCodeUrl ? (
             <Image
-              src={link.qrCodeUrl || "/placeholder.svg"}
+              src={qrCodeUrl || "/placeholder.svg"}
               alt={`QR code for ${link.shortCode}`}
               className="w-48 h-48 border rounded-md"
               width={12}
@@ -72,7 +81,7 @@ export default function QrCodeDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Close
           </Button>
-          {link.qrCodeUrl && (
+          {qrCodeUrl && (
             <Button
               onClick={handleDownload}
               iconLeft={<Download />}

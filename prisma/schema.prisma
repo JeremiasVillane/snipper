@@ -162,7 +162,6 @@ model ShortLink {
   password    String?
   userId      String?
   user        User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
-  qrCodeUrl   String?
   clicks      Int          @default(0)
   clickEvents ClickEvent[]
   linkTags    LinkTag[]
