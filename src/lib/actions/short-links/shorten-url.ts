@@ -2,13 +2,10 @@
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db/prisma";
-import {
-  buildShortUrl,
-  generateQRCode,
-  generateShortCode,
-} from "@/lib/helpers";
+import { buildShortUrl, generateShortCode } from "@/lib/helpers";
 import { CreateLinkFormData, createLinkSchema } from "@/lib/schemas";
 import { Prisma } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -54,6 +51,10 @@ export async function shortenUrl(formData: CreateLinkFormData) {
   }
 
   try {
+    const password = !!parsedData.password
+      ? await bcrypt.hash(parsedData.password, 12)
+      : null;
+
     const result = await prisma.$transaction(async (tx) => {
       const shortLink = await tx.shortLink.create({
         data: {
@@ -61,7 +62,7 @@ export async function shortenUrl(formData: CreateLinkFormData) {
           shortCode: shortCode,
           userId: session.user.id!,
           expiresAt: parsedData.expiresAt,
-          password: parsedData.password,
+          password,
           // description: formData.description || null,
           clicks: 0,
         },

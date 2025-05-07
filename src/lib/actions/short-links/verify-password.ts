@@ -1,8 +1,9 @@
 "use server";
 
 import { shortLinksRepository } from "@/lib/db/repositories";
+import bcrypt from "bcryptjs";
 
-export async function verifyPassword(shortCode: string, password: string) {
+export async function verifyPassword(shortCode: string, plainPassword: string) {
   const shortLink = await shortLinksRepository.findByShortCode(shortCode);
 
   if (!shortLink) {
@@ -17,8 +18,12 @@ export async function verifyPassword(shortCode: string, password: string) {
     return { success: true, url: shortLink.originalUrl };
   }
 
-  if (shortLink.password !== password) {
-    throw new Error("Incorrect password");
+  if (!!shortLink.password) {
+    const passwordMatch = await bcrypt.compare(
+      plainPassword,
+      shortLink.password
+    );
+    if (!passwordMatch) throw new Error("Incorrect password");
   }
 
   return { success: true, url: shortLink.originalUrl };

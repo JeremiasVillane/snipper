@@ -1,9 +1,10 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { CreateLinkFormData, createLinkSchema } from "@/lib/schemas";
 import { prisma } from "@/lib/db/prisma";
 import { shortLinksRepository } from "@/lib/db/repositories";
+import { CreateLinkFormData, createLinkSchema } from "@/lib/schemas";
+import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
 export async function updateShortLink(
@@ -15,9 +16,9 @@ export async function updateShortLink(
   if (!session?.user) {
     throw new Error("Authentication required");
   }
-  // if (session.user.email === "demo@example.com") {
-  //   throw new Error("This feature is not available for demo accounts.");
-  // }
+  if (session.user.email === "demo@example.com") {
+    throw new Error("This feature is not available for demo accounts.");
+  }
 
   const parsedData = await createLinkSchema.parseAsync(formData);
 
@@ -50,12 +51,16 @@ export async function updateShortLink(
         }
       }
 
+      const password = !!parsedData.password
+        ? await bcrypt.hash(parsedData.password, 12)
+        : null;
+
       await tx.shortLink.update({
         where: { id: linkId },
         data: {
           originalUrl: parsedData.originalUrl,
           expiresAt: parsedData.expiresAt,
-          password: parsedData.password,
+          password,
           // description: parsedData.description,
         },
       });
