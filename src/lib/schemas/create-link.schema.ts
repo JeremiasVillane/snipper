@@ -1,23 +1,28 @@
 import { z } from "zod";
 import { utmSetSchema } from "./utm-param.schema";
 
+export const shortCodeSchema = z
+  .string()
+  .min(3, { message: "Alias must be at least 3 characters" })
+  .max(20, { message: "Alias cannot exceed 20 characters" })
+  .regex(/^[a-zA-Z0-9-_]+$/, {
+    message: "Only alphanumeric, hyphen, underscore allowed",
+  });
+
+export const shortLinkPassword = z
+  .string()
+  .min(6, "Password must be at least 6 character long")
+  .max(33, "Password must be less than 33 characters long");
+
 export const createLinkSchema = z
   .object({
     originalUrl: z.string().url({ message: "Please enter a valid URL" }),
-    shortCode: z
-      .string()
-      .min(3, { message: "Alias must be at least 3 characters" })
-      .max(20, { message: "Alias cannot exceed 20 characters" })
-      .regex(/^[a-zA-Z0-9-_]+$/, {
-        message: "Only alphanumeric, hyphen, underscore allowed",
-      })
-      .optional()
-      .or(z.literal("")),
+    shortCode: shortCodeSchema.optional().or(z.literal("")),
     tags: z.array(z.string()).optional(),
     isExpirationEnabled: z.boolean().optional(),
     expiresAt: z.date().nullable().optional(),
     isPasswordEnabled: z.boolean().optional(),
-    password: z.string().optional().nullable(),
+    password: shortLinkPassword.optional().nullable(),
     utmSets: z.array(utmSetSchema).optional(),
   })
   .refine((data) => !data.isExpirationEnabled || !!data.expiresAt, {

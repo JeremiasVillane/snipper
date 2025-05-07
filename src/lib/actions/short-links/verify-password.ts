@@ -2,29 +2,42 @@
 
 import { shortLinksRepository } from "@/lib/db/repositories";
 import bcrypt from "bcryptjs";
+import { noauthActionClient } from "../safe-action";
+import { z } from "zod";
+import { shortCodeSchema, shortLinkPassword } from "@/lib/schemas";
 
-export async function verifyPassword(shortCode: string, plainPassword: string) {
-  const shortLink = await shortLinksRepository.findByShortCode(shortCode);
+const verifyPasswordSchema = z.object({
+  shortCode: shortCodeSchema,
+  plainPassword: shortLinkPassword,
+});
 
-  if (!shortLink) {
-    throw new Error("Short link not found");
-  }
+export const verifyPassword = noauthActionClient
+  .metadata({ name: "verify-short-link-password" })
+  .schema(verifyPasswordSchema)
+  .action(async ({ parsedInput }) => {
+    const { shortCode, plainPassword } = parsedInput;
 
-  if (shortLink.expiresAt && shortLink.expiresAt < new Date()) {
-    throw new Error("This link has expired");
-  }
+    const shortLink = await shortLinksRepository.findByShortCode(shortCode);
 
-  if (!shortLink.password) {
-    return { success: true, url: shortLink.originalUrl };
-  }
+    if (!shortLink) {
+      throw new Error("Short link not found");
+    }
 
-  if (!!shortLink.password) {
-    const passwordMatch = await bcrypt.compare(
-      plainPassword,
-      shortLink.password
-    );
-    if (!passwordMatch) throw new Error("Incorrect password");
-  }
+    if (shortLink.expiresAt && shortLink.expiresAt < new Date()) {
+      throw new Error("This link has expired");
+    }
 
-  return { success: true, url: shortLink.originalUrl };
-}
+    if (!shortLink.password) {
+      return { url: shortLink.originalUrl };
+    }
+
+    if (!!shortLink.password) {
+      const passwordMatch = await bcrypt.compare(
+        plainPassword,
+        shortLink.password
+      );
+      if (!passwordMatch) throw new Error("Incorrect password");
+    }
+
+    return { url: shortLink.originalUrl };
+  });

@@ -1,60 +1,24 @@
 "use server";
 
-import { recordClick, verifyPassword } from "@/lib/actions/short-links";
 import { parseUserAgentImproved } from "@/lib/helpers";
+import { shortCodeSchema } from "@/lib/schemas";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { z } from "zod";
+import { noauthActionClient } from "../safe-action";
+import { recordClick } from "./record-click";
 
-const passwordSchema = z.object({
-  password: z.string().min(1, "Password is required"),
-  shortCode: z.string(),
+const processShortLinkSchema = z.object({
+  shortCode: shortCodeSchema,
+  resolvedSearchParams: z.record(
+    z.union([z.string(), z.array(z.string()), z.undefined()])
+  ),
 });
 
-export interface VerifyPasswordState {
-  message: string | null;
-  success: boolean;
-}
-
-export async function verifyPasswordAndRecordClick(
-  shortCode: string,
-  resolvedSearchParams: {
-    [key: string]: string | string[] | undefined;
-  },
-  _previousState: VerifyPasswordState,
-  formData: FormData
-): Promise<VerifyPasswordState> {
-  const result = passwordSchema.safeParse({
-    password: formData.get("password"),
-    shortCode: shortCode,
-  });
-
-  if (!result.success) {
-    return { success: false, message: "Invalid input." };
-  }
-
-  const { password } = result.data;
-  let verificationUrl: string | undefined;
-
-  try {
-    const verificationResult = await verifyPassword(shortCode, password);
-
-    if (!verificationResult || !verificationResult.success) {
-      return { success: false, message: "Invalid password." };
-    }
-
-    if (!verificationResult.url) {
-      console.error(
-        "Verification successful but no URL returned for shortCode:",
-        shortCode
-      );
-      return {
-        success: false,
-        message: "Internal server error: Missing target URL.",
-      };
-    }
-
-    verificationUrl = verificationResult.url;
+export const processShortLink = noauthActionClient
+  .metadata({ name: "process-short-link" })
+  .schema(processShortLinkSchema)
+  .action(async ({ parsedInput }) => {
+    const { shortCode, resolvedSearchParams } = parsedInput;
 
     const headersList = await headers();
     const userAgent = headersList.get("user-agent") || "";
@@ -102,9 +66,9 @@ export async function verifyPasswordAndRecordClick(
         const res = await fetch(`http://ip-api.com/json/${realIP}`)
           .then((res) => res.json())
           .then((res) => res);
-        city = decodeURIComponent(res?.city);
+        city = decodeURIComponent(res?.city ?? "Unknown");
       } catch (e) {
-        city = city;
+        city = "Unknown";
       }
     }
 
@@ -121,57 +85,22 @@ export async function verifyPasswordAndRecordClick(
     const utmTerm = getQueryParam("utm_term");
     const utmContent = getQueryParam("utm_content");
 
-    recordClick(shortCode, {
-      ipAddress: ip,
-      userAgent,
-      referrer,
-      device,
-      browser,
-      os,
-      country,
-      city,
-      utmSource,
-      utmMedium,
-      utmCampaign,
-      utmTerm,
-      utmContent,
+    recordClick({
+      shortCode,
+      data: {
+        ipAddress: ip,
+        userAgent,
+        referrer,
+        device,
+        browser,
+        os,
+        country,
+        city,
+        utmSource,
+        utmMedium,
+        utmCampaign,
+        utmTerm,
+        utmContent,
+      },
     }).catch(console.error);
-  } catch (error) {
-    console.error("Password verification or click recording failed:", error);
-
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "digest" in error &&
-      typeof error.digest === "string" &&
-      error.digest.startsWith("NEXT_REDIRECT")
-    ) {
-      throw error;
-    }
-
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Failed during verification/recording";
-    return {
-      success: false,
-      message:
-        errorMessage === "Invalid password"
-          ? errorMessage
-          : "An unexpected error occurred.",
-    };
-  }
-
-  if (!verificationUrl) {
-    console.error(
-      "Reached redirect point but verificationUrl is missing for shortCode:",
-      shortCode
-    );
-    return {
-      success: false,
-      message: "Internal server error: Could not determine redirect URL.",
-    };
-  }
-
-  redirect(verificationUrl);
-}
+  });

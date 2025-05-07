@@ -3,7 +3,8 @@ import { z } from "zod";
 export const createApiKeySchema = z.object({
   name: z
     .string()
-    .min(1, { message: "The API Key name cannot be empty." }),
+    .min(3, "The API Key name must be at least 3 characters long.")
+    .max(33, "The API Key name cannot be more than 33 characters long."),
   expiresAt: z
     .date()
     .optional()

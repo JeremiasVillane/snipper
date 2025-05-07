@@ -1,25 +1,32 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { auth } from "@/lib/auth";
 import { shortLinksRepository } from "@/lib/db/repositories";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { authActionClient } from "../safe-action";
 
-export async function deleteShortLink(id: string) {
-  const session = await auth();
+const deleteShortLinkSchema = z.object({
+  id: z.string().min(1, "Short link ID is required"),
+});
 
-  if (!session?.user) {
-    throw new Error("Authentication required");
-  }
+export const deleteShortLink = authActionClient({
+  roles: ["USER"],
+  plans: "ALL",
+})
+  .metadata({ name: "delete-short-link" })
+  .schema(deleteShortLinkSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    const { id } = parsedInput;
+    const { userId } = ctx;
 
-  if (session.user.email === "demo@example.com") {
-    throw new Error("Not available on demo account")
-  }
+    const shortLink = await shortLinksRepository.findById(id);
+    if (!shortLink || shortLink.userId !== userId) {
+      throw new Error("Short link not found");
+    }
 
-  const shortLink = await shortLinksRepository.findById(id);
-  if (!shortLink || shortLink.userId !== session.user.id) {
-    throw new Error("Short link not found");
-  }
-
-  await shortLinksRepository.delete(id);
-  revalidatePath("/dashboard");
-}
+    await shortLinksRepository.delete(id);
+    revalidatePath("/dashboard");
+    return {
+      message: `Short link "${shortLink.shortCode}" successfully deleted`,
+    };
+  });

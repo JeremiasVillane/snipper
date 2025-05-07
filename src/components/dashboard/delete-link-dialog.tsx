@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { toast } from "../ui/simple-toast";
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 
 interface DeleteLinkDialogProps {
   link: ShortLinkFromRepository;
@@ -35,11 +36,14 @@ export default function DeleteLinkDialog({
     try {
       setIsLoading(true);
 
-      await deleteShortLink(link.id);
+      const result = await deleteShortLink({ id: link.id }).then((res) =>
+        getSafeActionResponse(res)
+      );
 
       toast({
-        title: "Success!",
-        description: "Your link has been deleted",
+        title: result.success ? "Success!" : "Error",
+        description: result.success ? result.data.message : result.error,
+        type: result.success ? "success" : "error",
       });
 
       onOpenChange(false);

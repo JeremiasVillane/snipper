@@ -14,7 +14,7 @@ import { Loader2, Lock } from "lucide-react";
 import { useFormStatus } from "react-dom";
 
 import {
-  verifyPasswordAndRecordClick,
+  verifyPasswordAndProcessShortLink,
   type VerifyPasswordState,
 } from "@/lib/actions/short-links";
 import { useActionState } from "react";
@@ -49,7 +49,7 @@ export function PasswordProtection({
 }: PasswordProtectionProps) {
   const initialState: VerifyPasswordState = { message: null, success: false };
 
-  const verifyPasswordWithShortCode = verifyPasswordAndRecordClick.bind(
+  const verifyPasswordWithShortCode = verifyPasswordAndProcessShortLink.bind(
     null,
     shortCode,
     resolvedSearchParams

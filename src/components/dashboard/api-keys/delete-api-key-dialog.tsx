@@ -1,9 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,9 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { deleteApiKey } from "@/lib/actions/api-keys";
-import { formatDate } from "@/lib/utils";
 import { toast } from "@/components/ui/simple-toast";
+import { deleteApiKey } from "@/lib/actions/api-keys";
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
+import { formatDate } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface ApiKey {
   id: string;
@@ -44,11 +44,14 @@ export default function DeleteApiKeyDialog({
     try {
       setIsLoading(true);
 
-      await deleteApiKey(apiKey.id);
+      const result = await deleteApiKey({ id: apiKey.id }).then((res) =>
+        getSafeActionResponse(res)
+      );
 
       toast({
-        title: "Success!",
-        description: "Your API key has been deleted",
+        title: result.success ? "Success!" : "Error",
+        description: result.success ? result.data.message : result.error,
+        type: result.success ? "success" : "error",
       });
 
       onOpenChange(false);

@@ -1,116 +1,119 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db/prisma";
 import { shortLinksRepository } from "@/lib/db/repositories";
-import { CreateLinkFormData, createLinkSchema } from "@/lib/schemas";
+import { createLinkSchema } from "@/lib/schemas";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { authActionClient } from "../safe-action";
 
-export async function updateShortLink(
-  linkId: string,
-  formData: CreateLinkFormData
-) {
-  const session = await auth();
+const updateShortLinkSchema = z.object({
+  linkId: z.string().min(1, "Short link ID is required"),
+  formData: createLinkSchema,
+});
 
-  if (!session?.user) {
-    throw new Error("Authentication required");
-  }
-  if (session.user.email === "demo@example.com") {
-    throw new Error("This feature is not available for demo accounts.");
-  }
+export const updateShortLink = authActionClient({
+  roles: ["USER"],
+  plans: "ALL",
+})
+  .metadata({ name: "update-short-link" })
+  .schema(updateShortLinkSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    const { linkId, formData } = parsedInput;
+    const { userId } = ctx;
 
-  const parsedData = await createLinkSchema.parseAsync(formData);
+    try {
+      const result = await prisma?.$transaction(async (tx) => {
+        const currentLink = await tx.shortLink.findUnique({
+          where: { id: linkId, userId },
+          select: { id: true, shortCode: true },
+        });
 
-  try {
-    const result = await prisma?.$transaction(async (tx) => {
-      const currentLink = await tx.shortLink.findUnique({
-        where: { id: linkId, userId: session.user.id! },
-        select: { id: true, shortCode: true },
-      });
-
-      if (!currentLink) {
-        throw new Error(
-          "Link not found or you do not have permission to edit it."
-        );
-      }
-
-      if (
-        parsedData.shortCode &&
-        parsedData.shortCode !== currentLink.shortCode
-      ) {
-        try {
-          const existingLink = await shortLinksRepository.findByShortCode(
-            parsedData.shortCode
+        if (!currentLink) {
+          throw new Error(
+            "Link not found or you do not have permission to edit it."
           );
-          if (existingLink && existingLink.id !== linkId) {
-            throw new Error("This custom alias is already taken");
-          }
-        } catch (error) {
-          throw error;
         }
-      }
 
-      const password = !!parsedData.password
-        ? await bcrypt.hash(parsedData.password, 12)
-        : null;
+        if (
+          formData.shortCode &&
+          formData.shortCode !== currentLink.shortCode
+        ) {
+          try {
+            const existingLink = await shortLinksRepository.findByShortCode(
+              formData.shortCode
+            );
+            if (existingLink && existingLink.id !== linkId) {
+              throw new Error("This custom alias is already taken");
+            }
+          } catch (error) {
+            throw error;
+          }
+        }
 
-      await tx.shortLink.update({
-        where: { id: linkId },
-        data: {
-          originalUrl: parsedData.originalUrl,
-          expiresAt: parsedData.expiresAt,
-          password,
-          // description: parsedData.description,
-        },
+        const password = !!formData.password
+          ? await bcrypt.hash(formData.password, 12)
+          : null;
+
+        await tx.shortLink.update({
+          where: { id: linkId },
+          data: {
+            originalUrl: formData.originalUrl,
+            expiresAt: formData.expiresAt,
+            password,
+            // description: formData.description,
+          },
+        });
+
+        await tx.linkTag.deleteMany({ where: { linkId } });
+        if (formData.tags && formData.tags.length > 0) {
+          const tagOperations = formData.tags.map(async (tagName) => {
+            return await tx.tag.upsert({
+              where: {
+                userId_name: { userId, name: tagName.trim() },
+              },
+              update: {},
+              create: { name: tagName.trim(), userId },
+              select: { id: true },
+            });
+          });
+          const tags = await Promise.all(tagOperations);
+          await tx.linkTag.createMany({
+            data: tags.map((tag) => ({ linkId, tagId: tag.id })),
+            skipDuplicates: true,
+          });
+          console.log(`Synced ${tags.length} tags for link ${linkId}`);
+        }
+
+        await tx.uTMParam.deleteMany({ where: { shortLinkId: linkId } });
+        if (formData.utmSets && formData.utmSets.length > 0) {
+          const utmParamsToCreate = formData.utmSets.map((utmSet) => ({
+            shortLinkId: linkId,
+            source: utmSet.source || null,
+            medium: utmSet.medium || null,
+            campaign: utmSet.campaign,
+            term: utmSet.term || null,
+            content: utmSet.content || null,
+          }));
+          await tx.uTMParam.createMany({ data: utmParamsToCreate });
+          console.log(
+            `Synced ${utmParamsToCreate.length} UTMParam sets for link ${linkId}`
+          );
+        }
+
+        return { shortCode: currentLink.shortCode };
       });
 
-      await tx.linkTag.deleteMany({ where: { linkId } });
-      if (parsedData.tags && parsedData.tags.length > 0) {
-        const tagOperations = parsedData.tags.map(async (tagName) => {
-          return await tx.tag.upsert({
-            where: {
-              userId_name: { userId: session.user.id!, name: tagName.trim() },
-            },
-            update: {},
-            create: { name: tagName.trim(), userId: session.user.id! },
-            select: { id: true },
-          });
-        });
-        const tags = await Promise.all(tagOperations);
-        await tx.linkTag.createMany({
-          data: tags.map((tag) => ({ linkId, tagId: tag.id })),
-          skipDuplicates: true,
-        });
-        console.log(`Synced ${tags.length} tags for link ${linkId}`);
-      }
+      revalidatePath("/dashboard");
+      revalidatePath(`/dashboard/analytics/${linkId}`);
 
-      await tx.uTMParam.deleteMany({ where: { shortLinkId: linkId } });
-      if (parsedData.utmSets && parsedData.utmSets.length > 0) {
-        const utmParamsToCreate = parsedData.utmSets.map((utmSet) => ({
-          shortLinkId: linkId,
-          source: utmSet.source || null,
-          medium: utmSet.medium || null,
-          campaign: utmSet.campaign,
-          term: utmSet.term || null,
-          content: utmSet.content || null,
-        }));
-        await tx.uTMParam.createMany({ data: utmParamsToCreate });
-        console.log(
-          `Synced ${utmParamsToCreate.length} UTMParam sets for link ${linkId}`
-        );
-      }
-
-      return { id: linkId };
-    });
-
-    revalidatePath("/dashboard");
-    revalidatePath(`/dashboard/analytics/${linkId}`);
-
-    return { success: true, linkId: result.id };
-  } catch (error) {
-    console.error(`Error updating link ${linkId}:`, error);
-    if (error instanceof Error) throw error;
-    throw new Error("Failed to update the short link due to a database error.");
-  }
-}
+      return { shortCode: result.shortCode };
+    } catch (error) {
+      console.error(`Error updating link ${linkId}:`, error);
+      if (error instanceof Error) throw error;
+      throw new Error(
+        "Failed to update the short link due to a database error."
+      );
+    }
+  });

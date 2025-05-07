@@ -41,9 +41,9 @@ export const apiKeysRepository = {
     return true;
   },
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string, userId: string): Promise<boolean> {
     await prisma.apiKey.delete({
-      where: { id },
+      where: { id, userId },
     });
 
     return true;

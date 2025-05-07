@@ -4,9 +4,10 @@ import {
   DEFAULT_SERVER_ERROR_MESSAGE,
 } from "next-safe-action";
 import { z, ZodError } from "zod";
-import { genericAuthorizationMiddlewareProps } from "../types";
+import { authorizationMiddlewareProps } from "../types";
 import { analyticsMiddleware } from "./middleware/analytics.middleware";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
+import { authorizationMiddleware } from "./middleware/authorization.middleware";
 import {
   loggingMiddleware,
   sentryMiddleware,
@@ -53,11 +54,12 @@ export const noauthActionClient = actionClientWithMeta
   .use(loggingMiddleware)
   .use(sentryMiddleware);
 
-export const authActionClient = <P extends genericAuthorizationMiddlewareProps>(
+export const authActionClient = <P extends authorizationMiddlewareProps>(
   props: P
 ) =>
   actionClientWithMeta
     .use(loggingMiddleware)
     .use(authenticationMiddleware)
+    .use(authorizationMiddleware(props))
     .use(analyticsMiddleware)
     .use(sentryMiddleware);

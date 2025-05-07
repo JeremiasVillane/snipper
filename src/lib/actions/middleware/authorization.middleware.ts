@@ -1,39 +1,43 @@
-import { Session } from "next-auth";
+import { authorizationMiddlewareProps } from "@/lib/types";
 import { createMiddleware } from "next-safe-action";
 
-export type authorizationMiddlewareProps = {
-  // plans: Plan[] | "ALL";
-  // roles: Role[] | "ALL";
-};
-
-export const authorizationMiddleware = (
-  props: authorizationMiddlewareProps
-) =>
+export const authorizationMiddleware = (props: authorizationMiddlewareProps) =>
   createMiddleware<{
     metadata: { name: string };
     ctx: {
-      session: Session;
+      userId: string;
     };
   }>().define(async ({ next, ctx }) => {
-    const { session } = ctx;
-
-    const userId = session.user.id;
+    const { userId } = ctx;
 
     const user = await prisma?.user.findUnique({
       where: {
         id: userId,
       },
+      include: {
+        subscriptions: {
+          include: { plan: true },
+        },
+      },
     });
 
-    // const { plans, roles } = props;
+    const { plans, roles } = props;
 
-    // if (plans !== "ALL" && !plans.some((p) => p === user?.plan)) {
-    //   throw new Error("User is not the correct plan");
-    // }
+    if (!!roles && roles !== "ALL" && !roles.some((r) => user?.role === r)) {
+      throw new Error(
+        `This feature is not available for ${user?.role.toLowerCase()} users`
+      );
+    }
 
-    // if (roles !== "ALL" && !roles.some((r) => user?.role === r)) {
-    //   throw new Error("User is not the correct role");
-    // }
+    if (
+      !!plans &&
+      plans !== "ALL" &&
+      !plans.some((p) =>
+        user?.subscriptions.some((sub) => sub.plan.name.includes(p))
+      )
+    ) {
+      throw new Error("This feature is not available in your current plan");
+    }
 
     return next({
       ctx: {

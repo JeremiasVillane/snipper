@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "@/components/ui/simple-toast";
 import { createApiKey } from "@/lib/actions/api-keys";
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import {
   CreateApiKeyFormData,
   createApiKeySchema,
@@ -82,13 +83,20 @@ export default function CreateApiKeyDialog({
 
   const onSubmit = async (data: CreateApiKeyFormData) => {
     try {
-      const result = await createApiKey(data);
-      setCreatedKey(result.key);
+      const result = await createApiKey({ data }).then((res) =>
+        getSafeActionResponse(res)
+      );
+
       toast({
-        title: "Success!",
-        description: "Your API key has been created",
-        type: "success",
+        title: result.success ? "Success!" : "Error",
+        description: result.success
+          ? "Your API key has been created"
+          : result.error,
+        type: result.success ? "success" : "error",
       });
+
+      result.success && setCreatedKey(result.data.key);
+      setOpen(false);
     } catch (error) {
       console.error("Error creating API key:", error);
       toast({

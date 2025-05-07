@@ -1,4 +1,4 @@
-import { Tag } from "@prisma/client";
+import { Plan, Tag, UserRole } from "@prisma/client";
 
 export interface ShortLink {
   id: string;
@@ -86,10 +86,10 @@ export type ShortLinkFromRepository = {
   utmParams: UTMParamData[];
 };
 
-export type genericAuthorizationMiddlewareProps =
+export type authorizationMiddlewareProps =
   | {
-      // plans: Plan[] | "ALL";
-      // roles: Role[] | "ALL";
+      plans: Plan["name"][] | "ALL";
+      roles: UserRole[] | "ALL";
     }
   | {
       plans?: never;

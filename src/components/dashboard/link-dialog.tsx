@@ -37,7 +37,7 @@ import {
 import { toast } from "@/components/ui/simple-toast";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { shortenUrl, updateShortLink } from "@/lib/actions/short-links";
+import { createShortLink, updateShortLink } from "@/lib/actions/short-links";
 import {
   CreateLinkFormData,
   createLinkSchema,
@@ -52,6 +52,7 @@ import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { UtmSetDisplay } from "./utm-set-display";
 import { UtmSetForm } from "./utm-set-form";
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 
 interface LinkDialogProps {
   children?: React.ReactNode;
@@ -170,16 +171,23 @@ export function LinkDialog({
         id: initialData?.id,
       };
 
-      !!initialData
-        ? await updateShortLink(initialData?.id, dataToSubmit)
-        : await shortenUrl(dataToSubmit);
+      const result = !!initialData
+        ? await updateShortLink({
+            linkId: initialData?.id,
+            formData: dataToSubmit,
+          }).then((res) => getSafeActionResponse(res))
+        : await createShortLink({ formData: dataToSubmit }).then((res) =>
+            getSafeActionResponse(res)
+          );
 
       toast({
-        title: "Success!",
-        description: `Link ${
-          initialData?.id ? "updated" : "created"
-        } successfully.`,
-        type: "success",
+        title: result.success ? "Success!" : "Error",
+        description: result.success
+          ? `Link ${
+              result.data.shortCode ? "updated" : "created"
+            } successfully.`
+          : result.error,
+        type: result.success ? "success" : "error",
       });
 
       onOpenChange(false);
