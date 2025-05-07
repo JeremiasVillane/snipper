@@ -16,6 +16,7 @@ import {
   DATABASE_ERROR_MESSAGE,
   DEFAULT_VALIDATION_ERROR_MESSAGE,
 } from "./safe-action-helpers";
+import { rateLimitingMiddleware } from "./middleware/ratelimit.middleware";
 
 // Base client which has server error handling, and metadata
 export const actionClientWithMeta = createSafeActionClient({
@@ -40,10 +41,12 @@ export const actionClientWithMeta = createSafeActionClient({
   defineMetadataSchema() {
     return z.object({
       name: z.string(),
-      track: z
+      limiter: z
         .object({
-          event: z.string(),
-          channel: z.string(),
+          refillRate: z.number(),
+          interval: z.number(),
+          capacity: z.number(),
+          requested: z.number(),
         })
         .optional(),
     });
@@ -52,6 +55,7 @@ export const actionClientWithMeta = createSafeActionClient({
 
 export const noauthActionClient = actionClientWithMeta
   .use(loggingMiddleware)
+  .use(rateLimitingMiddleware)
   .use(sentryMiddleware);
 
 export const authActionClient = <P extends authorizationMiddlewareProps>(
@@ -59,6 +63,7 @@ export const authActionClient = <P extends authorizationMiddlewareProps>(
 ) =>
   actionClientWithMeta
     .use(loggingMiddleware)
+    .use(rateLimitingMiddleware)
     .use(authenticationMiddleware)
     .use(authorizationMiddleware(props))
     .use(analyticsMiddleware)

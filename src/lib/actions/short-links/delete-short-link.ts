@@ -13,7 +13,15 @@ export const deleteShortLink = authActionClient({
   roles: ["USER"],
   plans: "ALL",
 })
-  .metadata({ name: "delete-short-link" })
+  .metadata({
+    name: "delete-short-link",
+    limiter: {
+      refillRate: 10,
+      interval: 5,
+      capacity: 10,
+      requested: 1,
+    },
+  })
   .schema(deleteShortLinkSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { id } = parsedInput;

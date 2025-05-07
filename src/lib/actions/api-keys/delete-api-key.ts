@@ -13,7 +13,15 @@ export const deleteApiKey = authActionClient({
   roles: ["USER"],
   plans: ["Premium"],
 })
-  .metadata({ name: "delete-api-key" })
+  .metadata({
+    name: "delete-api-key",
+    limiter: {
+      refillRate: 5,
+      interval: 10,
+      capacity: 5,
+      requested: 1,
+    },
+  })
   .schema(deleteApiKeySchema)
   .action(async ({ parsedInput, ctx }) => {
     const { id } = parsedInput;

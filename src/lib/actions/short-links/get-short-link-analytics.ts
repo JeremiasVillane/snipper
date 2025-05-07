@@ -32,9 +32,7 @@ const getAnalyticsSchema = z.object({
 });
 
 export const getShortLinkAnalytics = authActionClient({})
-  .metadata({
-    name: "get-short-link-analytics",
-  })
+  .metadata({ name: "get-short-link-analytics" })
   .schema(getAnalyticsSchema)
   .action(async ({ parsedInput, ctx }): Promise<ShortLinkAnalyticsData> => {
     const { id, startDate, endDate } = parsedInput;

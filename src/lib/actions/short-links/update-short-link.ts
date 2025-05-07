@@ -17,7 +17,15 @@ export const updateShortLink = authActionClient({
   roles: ["USER"],
   plans: "ALL",
 })
-  .metadata({ name: "update-short-link" })
+  .metadata({
+    name: "update-short-link",
+    limiter: {
+      refillRate: 10,
+      interval: 5,
+      capacity: 10,
+      requested: 1,
+    },
+  })
   .schema(updateShortLinkSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { linkId, formData } = parsedInput;

@@ -15,7 +15,15 @@ export const createApiKey = authActionClient({
   roles: ["USER"],
   plans: ["Premium"],
 })
-  .metadata({ name: "create-api-key" })
+  .metadata({
+    name: "create-api-key",
+    limiter: {
+      refillRate: 5,
+      interval: 10,
+      capacity: 5,
+      requested: 1,
+    },
+  })
   .schema(createApiKeyActionSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { data } = parsedInput;
@@ -23,7 +31,7 @@ export const createApiKey = authActionClient({
 
     const key = generateApiKey();
 
-    const apiKey = await apiKeysRepository.create({
+    await apiKeysRepository.create({
       user: { connect: { id: userId } },
       name: data.name,
       key,

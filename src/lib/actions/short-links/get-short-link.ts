@@ -9,9 +9,7 @@ const getShortLinkSchema = z.object({
 });
 
 export const getShortLink = authActionClient({})
-  .metadata({
-    name: "get-short-link",
-  })
+  .metadata({ name: "get-short-link" })
   .schema(getShortLinkSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { id } = parsedInput;
