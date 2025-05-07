@@ -33,7 +33,11 @@ export const authorizationMiddleware = (props: authorizationMiddlewareProps) =>
       !!plans &&
       plans !== "ALL" &&
       !plans.some((p) =>
-        user?.subscriptions.some((sub) => sub.plan.name.includes(p))
+        user?.subscriptions.some(
+          (sub) =>
+            sub.plan.name.includes(p) &&
+            ["ACTIVE", "TRIALING"].includes(sub.status)
+        )
       )
     ) {
       throw new Error("This feature is not available in your current plan");
