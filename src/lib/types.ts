@@ -1,30 +1,4 @@
-import { Plan, Tag, UserRole } from "@prisma/client";
-
-export interface ShortLink {
-  id: string;
-  originalUrl: string;
-  shortCode: string;
-  createdAt: Date;
-  expiresAt: Date | null;
-  password: string | null;
-  userId: string | null;
-  tags: Tag[];
-  clicks: number;
-}
-
-export interface ClickEvent {
-  id: string;
-  shortLinkId: string;
-  timestamp: Date;
-  ipAddress: string | null;
-  userAgent: string | null;
-  referrer: string | null;
-  country: string | null;
-  city: string | null;
-  device: string | null;
-  browser: string | null;
-  os: string | null;
-}
+import { ClickEvent, Plan, UserRole, UTMParam } from "@prisma/client";
 
 export type ShortLinkAnalyticsData = {
   totalClicks: number;
@@ -51,7 +25,7 @@ export type ShortLinkAnalyticsData = {
   /** Referrer (string), Count (number) */
   clicksByReferrer: Record<string, number>;
   recentClicks: ClickEvent[];
-  definedCampaigns: UTMParamData[];
+  definedCampaigns: UTMParam[];
   clicksByCampaign: Record<string, number>;
   clicksBySource: Record<string, number>;
   clicksByMedium: Record<string, number>;
@@ -59,32 +33,21 @@ export type ShortLinkAnalyticsData = {
   clicksByContent: Record<string, number>;
 };
 
-export type UTMParamData = {
-  id: string;
-  source: string | null;
-  medium: string | null;
-  campaign: string;
-  term: string | null;
-  content: string | null;
-};
-
-export type ShortLinkFromRepository = {
+interface ShortLinkBaseResponse {
   id: string;
   originalUrl: string;
   shortCode: string;
-  createdAt: Date;
-  expiresAt: Date | null;
-  password: string | null;
   userId: string | null;
   clicks: number;
-  linkTags: Array<{
-    linkId: string;
-    tagId: string;
-    tag: Tag;
-  }>;
   tags: string[];
-  utmParams: UTMParamData[];
-};
+  utmParams: UTMParam[];
+  createdAt: Date;
+  expiresAt: Date | null;
+}
+
+export interface ShortLinkFromRepository extends ShortLinkBaseResponse {
+  isPasswordEnabled: boolean;
+}
 
 export type authorizationMiddlewareProps =
   | {
@@ -95,3 +58,17 @@ export type authorizationMiddlewareProps =
       plans?: never;
       roles?: never;
     };
+
+///------ API Endpoints Types ------///
+
+export interface APIGetLink extends ShortLinkBaseResponse {
+  shortUrl: string;
+  qrCodeUrl: string;
+}
+export type APIGetAllLinks = { links: Omit<APIGetLink, "qrCodeUrl">[] };
+export type APIPostLink = Omit<APIGetLink, "userId" | "clicks">;
+export type APIDeleteLink = { success: boolean };
+export type APIGetLinkAnalytics = Omit<
+  ShortLinkAnalyticsData,
+  "recentClicks" | "definedCampaigns"
+>;

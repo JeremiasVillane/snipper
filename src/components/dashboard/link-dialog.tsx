@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -15,6 +15,7 @@ import {
   UtmSetFormData,
 } from "@/lib/schemas";
 import { ShortLinkFromRepository } from "@/lib/types";
+import { isDeepEqual } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -79,6 +80,8 @@ export function LinkDialog({
   const [newTag, setNewTag] = useState("");
   const [editingUtmIndex, setEditingUtmIndex] = useState<number | null>(null);
 
+  const initialFormValuesRef = useRef<CreateLinkFormData | null>(null);
+
   const calculateFormValues = (
     data: ShortLinkFromRepository | undefined,
   ): CreateLinkFormData => {
@@ -88,24 +91,21 @@ export function LinkDialog({
       tags: data?.tags ?? [],
       isExpirationEnabled: !!data?.expiresAt,
       expiresAt: data?.expiresAt ?? undefined,
-      isPasswordEnabled: !!data?.password,
-      password: data?.password ?? undefined,
+      isPasswordEnabled: !!data?.isPasswordEnabled,
+      password: "",
       utmSets:
         data?.utmParams?.map((p) => ({
-          source: p.source,
-          medium: p.medium,
-          campaign: p.campaign,
-          term: p.term,
-          content: p.content,
+          source: p.source ?? "",
+          medium: p.medium ?? "",
+          campaign: p.campaign ?? "",
+          term: p.term ?? "",
+          content: p.content ?? "",
         })) ?? [],
     };
   };
 
-  const defaultValues = calculateFormValues(initialData);
-
   const form = useForm<CreateLinkFormData>({
     resolver: zodResolver(createLinkSchema),
-    defaultValues: defaultValues,
     mode: "onTouched",
   });
 
@@ -116,7 +116,7 @@ export function LinkDialog({
     setValue,
     getValues,
     reset,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting, isDirty, errors },
   } = form;
 
   const {
@@ -129,15 +129,25 @@ export function LinkDialog({
     name: "utmSets",
   });
 
+  const formValues = watch();
+
   const isExpirationEnabled = watch("isExpirationEnabled");
   const isPasswordEnabled = watch("isPasswordEnabled");
   const currentTags = watch("tags");
 
+  const initialFormValues = useMemo(() => {
+    return calculateFormValues(initialData);
+  }, [initialData]);
+
   useEffect(() => {
     if (isOpen) {
-      reset(calculateFormValues(initialData));
+      const values = initialFormValues;
+      reset(values);
+      initialFormValuesRef.current = values;
       setNewTag("");
       setEditingUtmIndex(null);
+    } else {
+      initialFormValuesRef.current = null;
     }
   }, [initialData, isOpen, reset]);
 
@@ -168,14 +178,14 @@ export function LinkDialog({
     try {
       const dataToSubmit = {
         ...data,
-        password: data.isPasswordEnabled ? data.password : null,
-        expiresAt: data.isExpirationEnabled ? data.expiresAt : null,
+        password: data.isPasswordEnabled ? data.password : undefined,
+        expiresAt: data.isExpirationEnabled ? data.expiresAt : undefined,
         id: initialData?.id,
       };
 
       const result = !!initialData
         ? await updateShortLink({
-            linkId: initialData?.id,
+            linkId: initialData.id,
             formData: dataToSubmit,
           }).then((res) => getSafeActionResponse(res))
         : await createShortLink({ formData: dataToSubmit }).then((res) =>
@@ -191,6 +201,12 @@ export function LinkDialog({
           : result.error,
         type: result.success ? "success" : "error",
       });
+
+      // if (result.success) {
+      //   initialFormValuesRef.current = calculateFormValues(
+      //     result.data as ShortLinkFromRepository,
+      //   );
+      // }
 
       onOpenChange(false);
       router.refresh();
@@ -213,10 +229,10 @@ export function LinkDialog({
   };
 
   const handleAddUtmSet = (newSet: UtmSetFormData) => {
-    const existingNames = (getValues("utmSets") ?? []).map(
-      (set) => set.campaign,
+    const existingCampaigns = (getValues("utmSets") ?? []).map((set) =>
+      set.campaign?.toLowerCase(),
     );
-    if (existingNames.includes(newSet.campaign)) {
+    if (existingCampaigns.includes(newSet.campaign?.toLowerCase())) {
       toast({
         title: "Duplicate Campaign Name",
         description: `A set with campaign name "${newSet.campaign}" already exists.`,
@@ -230,10 +246,11 @@ export function LinkDialog({
   };
 
   const handleUpdateUtmSet = (index: number, updatedSet: UtmSetFormData) => {
-    const existingNames = (getValues("utmSets") ?? [])
+    const existingCampaigns = (getValues("utmSets") ?? [])
       .filter((_, i) => i !== index)
-      .map((set) => set.campaign);
-    if (existingNames.includes(updatedSet.campaign)) {
+      .map((set) => set.campaign?.toLowerCase());
+
+    if (existingCampaigns.includes(updatedSet.campaign?.toLowerCase())) {
       toast({
         title: "Duplicate Campaign Name",
         description: `Another set with campaign name "${updatedSet.campaign}" already exists.`,
@@ -251,6 +268,10 @@ export function LinkDialog({
 
   const currentEditData =
     editingUtmIndex !== null ? getValues(`utmSets.${editingUtmIndex}`) : null;
+
+  const isTrulyDirty = initialData
+    ? !isDeepEqual(formValues, initialFormValuesRef.current)
+    : isDirty;
 
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
@@ -292,9 +313,10 @@ export function LinkDialog({
                             </FormLabel>
                             <FormControl>
                               <Input
+                                {...field}
                                 placeholder="https://example.com/your-very-long-url..."
                                 autoComplete="off"
-                                {...field}
+                                disabled={!!initialData}
                               />
                             </FormControl>
                             <FormMessage />
@@ -310,10 +332,11 @@ export function LinkDialog({
                             <FormLabel>Custom Alias</FormLabel>
                             <FormControl>
                               <Input
+                                {...field}
                                 placeholder="my-custom-link"
                                 autoComplete="off"
-                                {...field}
                                 value={field.value ?? ""}
+                                disabled={!!initialData}
                               />
                             </FormControl>
                             <FormDescription>
@@ -390,7 +413,7 @@ export function LinkDialog({
                                 onCheckedChange={(checked) => {
                                   field.onChange(checked);
                                   if (!checked) {
-                                    setValue("expiresAt", null);
+                                    setValue("expiresAt", undefined);
                                   }
                                 }}
                               />
@@ -465,7 +488,7 @@ export function LinkDialog({
                                 onCheckedChange={(checked) => {
                                   field.onChange(checked);
                                   if (!checked) {
-                                    setValue("password", "");
+                                    setValue("password", undefined);
                                   }
                                 }}
                               />
@@ -474,26 +497,30 @@ export function LinkDialog({
                         )}
                       />
 
-                      {isPasswordEnabled && (
-                        <FormField
-                          control={control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem className="ml-6 space-y-2 pt-2">
-                              <FormLabel>Password</FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="password"
-                                  placeholder="Enter a password"
-                                  {...field}
-                                  value={field.value ?? ""}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      )}
+                      {isPasswordEnabled &&
+                        !(
+                          initialData?.isPasswordEnabled &&
+                          initialFormValues.password === ""
+                        ) && (
+                          <FormField
+                            control={control}
+                            name="password"
+                            render={({ field }) => (
+                              <FormItem className="ml-6 space-y-2 pt-2">
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="password"
+                                    placeholder="Enter a password"
+                                    {...field}
+                                    value={field.value ?? ""}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        )}
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -548,7 +575,7 @@ export function LinkDialog({
                   type="submit"
                   className="m-0 w-full md:ml-auto md:w-fit"
                   isLoading={isSubmitting}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !isTrulyDirty}
                 >
                   {isSubmitting
                     ? "Processing..."

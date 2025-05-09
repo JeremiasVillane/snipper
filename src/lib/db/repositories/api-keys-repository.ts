@@ -21,12 +21,9 @@ export const apiKeysRepository = {
     });
   },
 
-  async findByKey(key: string): Promise<ApiKeyWithUser | null> {
+  async findByKey(key: string): Promise<ApiKey | null> {
     const apiKeyWithUser = await prisma.apiKey.findFirst({
       where: { key },
-      include: {
-        user: true,
-      },
     });
 
     return apiKeyWithUser;

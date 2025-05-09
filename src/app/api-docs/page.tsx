@@ -4,6 +4,14 @@ import { ArrowLeft } from "lucide-react";
 
 import { constructMetadata } from "@/lib/metadata";
 import { generateOgImageUrl } from "@/lib/og";
+import { CreateLinkBodyAPI, UpdateLinkBodyAPI } from "@/lib/schemas";
+import {
+  APIDeleteLink,
+  APIGetAllLinks,
+  APIGetLink,
+  APIGetLinkAnalytics,
+  APIPostLink,
+} from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -116,16 +124,34 @@ export default function ApiDocsPage() {
                             links: [
                               {
                                 id: "link_id",
+                                userId: "user_id",
                                 originalUrl: "https://example.com",
-                                shortUrl: "https://linksnip.com/abc123",
+                                shortUrl: "https://snppr.link/abc123",
                                 shortCode: "abc123",
-                                createdAt: "2023-01-01T00:00:00.000Z",
+                                createdAt: new Date("2025-01-01T00:00:00.000Z"),
                                 expiresAt: null,
                                 clicks: 42,
                                 tags: ["marketing", "social"],
+                                utmParams: [
+                                  {
+                                    id: "utm_param_id",
+                                    source: "google",
+                                    medium: "cpc",
+                                    campaign: "newsletter_q3",
+                                    term: "new+merch",
+                                    content: "logo_link",
+                                    shortLinkId: "link_id",
+                                    createdAt: new Date(
+                                      "2025-01-01T00:00:00.000Z",
+                                    ),
+                                    updatedAt: new Date(
+                                      "2025-01-01T00:00:00.000Z",
+                                    ),
+                                  },
+                                ],
                               },
                             ],
-                          },
+                          } satisfies APIGetAllLinks,
                           null,
                           2,
                         )}
@@ -148,12 +174,21 @@ export default function ApiDocsPage() {
                       <code>
                         {JSON.stringify(
                           {
-                            url: "https://example.com",
-                            customAlias: "my-link", // optional
-                            expiresAt: "2023-12-31T23:59:59.999Z", // optional
-                            password: "secret", // optional
-                            tags: ["marketing", "social"], // optional
-                          },
+                            originalUrl: "https://example.com",
+                            shortCode: "my-link",
+                            expiresAt: new Date("2025-12-31T23:59:59.999Z"),
+                            password: "secret",
+                            tags: ["marketing", "social"],
+                            utmSets: [
+                              {
+                                source: "facebook",
+                                medium: "social",
+                                campaign: "summer_sale",
+                                term: "running+shoes",
+                                content: "logo_link",
+                              },
+                            ],
+                          } satisfies CreateLinkBodyAPI,
                           null,
                           2,
                         )}
@@ -168,12 +203,26 @@ export default function ApiDocsPage() {
                           {
                             id: "link_id",
                             originalUrl: "https://example.com",
-                            shortUrl: "https://linksnip.com/my-link",
+                            shortUrl: "https://snppr.link/my-link",
                             shortCode: "my-link",
-                            createdAt: "2023-01-01T00:00:00.000Z",
-                            expiresAt: "2023-12-31T23:59:59.999Z",
+                            createdAt: new Date("2025-01-01T00:00:00.000Z"),
+                            expiresAt: new Date("2025-12-31T23:59:59.999Z"),
+                            tags: ["marketing", "social"],
+                            utmParams: [
+                              {
+                                id: "utm_param_id",
+                                source: "facebook",
+                                medium: "social",
+                                campaign: "summer_sale",
+                                term: "running+shoes",
+                                content: "logo_link",
+                                shortLinkId: "link_id",
+                                createdAt: new Date("2025-01-01T00:00:00.000Z"),
+                                updatedAt: new Date("2025-01-01T00:00:00.000Z"),
+                              },
+                            ],
                             qrCodeUrl: "data:image/png;base64,...",
-                          },
+                          } satisfies APIPostLink,
                           null,
                           2,
                         )}
@@ -197,15 +246,29 @@ export default function ApiDocsPage() {
                         {JSON.stringify(
                           {
                             id: "link_id",
+                            userId: "user_id",
                             originalUrl: "https://example.com",
-                            shortUrl: "https://linksnip.com/abc123",
+                            shortUrl: "https://snppr.link/abc123",
                             shortCode: "abc123",
-                            createdAt: "2023-01-01T00:00:00.000Z",
+                            createdAt: new Date("2025-01-01T00:00:00.000Z"),
                             expiresAt: null,
                             clicks: 42,
                             tags: ["marketing", "social"],
+                            utmParams: [
+                              {
+                                id: "utm_param_id",
+                                source: "facebook",
+                                medium: "social",
+                                campaign: "summer_sale",
+                                term: "running+shoes",
+                                content: "logo_link",
+                                shortLinkId: "link_id",
+                                createdAt: new Date("2025-01-01T00:00:00.000Z"),
+                                updatedAt: new Date("2025-01-01T00:00:00.000Z"),
+                              },
+                            ],
                             qrCodeUrl: "data:image/png;base64,...",
-                          },
+                          } satisfies APIGetLink,
                           null,
                           2,
                         )}
@@ -228,10 +291,10 @@ export default function ApiDocsPage() {
                       <code>
                         {JSON.stringify(
                           {
-                            customAlias: "new-alias", // optional
-                            expiresAt: "2023-12-31T23:59:59.999Z", // optional
-                            password: "new-secret", // optional
-                          },
+                            shortCode: "new-alias",
+                            expiresAt: new Date("2025-12-31T23:59:59.999Z"),
+                            password: "new-secret",
+                          } satisfies UpdateLinkBodyAPI,
                           null,
                           2,
                         )}
@@ -245,13 +308,29 @@ export default function ApiDocsPage() {
                         {JSON.stringify(
                           {
                             id: "link_id",
+                            userId: "user_id",
                             originalUrl: "https://example.com",
-                            shortUrl: "https://linksnip.com/new-alias",
+                            shortUrl: "https://snppr.link/new-alias",
                             shortCode: "new-alias",
-                            createdAt: "2023-01-01T00:00:00.000Z",
-                            expiresAt: "2023-12-31T23:59:59.999Z",
+                            clicks: 120,
+                            createdAt: new Date("2025-01-01T00:00:00.000Z"),
+                            expiresAt: new Date("2025-12-31T23:59:59.999Z"),
+                            tags: ["marketing", "social"],
+                            utmParams: [
+                              {
+                                id: "utm_param_id",
+                                source: "facebook",
+                                medium: "social",
+                                campaign: "summer_sale",
+                                term: "running+shoes",
+                                content: "logo_link",
+                                shortLinkId: "link_id",
+                                createdAt: new Date("2025-01-01T00:00:00.000Z"),
+                                updatedAt: new Date("2025-01-01T00:00:00.000Z"),
+                              },
+                            ],
                             qrCodeUrl: "data:image/png;base64,...",
-                          },
+                          } satisfies APIGetLink,
                           null,
                           2,
                         )}
@@ -275,7 +354,7 @@ export default function ApiDocsPage() {
                         {JSON.stringify(
                           {
                             success: true,
-                          },
+                          } satisfies APIDeleteLink,
                           null,
                           2,
                         )}
@@ -304,15 +383,51 @@ export default function ApiDocsPage() {
                           {
                             totalClicks: 42,
                             clicksByDate: {
-                              "2023-01-01": 10,
-                              "2023-01-02": 15,
-                              "2023-01-03": 17,
+                              "2025-01-01": 10,
+                              "2025-01-02": 15,
+                              "2025-01-03": 17,
                             },
                             clicksByCountry: {
                               "United States": 20,
                               "United Kingdom": 10,
                               Canada: 5,
                               Other: 7,
+                            },
+                            clicksByCity: {
+                              "New York": 8,
+                              London: 5,
+                              Toronto: 3,
+                              "Los Angeles": 7,
+                              Manchester: 2,
+                              Other: 17,
+                            },
+                            clicksByCountryWithCities: {
+                              "United States": {
+                                totalClicks: 20,
+                                cities: {
+                                  "New York": 8,
+                                  "Los Angeles": 7,
+                                  Chicago: 3,
+                                  Houston: 2,
+                                },
+                              },
+                              "United Kingdom": {
+                                totalClicks: 10,
+                                cities: {
+                                  London: 5,
+                                  Manchester: 2,
+                                  Birmingham: 1,
+                                  Glasgow: 2,
+                                },
+                              },
+                              Canada: {
+                                totalClicks: 5,
+                                cities: {
+                                  Toronto: 3,
+                                  Vancouver: 1,
+                                  Montreal: 1,
+                                },
+                              },
                             },
                             clicksByDevice: {
                               Desktop: 25,
@@ -331,7 +446,46 @@ export default function ApiDocsPage() {
                               iOS: 8,
                               Android: 7,
                             },
-                          },
+                            clicksByReferrer: {
+                              direct: 18,
+                              "google.com": 10,
+                              "twitter.com": 5,
+                              "facebook.com": 4,
+                              "linkedin.com": 3,
+                              other: 2,
+                            },
+                            clicksByCampaign: {
+                              spring_promo_2025: 15,
+                              q1_newsletter: 10,
+                              social_media_blitz: 12,
+                              organic: 5,
+                            },
+                            clicksBySource: {
+                              google: 10,
+                              twitter: 5,
+                              facebook: 4,
+                              email: 10,
+                              direct: 8,
+                              linkedin: 3,
+                              other: 2,
+                            },
+                            clicksByMedium: {
+                              organic: 10,
+                              social: 12,
+                              email: 10,
+                              cpc: 2,
+                            },
+                            clicksByTerm: {
+                              "short link analytics": 5,
+                              "url tracking": 3,
+                              "link clicks data": 2,
+                            },
+                            clicksByContent: {
+                              button_cta: 8,
+                              text_link: 5,
+                              image_banner: 4,
+                            },
+                          } satisfies APIGetLinkAnalytics,
                           null,
                           2,
                         )}
@@ -429,7 +583,7 @@ curl -X POST '${publicUrl}/api/v1/links' \\
   -d '{
     "url": "https://example.com",
     "customAlias": "my-link",
-    "expiresAt": "2023-12-31T23:59:59.999Z"
+    "expiresAt": "2025-12-31T23:59:59.999Z"
   }'
 
 # Get all links

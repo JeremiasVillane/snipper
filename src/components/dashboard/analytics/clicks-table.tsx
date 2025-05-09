@@ -1,6 +1,7 @@
 "use client";
 
-import type { ClickEvent } from "@/lib/types";
+import { ClickEvent } from "@prisma/client";
+
 import { formatDate } from "@/lib/utils";
 import {
   Table,

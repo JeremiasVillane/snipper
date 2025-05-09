@@ -1,4 +1,6 @@
-import { ShortLinkAnalyticsData, UTMParamData } from "@/lib/types";
+import { UTMParam } from "@prisma/client";
+
+import { ShortLinkAnalyticsData } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import {
   Card,
@@ -55,7 +57,7 @@ export function AnalyticsTabs({
     .filter((name) => name !== "Unknown")
     .forEach((name) => names.add(name));
 
-  const map = new Map<string, UTMParamData>();
+  const map = new Map<string, UTMParam>();
   analytics.definedCampaigns?.forEach((def) => {
     if (def.campaign) {
       map.set(def.campaign, def);

@@ -1,16 +1,13 @@
-import { UTMParamData } from "@/lib/types";
+import { UTMParam } from "@prisma/client";
 
 /**
- * Builds a URL string by appending UTM parameters from a UTMParamData object
+ * Builds a URL string by appending UTM parameters from a UTMParam object
  * to a base URL.
  * @param baseUrl The base URL (e.g., https://your.domain/shortcode)
  * @param utmParams The UTM parameters object.
  * @returns The URL string with UTM parameters appended.
  */
-export function buildUrlWithUtm(
-  baseUrl: string,
-  utmParams: UTMParamData,
-): string {
+export function buildUrlWithUtm(baseUrl: string, utmParams: UTMParam): string {
   try {
     const url = new URL(baseUrl);
 

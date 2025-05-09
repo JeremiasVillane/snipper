@@ -74,7 +74,7 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
             </Badge>
           ))}
 
-          {link.password && (
+          {link.isPasswordEnabled && (
             <Badge variant="outline" className="text-xs">
               Password Protected
             </Badge>

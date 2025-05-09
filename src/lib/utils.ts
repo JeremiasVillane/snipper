@@ -1,3 +1,4 @@
+import { deepStrictEqual } from "assert";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -17,4 +18,13 @@ export function formatDate(date: Date): string {
 // Format number with commas
 export function formatNumber(num: number): string {
   return new Intl.NumberFormat().format(num);
+}
+
+export function isDeepEqual(a: unknown, b: unknown) {
+  try {
+    deepStrictEqual(a, b);
+    return true;
+  } catch {
+    return false;
+  }
 }

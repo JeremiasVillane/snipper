@@ -31,7 +31,7 @@ export const tagsRepository = {
       id: crypto.randomUUID(),
       name,
       userId,
-    } as Tag);
+    });
   },
 
   async addTagToLink(linkId: string, tagId: string) {

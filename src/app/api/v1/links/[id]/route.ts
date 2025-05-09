@@ -1,24 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 
-import { shortLinksRepository, tagsRepository } from "@/lib/db/repositories";
+import { shortLinksRepository } from "@/lib/db/repositories";
 import { buildShortUrl, generateQRCode, validateApiKey } from "@/lib/helpers";
-
-const updateLinkSchema = z.object({
-  customAlias: z.string().optional(),
-  expiresAt: z
-    .string()
-    .optional()
-    .transform((val) => (val ? new Date(val) : null)),
-  password: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-});
+import { updateLinksSchemaAPI } from "@/lib/schemas";
+import { APIDeleteLink, APIGetLink } from "@/lib/types";
 
 // GET /api/v1/links/[id] - Get a specific link
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+): Promise<NextResponse<APIGetLink | { error: string }>> {
   const apiKeyRecord = await validateApiKey(request);
   if (!apiKeyRecord) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -26,26 +18,21 @@ export async function GET(
 
   const { id } = await params;
 
-  const link = await shortLinksRepository.findById(id);
-  if (!link) {
+  const shortLink = await shortLinksRepository.findById(id);
+  if (!shortLink) {
     return NextResponse.json({ error: "Link not found" }, { status: 404 });
   }
 
-  if (link.userId !== apiKeyRecord.userId) {
+  if (shortLink.userId !== apiKeyRecord.userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const qrCodeUrl = await generateQRCode(buildShortUrl(link.shortCode));
+  const shortUrl = buildShortUrl(shortLink.shortCode);
+  const qrCodeUrl = await generateQRCode(shortUrl);
 
   return NextResponse.json({
-    id: link.id,
-    originalUrl: link.originalUrl,
-    shortUrl: buildShortUrl(link.shortCode),
-    shortCode: link.shortCode,
-    createdAt: link.createdAt,
-    expiresAt: link.expiresAt,
-    clicks: link.clicks,
-    tags: link.tags ?? [],
+    ...shortLink,
+    shortUrl,
     qrCodeUrl,
   });
 }
@@ -54,7 +41,7 @@ export async function GET(
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+): Promise<NextResponse<APIGetLink | { error: string }>> {
   const apiKeyRecord = await validateApiKey(request);
   if (!apiKeyRecord) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -63,69 +50,37 @@ export async function PATCH(
   const { id } = await params;
 
   try {
-    const link = await shortLinksRepository.findById(id);
-    if (!link) {
-      return NextResponse.json({ error: "Link not found" }, { status: 404 });
-    }
-
-    if (link.userId !== apiKeyRecord.userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
-
     const body = await request.json();
-    const validatedData = updateLinkSchema.parse(body);
+    const validatedData = updateLinksSchemaAPI.parse(body);
 
-    if (
-      validatedData.customAlias &&
-      validatedData.customAlias !== link.shortCode
-    ) {
-      const existingLink = await shortLinksRepository.findByShortCode(
-        validatedData.customAlias,
-      );
-      if (existingLink && existingLink.id !== id) {
-        return NextResponse.json(
-          { error: "Custom alias already taken" },
-          { status: 400 },
-        );
-      }
-    }
-
-    const updatedLink = await shortLinksRepository.update(id, {
-      shortCode: validatedData.customAlias,
-      expiresAt: validatedData.expiresAt,
-      password: validatedData.password,
-    });
-
-    if (validatedData.tags) {
-      const tagIdPromises = validatedData.tags.map(async (tagName) => {
-        const tag = await tagsRepository.findOrCreate(
-          tagName,
-          apiKeyRecord.user.id,
-        );
-        return tag.id;
-      });
-
-      const tagIds = await Promise.all(tagIdPromises);
-      await tagsRepository.updateLinkTags(id, tagIds);
-    }
-
-    const qrCodeUrl = await generateQRCode(
-      buildShortUrl(updatedLink.shortCode),
+    const updatedLink = await shortLinksRepository.update(
+      id,
+      apiKeyRecord.userId,
+      validatedData,
     );
+
+    const shortUrl = buildShortUrl(updatedLink.shortCode);
+    const qrCodeUrl = await generateQRCode(shortUrl);
 
     return NextResponse.json({
       id: updatedLink.id,
+      userId: updatedLink.userId,
       originalUrl: updatedLink.originalUrl,
-      shortUrl: buildShortUrl(updatedLink.shortCode),
+      shortUrl,
       shortCode: updatedLink.shortCode,
+      clicks: updatedLink.clicks,
       createdAt: updatedLink.createdAt,
       expiresAt: updatedLink.expiresAt,
+      tags: updatedLink.tags,
+      utmParams: updatedLink.utmParams,
       qrCodeUrl,
-      tags: validatedData.tags || updatedLink.tags,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors }, { status: 400 });
+      return NextResponse.json(
+        { error: error.errors.map((e) => e.message).join("; ") },
+        { status: 400 },
+      );
     }
     return NextResponse.json(
       { error: "Failed to update link" },
@@ -138,7 +93,7 @@ export async function PATCH(
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+): Promise<NextResponse<APIDeleteLink | { error: string }>> {
   const apiKeyRecord = await validateApiKey(request);
   if (!apiKeyRecord) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

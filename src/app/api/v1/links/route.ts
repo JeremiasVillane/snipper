@@ -1,27 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 
-import { shortLinksRepository, tagsRepository } from "@/lib/db/repositories";
-import {
-  buildShortUrl,
-  generateQRCode,
-  generateShortCode,
-  validateApiKey,
-} from "@/lib/helpers";
-
-const createLinkSchema = z.object({
-  url: z.string().url(),
-  customAlias: z.string().optional(),
-  expiresAt: z
-    .string()
-    .optional()
-    .transform((val) => (val ? new Date(val) : undefined)),
-  password: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-});
+import { shortLinksRepository } from "@/lib/db/repositories";
+import { buildShortUrl, generateQRCode, validateApiKey } from "@/lib/helpers";
+import { createLinksSchemaAPI } from "@/lib/schemas";
+import { APIGetAllLinks, APIPostLink } from "@/lib/types";
 
 // GET /api/v1/links - List all links for the authenticated user
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+): Promise<NextResponse<APIGetAllLinks | { error: string }>> {
   const apiKeyRecord = await validateApiKey(request);
   if (!apiKeyRecord) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -31,6 +19,7 @@ export async function GET(request: NextRequest) {
 
   const formattedLinks = links.map((link) => ({
     id: link.id,
+    userId: link.userId,
     originalUrl: link.originalUrl,
     shortUrl: buildShortUrl(link.shortCode),
     shortCode: link.shortCode,
@@ -38,13 +27,16 @@ export async function GET(request: NextRequest) {
     expiresAt: link.expiresAt,
     clicks: link.clicks,
     tags: link.tags ?? [],
+    utmParams: link.utmParams ?? [],
   }));
 
   return NextResponse.json({ links: formattedLinks });
 }
 
 // POST /api/v1/links - Create a new short link
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: NextRequest,
+): Promise<NextResponse<APIPostLink | { error: string }>> {
   const apiKeyRecord = await validateApiKey(request);
   if (!apiKeyRecord) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -52,45 +44,18 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const validatedData = createLinkSchema.parse(body);
+    const validatedData = createLinksSchemaAPI.parse(body);
 
-    let shortCode = validatedData.customAlias;
-    if (shortCode) {
-      const existingLink =
-        await shortLinksRepository.findByShortCode(shortCode);
-      if (existingLink) {
-        return NextResponse.json(
-          { error: "Custom alias already taken" },
-          { status: 400 },
-        );
-      }
-    } else {
-      shortCode = generateShortCode();
-    }
-
-    const shortLink = await shortLinksRepository.create({
-      originalUrl: validatedData.url,
-      shortCode,
-      expiresAt: validatedData.expiresAt || null,
-      password: validatedData.password || null,
-      user: { connect: { id: apiKeyRecord.userId } },
-    });
-
-    let createdTags: string[] = [];
-
-    if (validatedData.tags && validatedData.tags.length > 0) {
-      const tagOperationsPromises = validatedData.tags.map(async (tagName) => {
-        const tag = await tagsRepository.findOrCreate(
-          tagName,
-          apiKeyRecord.user.id,
-        );
-
-        await tagsRepository.addTagToLink(shortLink.id, tag.id);
-        return tag.name;
-      });
-
-      createdTags = await Promise.all(tagOperationsPromises);
-    }
+    const shortLink = await shortLinksRepository.create(
+      {
+        originalUrl: validatedData.originalUrl,
+        shortCode: validatedData.shortCode,
+        tags: validatedData.tags,
+        expiresAt: validatedData.expiresAt || null,
+        password: validatedData.password || null,
+      },
+      apiKeyRecord.userId,
+    );
 
     const qrCodeUrl = await generateQRCode(buildShortUrl(shortLink.shortCode));
 
@@ -101,13 +66,21 @@ export async function POST(request: NextRequest) {
       shortCode: shortLink.shortCode,
       createdAt: shortLink.createdAt,
       expiresAt: shortLink.expiresAt,
+      tags: shortLink.tags,
+      utmParams: shortLink.utmParams,
       qrCodeUrl,
-      tags: createdTags,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors }, { status: 400 });
+      return NextResponse.json(
+        { error: error.errors.map((e) => e.message).join("; ") },
+        { status: 400 },
+      );
     }
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
     return NextResponse.json(
       { error: "Failed to create short link" },
       { status: 500 },

@@ -1,3 +1,4 @@
+export * from "./aggregate-utm-params";
 export * from "./build-short-url";
 export * from "./build-url-with-utm";
 export * from "./generate-api-key";
