@@ -1,11 +1,20 @@
-import type { Prisma, User } from "@prisma/client";
+import type { Plan, Prisma, Subscription, User } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
 
 export const usersRepository = {
-  async findById(id: string): Promise<User | null> {
+  async findById(
+    id: string,
+  ): Promise<
+    (User & { subscriptions: (Subscription & { plan: Plan })[] }) | null
+  > {
     const user = await prisma.user.findUnique({
       where: { id },
+      include: {
+        subscriptions: {
+          include: { plan: true },
+        },
+      },
     });
     return user;
   },

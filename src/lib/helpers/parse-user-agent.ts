@@ -10,7 +10,7 @@ interface ParsedUAInfo {
   deviceModel?: string;
 }
 
-export function parseUserAgentImproved(userAgent: string): ParsedUAInfo {
+export function parseUserAgent(userAgent: string): ParsedUAInfo {
   const parser = new UAParser(userAgent);
   const result = parser.getResult();
 

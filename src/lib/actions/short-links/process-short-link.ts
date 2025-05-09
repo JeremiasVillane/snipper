@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { z } from "zod";
 
-import { parseUserAgentImproved } from "@/lib/helpers";
+import { parseUserAgent } from "@/lib/helpers";
 import { shortCodeSchema } from "@/lib/schemas";
 
 import { noauthActionClient } from "../safe-action";
@@ -74,7 +74,7 @@ export const processShortLink = noauthActionClient
       }
     }
 
-    const { browser, os, device } = parseUserAgentImproved(userAgent);
+    const { browser, os, device } = parseUserAgent(userAgent);
 
     const getQueryParam = (key: string): string | undefined => {
       const value = resolvedSearchParams[key];

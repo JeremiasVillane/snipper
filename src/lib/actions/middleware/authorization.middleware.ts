@@ -1,5 +1,6 @@
 import { createMiddleware } from "next-safe-action";
 
+import { usersRepository } from "@/lib/db/repositories";
 import { authorizationMiddlewareProps } from "@/lib/types";
 
 export const authorizationMiddleware = (props: authorizationMiddlewareProps) =>
@@ -11,16 +12,8 @@ export const authorizationMiddleware = (props: authorizationMiddlewareProps) =>
   }>().define(async ({ next, ctx }) => {
     const { userId } = ctx;
 
-    const user = await prisma?.user.findUnique({
-      where: {
-        id: userId,
-      },
-      include: {
-        subscriptions: {
-          include: { plan: true },
-        },
-      },
-    });
+    const user = await usersRepository.findById(userId);
+    if (!user) throw new Error("User not found");
 
     const { plans, roles } = props;
 

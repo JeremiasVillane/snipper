@@ -178,7 +178,7 @@ export const shortLinksRepository = {
       ? await bcrypt.hash(data.password, 12)
       : null;
 
-    const result = await prisma?.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       if (data.shortCode && data.shortCode !== shortLink.shortCode) {
         try {
           const existingLink = await shortLinksRepository.findByShortCode(
