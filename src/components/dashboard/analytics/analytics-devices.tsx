@@ -1,8 +1,10 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { ShortLinkAnalyticsData } from "@/lib/types";
 import { useMemo } from "react";
+
+import type { ShortLinkAnalyticsData } from "@/lib/types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { processAndSortData } from "./analytics-helpers";
 import { DevicesTable } from "./devices-table";
 
@@ -19,17 +21,17 @@ export function AnalyticsDevices({
 }: AnalyticsDevicesProps) {
   const browserData = useMemo(
     () => processAndSortData(clicksByBrowser),
-    [clicksByBrowser]
+    [clicksByBrowser],
   );
   const osData = useMemo(() => processAndSortData(clicksByOS), [clicksByOS]);
   const deviceData = useMemo(
     () => processAndSortData(clicksByDevice),
-    [clicksByDevice]
+    [clicksByDevice],
   );
 
   return (
     <Tabs variant="underlined" defaultValue="browser">
-      <TabsList className="grid w-full grid-cols-3 mb-4">
+      <TabsList className="mb-4 grid w-full grid-cols-3">
         <TabsTrigger value="browser">By Browser</TabsTrigger>
         <TabsTrigger value="os">By OS</TabsTrigger>
         <TabsTrigger value="device">By Device</TabsTrigger>

@@ -1,6 +1,5 @@
 "use client";
 
-import type { ShortLinkAnalyticsData } from "@/lib/types";
 import { useMemo } from "react";
 import {
   Bar,
@@ -17,6 +16,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+
+import type { ShortLinkAnalyticsData } from "@/lib/types";
+
 import { prepareChartData } from "./analytics-helpers";
 
 const COLORS = [
@@ -65,7 +67,7 @@ export function ClicksOverTime({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[300px] bg-muted/20 rounded-md">
+      <div className="flex h-[300px] items-center justify-center rounded-md bg-muted/20">
         <p className="text-muted-foreground">No data available</p>
       </div>
     );
@@ -102,7 +104,7 @@ export function TopCountries({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[300px] bg-muted/20 rounded-md">
+      <div className="flex h-[300px] items-center justify-center rounded-md bg-muted/20">
         <p className="text-muted-foreground">No data available</p>
       </div>
     );
@@ -136,7 +138,7 @@ export function DeviceTypes({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[300px] bg-muted/20 rounded-md">
+      <div className="flex h-[300px] items-center justify-center rounded-md bg-muted/20">
         <p className="text-muted-foreground">No data available</p>
       </div>
     );
@@ -181,7 +183,7 @@ export function Browsers({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[300px] bg-muted/20 rounded-md">
+      <div className="flex h-[300px] items-center justify-center rounded-md bg-muted/20">
         <p className="text-muted-foreground">No data available</p>
       </div>
     );
@@ -226,7 +228,7 @@ export function OperatingSystems({
 
   if (chartData.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[300px] bg-muted/20 rounded-md">
+      <div className="flex h-[300px] items-center justify-center rounded-md bg-muted/20">
         <p className="text-muted-foreground">No data available</p>
       </div>
     );

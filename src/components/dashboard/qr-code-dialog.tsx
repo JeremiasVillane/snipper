@@ -1,5 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { Download } from "lucide-react";
+
+import { buildShortUrl, generateQRCode } from "@/lib/helpers";
+import type { ShortLinkFromRepository } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
   Credenza,
@@ -10,12 +16,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui/credenza";
-import { buildShortUrl, generateQRCode } from "@/lib/helpers";
-import type { ShortLinkFromRepository } from "@/lib/types";
-import { Download } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { toast } from "../ui/simple-toast";
+import { toast } from "@/components/ui/simple-toast";
 
 interface QrCodeDialogProps {
   link: ShortLinkFromRepository;
@@ -65,13 +66,13 @@ export default function QrCodeDialog({
             <Image
               src={qrCodeUrl || "/placeholder.svg"}
               alt={`QR code for ${link.shortCode}`}
-              className="w-48 h-48 border rounded-md"
+              className="h-48 w-48 rounded-md border"
               width={12}
               height={12}
             />
           ) : (
-            <div className="w-48 h-48 border rounded-md flex items-center justify-center bg-muted">
-              <p className="text-sm text-muted-foreground text-center px-4">
+            <div className="flex h-48 w-48 items-center justify-center rounded-md border bg-muted">
+              <p className="px-4 text-center text-sm text-muted-foreground">
                 QR code not available
               </p>
             </div>

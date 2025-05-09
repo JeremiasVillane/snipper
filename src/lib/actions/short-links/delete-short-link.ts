@@ -1,8 +1,10 @@
 "use server";
 
-import { shortLinksRepository } from "@/lib/db/repositories";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+
+import { shortLinksRepository } from "@/lib/db/repositories";
+
 import { authActionClient } from "../safe-action";
 
 const deleteShortLinkSchema = z.object({

@@ -1,10 +1,12 @@
 "use server";
 
-import { shortLinksRepository } from "@/lib/db/repositories";
 import bcrypt from "bcryptjs";
-import { noauthActionClient } from "../safe-action";
 import { z } from "zod";
+
+import { shortLinksRepository } from "@/lib/db/repositories";
 import { shortCodeSchema, shortLinkPassword } from "@/lib/schemas";
+
+import { noauthActionClient } from "../safe-action";
 
 const verifyPasswordSchema = z.object({
   shortCode: shortCodeSchema,
@@ -34,7 +36,7 @@ export const verifyPassword = noauthActionClient
     if (!!shortLink.password) {
       const passwordMatch = await bcrypt.compare(
         plainPassword,
-        shortLink.password
+        shortLink.password,
       );
       if (!passwordMatch) throw new Error("Incorrect password");
     }

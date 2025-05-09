@@ -1,17 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import * as React from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import {
-  format,
   endOfMonth,
   endOfYear,
+  format,
   startOfMonth,
   startOfYear,
   subDays,
@@ -19,9 +13,16 @@ import {
   subYears,
 } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import * as React from "react";
 import { DateRange } from "react-day-picker";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export function DateRangePicker({
   className,
@@ -105,8 +106,8 @@ export function DateRangePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-full md:w-[300px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              "w-full justify-start text-left font-normal md:w-[300px]",
+              !date && "text-muted-foreground",
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -247,7 +248,7 @@ export function DateRangePicker({
               </div>
             </div>
           </div>
-          <div className="p-2 border-t border-border">
+          <div className="border-t border-border p-2">
             <Button
               variant="ghost"
               size="sm"

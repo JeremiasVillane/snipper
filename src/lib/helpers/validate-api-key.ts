@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
-import { apiKeysRepository } from "../db/repositories";
+
+import { apiKeysRepository } from "@/lib/db/repositories";
 
 export async function validateApiKey(request: NextRequest) {
   const authHeader = request.headers.get("authorization");

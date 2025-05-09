@@ -1,10 +1,11 @@
 "use client";
 
 import { env } from "@/env.mjs";
-import { PostHogProvider } from "@/lib/posthog-provider";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+
+import { PostHogProvider } from "@/lib/posthog-provider";
 
 const isPosthogConfigured =
   !!env.NEXT_PUBLIC_POSTHOG_KEY && !!env.NEXT_PUBLIC_POSTHOG_HOST;

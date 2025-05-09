@@ -1,4 +1,5 @@
 import { UTMParamData } from "@/lib/types";
+
 /**
  * Builds a URL string by appending UTM parameters from a UTMParamData object
  * to a base URL.
@@ -8,7 +9,7 @@ import { UTMParamData } from "@/lib/types";
  */
 export function buildUrlWithUtm(
   baseUrl: string,
-  utmParams: UTMParamData
+  utmParams: UTMParamData,
 ): string {
   try {
     const url = new URL(baseUrl);

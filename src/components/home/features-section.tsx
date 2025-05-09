@@ -1,14 +1,15 @@
-import { BlurFade } from "@/components/ui/blur-fade";
-import { Card } from "@/components/ui/card";
 import {
   BarChart3,
   CheckCircle2,
-  type LucideIcon,
   PenTool,
   QrCode,
   Shield,
   Zap,
+  type LucideIcon,
 } from "lucide-react";
+
+import { BlurFade } from "@/components/ui/blur-fade";
+import { Card } from "@/components/ui/card";
 
 interface FeatureItem {
   icon: LucideIcon;
@@ -62,7 +63,7 @@ export function FeaturesSection() {
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
           Powerful Features
         </h2>
-        <p className="mt-4 text-muted-foreground text-pretty">
+        <p className="mt-4 text-pretty text-muted-foreground">
           Everything you need to create, share, and track your links.
         </p>
       </div>
@@ -71,7 +72,7 @@ export function FeaturesSection() {
         {FEATURES.map((feature, index) => (
           <BlurFade key={feature.title} delay={0.25 + index * 0.05} inView>
             <Card key={index} className="space-y-4 p-6">
-              <div className="inline-flex items-center justify-center rounded-lg p-2 bg-primary/10">
+              <div className="inline-flex items-center justify-center rounded-lg bg-primary/10 p-2">
                 <feature.icon className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-xl font-bold">{feature.title}</h3>

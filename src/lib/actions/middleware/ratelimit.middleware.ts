@@ -1,3 +1,4 @@
+import { headers as getNextHeaders } from "next/headers";
 import { env } from "@/env.mjs";
 import arcjet, {
   ArcjetDecision,
@@ -5,7 +6,6 @@ import arcjet, {
   tokenBucket,
 } from "@arcjet/next";
 import { createMiddleware } from "next-safe-action";
-import { headers as getNextHeaders } from "next/headers";
 
 interface RateLimitInfo {
   window: number;
@@ -29,7 +29,7 @@ export const rateLimitingMiddleware = createMiddleware<{
 }>().define(async ({ next, metadata, ctx: originalContext }) => {
   if (!env.ARCJET_KEY) {
     console.warn(
-      `Arcjet key not found. Rate limiting for action '${metadata.name}' will be disabled.`
+      `Arcjet key not found. Rate limiting for action '${metadata.name}' will be disabled.`,
     );
     return next({ ctx: originalContext });
   }
@@ -62,9 +62,9 @@ export const rateLimitingMiddleware = createMiddleware<{
     const forwardedFor = currentHeaders.get("x-forwarded-for");
     const clientIpAddress = forwardedFor
       ? forwardedFor.split(",")[0].trim()
-      : (await fetch("https://api.ipify.org/?format=json")
+      : ((await fetch("https://api.ipify.org/?format=json")
           .then((res) => res.json())
-          .then((res) => res?.ip)) ?? "127.0.0.1";
+          .then((res) => res?.ip)) ?? "127.0.0.1");
 
     const decision: ArcjetDecision = await aj.protect(
       {
@@ -73,7 +73,7 @@ export const rateLimitingMiddleware = createMiddleware<{
       },
       {
         requested: limiter.requested,
-      }
+      },
     );
 
     if (decision.isDenied()) {
@@ -84,8 +84,8 @@ export const rateLimitingMiddleware = createMiddleware<{
           `Rate limit hit for action '${metadata.name}'. IP: ${
             decision.ip ?? "N/A"
           }. Remaining: ${reason.remaining}, Reset: ${new Date(
-            reason.reset * 1000
-          )}`
+            reason.reset * 1000,
+          )}`,
         );
         const error = new Error("Too Many Requests");
         error.cause = "rate-limit";
@@ -94,7 +94,7 @@ export const rateLimitingMiddleware = createMiddleware<{
         console.warn(
           `Request denied for action '${metadata.name}' by Arcjet. IP: ${
             decision.ip ?? "N/A"
-          }. Reason: ${decision.reason.type}`
+          }. Reason: ${decision.reason.type}`,
         );
         const error = new Error("Forbidden");
         error.cause = decision.reason.type;
@@ -119,7 +119,7 @@ export const rateLimitingMiddleware = createMiddleware<{
   } catch (error) {
     console.error(
       `Arcjet middleware error for action '${metadata.name}':`,
-      error
+      error,
     );
 
     if (
@@ -134,7 +134,7 @@ export const rateLimitingMiddleware = createMiddleware<{
       error.message.includes("Invariant: headers()")
     ) {
       console.error(
-        "Error: headers() was called outside of the Next.js request scope. Ensure this action is run within a Server Action or similar Next.js request context."
+        "Error: headers() was called outside of the Next.js request scope. Ensure this action is run within a Server Action or similar Next.js request context.",
       );
       throw new Error("Server configuration error for security check.");
     }

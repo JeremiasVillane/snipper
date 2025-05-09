@@ -1,11 +1,11 @@
+import { constructMetadata } from "@/lib/metadata";
+import { generateOgImageUrl } from "@/lib/og";
 import {
   FeaturesCTA,
   FeaturesDetails,
   FeaturesHero,
   FeaturesWhyChoose,
 } from "@/components/features";
-import { constructMetadata } from "@/lib/metadata";
-import { generateOgImageUrl } from "@/lib/og";
 
 export const generateMetadata = async () => {
   const title = "Snipper Features: Custom Links, Analytics, UTM & QR Codes";

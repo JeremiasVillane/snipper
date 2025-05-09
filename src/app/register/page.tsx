@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { RegisterForm } from "@/components/register/register-form";
+import { auth } from "@/lib/auth";
+import { constructMetadata } from "@/lib/metadata";
+import { generateOgImageUrl } from "@/lib/og";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,9 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { auth } from "@/lib/auth";
-import { constructMetadata } from "@/lib/metadata";
-import { generateOgImageUrl } from "@/lib/og";
+import { RegisterForm } from "@/components/register/register-form";
 
 export const generateMetadata = async () => {
   const title = "Create Account - Snipper | Sign Up Free";
@@ -49,7 +49,7 @@ export default async function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 dark:bg-slate-900">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">
@@ -63,7 +63,7 @@ export default async function RegisterPage() {
           <RegisterForm />
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <div className="text-sm text-center text-muted-foreground">
+          <div className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link href="/login" className="text-primary hover:underline">
               Login

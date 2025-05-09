@@ -1,11 +1,13 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import bcrypt from "bcryptjs";
+import { z } from "zod";
+
 import { prisma } from "@/lib/db/prisma";
 import { shortLinksRepository } from "@/lib/db/repositories";
 import { createLinkSchema } from "@/lib/schemas";
-import bcrypt from "bcryptjs";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
+
 import { authActionClient } from "../safe-action";
 
 const updateShortLinkSchema = z.object({
@@ -40,7 +42,7 @@ export const updateShortLink = authActionClient({
 
         if (!currentLink) {
           throw new Error(
-            "Link not found or you do not have permission to edit it."
+            "Link not found or you do not have permission to edit it.",
           );
         }
 
@@ -50,7 +52,7 @@ export const updateShortLink = authActionClient({
         ) {
           try {
             const existingLink = await shortLinksRepository.findByShortCode(
-              formData.shortCode
+              formData.shortCode,
             );
             if (existingLink && existingLink.id !== linkId) {
               throw new Error("This custom alias is already taken");
@@ -106,7 +108,7 @@ export const updateShortLink = authActionClient({
           }));
           await tx.uTMParam.createMany({ data: utmParamsToCreate });
           console.log(
-            `Synced ${utmParamsToCreate.length} UTMParam sets for link ${linkId}`
+            `Synced ${utmParamsToCreate.length} UTMParam sets for link ${linkId}`,
           );
         }
 
@@ -121,7 +123,7 @@ export const updateShortLink = authActionClient({
       console.error(`Error updating link ${linkId}:`, error);
       if (error instanceof Error) throw error;
       throw new Error(
-        "Failed to update the short link due to a database error."
+        "Failed to update the short link due to a database error.",
       );
     }
   });

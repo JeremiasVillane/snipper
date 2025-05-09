@@ -1,11 +1,11 @@
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { publicUrl } from "@/env.mjs";
+import { ArrowLeft } from "lucide-react";
+
 import { constructMetadata } from "@/lib/metadata";
 import { generateOgImageUrl } from "@/lib/og";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const generateMetadata = async () => {
   const title = "Snipper API Documentation | Automate Link Shortening";
@@ -60,12 +60,12 @@ export default function ApiDocsPage() {
           </div>
         </div>
       </header>
-      <main className="flex-1 container py-6">
-        <div className="max-w-4xl mx-auto">
+      <main className="container flex-1 py-6">
+        <div className="mx-auto max-w-4xl">
           <div className="space-y-6">
             <div>
               <h2 className="text-3xl font-bold tracking-tight">Snipper API</h2>
-              <p className="text-muted-foreground mt-2">
+              <p className="mt-2 text-muted-foreground">
                 The Snipper API allows you to programmatically create, manage,
                 and analyze short links.
               </p>
@@ -88,7 +88,7 @@ export default function ApiDocsPage() {
                 Include your API key in the Authorization header of your
                 requests:
               </p>
-              <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+              <pre className="overflow-x-auto rounded-md bg-muted p-4">
                 <code>Authorization: Bearer your_api_key</code>
               </pre>
             </div>
@@ -98,10 +98,10 @@ export default function ApiDocsPage() {
                 <TabsTrigger value="links">Links</TabsTrigger>
                 <TabsTrigger value="analytics">Analytics</TabsTrigger>
               </TabsList>
-              <TabsContent value="links" className="space-y-6 mt-6">
+              <TabsContent value="links" className="mt-6 space-y-6">
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 text-primary font-mono p-1 rounded">
+                    <div className="font-mono rounded bg-primary/10 p-1 text-primary">
                       GET
                     </div>
                     <h4 className="text-lg font-semibold">/api/v1/links</h4>
@@ -109,7 +109,7 @@ export default function ApiDocsPage() {
                   <p>List all your short links.</p>
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                    <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
@@ -127,7 +127,7 @@ export default function ApiDocsPage() {
                             ],
                           },
                           null,
-                          2
+                          2,
                         )}
                       </code>
                     </pre>
@@ -136,7 +136,7 @@ export default function ApiDocsPage() {
 
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <div className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 font-mono p-1 rounded">
+                    <div className="font-mono rounded bg-green-100 p-1 text-green-700 dark:bg-green-900 dark:text-green-300">
                       POST
                     </div>
                     <h4 className="text-lg font-semibold">/api/v1/links</h4>
@@ -144,7 +144,7 @@ export default function ApiDocsPage() {
                   <p>Create a new short link.</p>
                   <div className="space-y-2">
                     <h5 className="font-semibold">Request Body</h5>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                    <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
@@ -155,14 +155,14 @@ export default function ApiDocsPage() {
                             tags: ["marketing", "social"], // optional
                           },
                           null,
-                          2
+                          2,
                         )}
                       </code>
                     </pre>
                   </div>
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                    <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
@@ -175,7 +175,7 @@ export default function ApiDocsPage() {
                             qrCodeUrl: "data:image/png;base64,...",
                           },
                           null,
-                          2
+                          2,
                         )}
                       </code>
                     </pre>
@@ -184,7 +184,7 @@ export default function ApiDocsPage() {
 
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 text-primary font-mono p-1 rounded">
+                    <div className="font-mono rounded bg-primary/10 p-1 text-primary">
                       GET
                     </div>
                     <h4 className="text-lg font-semibold">/api/v1/links/:id</h4>
@@ -192,7 +192,7 @@ export default function ApiDocsPage() {
                   <p>Get details of a specific short link.</p>
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                    <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
@@ -207,7 +207,7 @@ export default function ApiDocsPage() {
                             qrCodeUrl: "data:image/png;base64,...",
                           },
                           null,
-                          2
+                          2,
                         )}
                       </code>
                     </pre>
@@ -216,7 +216,7 @@ export default function ApiDocsPage() {
 
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <div className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-mono p-1 rounded">
+                    <div className="font-mono rounded bg-blue-100 p-1 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
                       PATCH
                     </div>
                     <h4 className="text-lg font-semibold">/api/v1/links/:id</h4>
@@ -224,7 +224,7 @@ export default function ApiDocsPage() {
                   <p>Update a short link.</p>
                   <div className="space-y-2">
                     <h5 className="font-semibold">Request Body</h5>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                    <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
@@ -233,14 +233,14 @@ export default function ApiDocsPage() {
                             password: "new-secret", // optional
                           },
                           null,
-                          2
+                          2,
                         )}
                       </code>
                     </pre>
                   </div>
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                    <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
@@ -253,7 +253,7 @@ export default function ApiDocsPage() {
                             qrCodeUrl: "data:image/png;base64,...",
                           },
                           null,
-                          2
+                          2,
                         )}
                       </code>
                     </pre>
@@ -262,7 +262,7 @@ export default function ApiDocsPage() {
 
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <div className="bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300 font-mono p-1 rounded">
+                    <div className="font-mono rounded bg-red-100 p-1 text-red-700 dark:bg-red-900 dark:text-red-300">
                       DELETE
                     </div>
                     <h4 className="text-lg font-semibold">/api/v1/links/:id</h4>
@@ -270,14 +270,14 @@ export default function ApiDocsPage() {
                   <p>Delete a short link.</p>
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                    <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
                             success: true,
                           },
                           null,
-                          2
+                          2,
                         )}
                       </code>
                     </pre>
@@ -285,10 +285,10 @@ export default function ApiDocsPage() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="analytics" className="space-y-6 mt-6">
+              <TabsContent value="analytics" className="mt-6 space-y-6">
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <div className="bg-primary/10 text-primary font-mono p-1 rounded">
+                    <div className="font-mono rounded bg-primary/10 p-1 text-primary">
                       GET
                     </div>
                     <h4 className="text-lg font-semibold">
@@ -298,7 +298,7 @@ export default function ApiDocsPage() {
                   <p>Get analytics for a specific short link.</p>
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
-                    <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                    <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
@@ -333,7 +333,7 @@ export default function ApiDocsPage() {
                             },
                           },
                           null,
-                          2
+                          2,
                         )}
                       </code>
                     </pre>
@@ -351,7 +351,7 @@ export default function ApiDocsPage() {
                   <TabsTrigger value="curl">cURL</TabsTrigger>
                 </TabsList>
                 <TabsContent value="javascript" className="mt-4">
-                  <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                  <pre className="overflow-x-auto rounded-md bg-muted p-4">
                     <code>
                       {`const API_KEY = 'your_api_key';
 const API_URL = '${publicUrl}/api/v1';
@@ -384,7 +384,7 @@ createShortLink('https://example.com', {
                   </pre>
                 </TabsContent>
                 <TabsContent value="python" className="mt-4">
-                  <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                  <pre className="overflow-x-auto rounded-md bg-muted p-4">
                     <code>
                       {`import requests
 import json
@@ -420,7 +420,7 @@ print(json.dumps(result, indent=2))`}
                   </pre>
                 </TabsContent>
                 <TabsContent value="curl" className="mt-4">
-                  <pre className="bg-muted p-4 rounded-md overflow-x-auto">
+                  <pre className="overflow-x-auto rounded-md bg-muted p-4">
                     <code>
                       {`# Create a short link
 curl -X POST '${publicUrl}/api/v1/links' \\

@@ -1,5 +1,3 @@
-import { BlurFade } from "@/components/ui/blur-fade";
-import { Card } from "@/components/ui/card";
 import {
   BarChart3,
   CheckCircle2,
@@ -10,6 +8,9 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+
+import { BlurFade } from "@/components/ui/blur-fade";
+import { Card } from "@/components/ui/card";
 
 interface FeatureDetail {
   icon: LucideIcon;
@@ -91,11 +92,11 @@ export function FeaturesDetails() {
   return (
     <section className="py-20">
       <div className="container px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {FEATURE_DETAILS.map((feature, index) => (
             <BlurFade key={feature.title} delay={0.25 + index * 0.05} inView>
-              <Card key={index} className="space-y-4 p-6 rounded-lg">
-                <div className="inline-flex items-center justify-center rounded-lg p-2 bg-primary/10">
+              <Card key={index} className="space-y-4 rounded-lg p-6">
+                <div className="inline-flex items-center justify-center rounded-lg bg-primary/10 p-2">
                   <feature.icon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold">{feature.title}</h3>
@@ -103,7 +104,7 @@ export function FeaturesDetails() {
                 <ul className="space-y-2">
                   {feature.points.map((point, pointIndex) => (
                     <li key={pointIndex} className="flex items-start">
-                      <CheckCircle2 className="h-5 w-5 text-primary mr-2 mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="mr-2 mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
                       <span>{point}</span>
                     </li>
                   ))}

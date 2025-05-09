@@ -1,7 +1,9 @@
+import Link from "next/link";
+import { CheckCircle2, ChevronRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { List, ListItem } from "@/components/ui/list";
-import { CheckCircle2, ChevronRight } from "lucide-react";
-import Link from "next/link";
+
 import WhyChooseInfoCards from "./features-why-choose-cards";
 
 interface WhyChooseItem {
@@ -25,16 +27,15 @@ const WHY_CHOOSE_ITEMS: WhyChooseItem[] = [
   },
   {
     title: "Open Source & Transparent",
-    description:
-      "Benefit from community contributions and full transparency.",
+    description: "Benefit from community contributions and full transparency.",
   },
 ];
 
 export function FeaturesWhyChoose() {
   return (
-    <section className="py-20 bg-muted/50">
+    <section className="bg-muted/50 py-20">
       <div className="container px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
           <div className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter">
               Why Choose Snipper?
@@ -51,7 +52,7 @@ export function FeaturesWhyChoose() {
                   <CheckCircle2 className="h-5 w-5 text-primary" />
                 </div>
               }
-              className="space-y-4 mt-6 [&>li]:before:mr-1"
+              className="mt-6 space-y-4 [&>li]:before:mr-1"
             >
               {WHY_CHOOSE_ITEMS.map((item, index) => (
                 <ListItem key={index} className="flex gap-2">

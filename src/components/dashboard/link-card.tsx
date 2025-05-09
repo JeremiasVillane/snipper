@@ -1,5 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
+import { ExternalLink, LineChart, Pencil, QrCode, Trash2 } from "lucide-react";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
+import { buildShortUrl } from "@/lib/helpers";
+import { ShortLinkFromRepository } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -8,12 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { buildShortUrl } from "@/lib/helpers";
-import { ShortLinkFromRepository } from "@/lib/types";
-import { formatDistanceToNow } from "date-fns";
-import { ExternalLink, LineChart, Pencil, QrCode, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { Tooltip as ReactTooltip } from "react-tooltip";
+
 import { BubbleMenu } from "../ui/bubble-menu";
 import { CopyOptionsMenu } from "./copy-options-menu";
 
@@ -28,15 +30,15 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
   const isExpired = !!link.expiresAt && new Date() >= link.expiresAt;
 
   return (
-    <Card className="relative h-full flex flex-col">
-      <CardHeader className="pb-2 overflow-hidden">
-        <div className="flex justify-between items-start">
+    <Card className="relative flex h-full flex-col">
+      <CardHeader className="overflow-hidden pb-2">
+        <div className="flex items-start justify-between">
           <div className="space-y-1">
             <CardTitle className="text-lg">{link.shortCode}</CardTitle>
             <CardDescription
               data-tooltip-id="card-url-tooltip"
               data-tooltip-content={link.originalUrl}
-              className="truncate max-w-[200px] md:max-w-[250px] cursor-default"
+              className="max-w-[200px] cursor-default truncate md:max-w-[250px]"
             >
               {link.originalUrl}
             </CardDescription>
@@ -49,7 +51,7 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="py-2 flex-grow">
+      <CardContent className="flex-grow py-2">
         <div className="mb-2">
           <p className="text-sm text-muted-foreground">
             Created{" "}
@@ -65,7 +67,7 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
           )}
         </div>
 
-        <div className="flex flex-wrap gap-1 mt-2 mr-4">
+        <div className="mr-4 mt-2 flex flex-wrap gap-1">
           {link.tags?.map((tag) => (
             <Badge key={tag} variant="secondary" className="text-xs">
               {tag}
@@ -86,7 +88,7 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
         </div>
       </CardContent>
 
-      <BubbleMenu className="mt-1 mb-2 mr-auto xl:mr-2 ml-auto">
+      <BubbleMenu className="mb-2 ml-auto mr-auto mt-1 xl:mr-2">
         <CopyOptionsMenu {...{ link, isExpired }} />
         <QrCode
           role="button"
@@ -117,14 +119,14 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
         <Trash2
           role="button"
           onClick={() => onDelete(link)}
-          className="text-destructive size-full p-3"
+          className="size-full p-3 text-destructive"
           aria-label="Delete Short Link"
         />
       </BubbleMenu>
 
       <ReactTooltip
         id="card-url-tooltip"
-        className="max-w-sm md:max-w-md lg:max-w-xl whitespace-normal break-words"
+        className="max-w-sm whitespace-normal break-words md:max-w-md lg:max-w-xl"
       />
     </Card>
   );

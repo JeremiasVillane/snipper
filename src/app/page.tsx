@@ -1,13 +1,14 @@
+import { publicUrl } from "@/env.mjs";
+
+import { constructMetadata } from "@/lib/metadata";
+import { generateOgImageUrl } from "@/lib/og";
+import { BlurFade } from "@/components/ui/blur-fade";
 import {
   CTASection,
   FeaturesSection,
   HeroSection,
   ShortenerForm,
 } from "@/components/home";
-import { BlurFade } from "@/components/ui/blur-fade";
-import { publicUrl } from "@/env.mjs";
-import { constructMetadata } from "@/lib/metadata";
-import { generateOgImageUrl } from "@/lib/og";
 
 export const generateMetadata = async () => {
   const title = "Snipper: URL shortnener | Landing Page";

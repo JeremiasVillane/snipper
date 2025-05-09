@@ -1,3 +1,5 @@
+import { Copy, Share2 } from "lucide-react";
+
 import { buildShortUrl, buildUrlWithUtm } from "@/lib/helpers";
 import { ShortLinkFromRepository } from "@/lib/types";
 import {
@@ -5,15 +7,15 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
   DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import { Button } from "../ui/button";
-import { Copy, Share2 } from "lucide-react";
 import { CopyToClipboardButton } from "../ui/copy-to-clipboard-button";
 
 interface CopyOptionsMenuProps {
@@ -45,7 +47,7 @@ export function CopyOptionsMenu({ link, isExpired }: CopyOptionsMenuProps) {
           <CopyToClipboardButton
             content={baseShortUrl}
             variant="ghost"
-            className="w-full justify-start [&_svg]:size-4 [&_svg]:mr-2 gap-2 h-8 py-1.5 px-2 text-sm font-normal text-foreground"
+            className="h-8 w-full justify-start gap-2 px-2 py-1.5 text-sm font-normal text-foreground [&_svg]:mr-2 [&_svg]:size-4"
             disabled={isExpired}
             successToastOptions={{ title: "Base URL Copied!" }}
           >
@@ -69,7 +71,7 @@ export function CopyOptionsMenu({ link, isExpired }: CopyOptionsMenuProps) {
                       <CopyToClipboardButton
                         content={urlWithUtm}
                         variant="ghost"
-                        className="w-full justify-start [&_svg]:size-4 gap-2 h-8 py-1.5 px-2 text-sm font-normal text-foreground"
+                        className="h-8 w-full justify-start gap-2 px-2 py-1.5 text-sm font-normal text-foreground [&_svg]:size-4"
                         disabled={isExpired}
                         successToastOptions={{
                           title: `URL with Campaign Copied!`,

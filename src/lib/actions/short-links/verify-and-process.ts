@@ -1,8 +1,10 @@
 "use server";
 
-import { processShortLink, verifyPassword } from "@/lib/actions/short-links";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+
+import { processShortLink, verifyPassword } from "@/lib/actions/short-links";
+
 import { getSafeActionResponse } from "../safe-action-helpers";
 
 const passwordSchema = z.object({
@@ -21,7 +23,7 @@ export async function verifyPasswordAndProcessShortLink(
     [key: string]: string | string[] | undefined;
   },
   _previousState: VerifyPasswordState,
-  formData: FormData
+  formData: FormData,
 ): Promise<VerifyPasswordState> {
   const result = passwordSchema.safeParse({
     password: formData.get("password"),
@@ -48,7 +50,7 @@ export async function verifyPasswordAndProcessShortLink(
     if (!verificationResult.data.url) {
       console.error(
         "Verification successful but no URL returned for shortCode:",
-        shortCode
+        shortCode,
       );
       return {
         success: false,
@@ -88,7 +90,7 @@ export async function verifyPasswordAndProcessShortLink(
   if (!verificationUrl) {
     console.error(
       "Reached redirect point but verificationUrl is missing for shortCode:",
-      shortCode
+      shortCode,
     );
     return {
       success: false,

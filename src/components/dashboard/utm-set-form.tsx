@@ -1,13 +1,14 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { PlusCircle, Save, XCircle } from "lucide-react";
+import { ZodIssue } from "zod";
+
+import { UtmSetFormData, utmSetSchema } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/simple-toast";
-import { UtmSetFormData, utmSetSchema } from "@/lib/schemas";
-import { PlusCircle, Save, XCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { ZodIssue } from "zod";
-import { Label } from "../ui/label";
 
 interface UtmSetFormProps {
   editingSet: UtmSetFormData | null;
@@ -95,13 +96,13 @@ export function UtmSetForm({
 
   return (
     <div
-      className={`space-y-4 mt-4 p-4 border rounded-md ${
+      className={`mt-4 space-y-4 rounded-md border p-4 ${
         isEditing
-          ? "border-primary ring-1 ring-primary shadow-md"
+          ? "border-primary shadow-md ring-1 ring-primary"
           : "bg-muted/30"
       }`}
     >
-      <h4 className="font-medium text-md mb-3">
+      <h4 className="text-md mb-3 font-medium">
         {isEditing
           ? `Editing Campaign: ${editingSet?.campaign}`
           : "Add New Campaign Set"}
@@ -121,13 +122,13 @@ export function UtmSetForm({
           aria-invalid={!!localErrors.campaign}
         />
         {localErrors.campaign && (
-          <p className="text-sm text-destructive mt-1">
+          <p className="mt-1 text-sm text-destructive">
             {localErrors.campaign}
           </p>
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-1">
           <Label htmlFor="source">Source</Label>
           <Input
@@ -150,7 +151,7 @@ export function UtmSetForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-1">
           <Label htmlFor="term">Term</Label>
           <Input
@@ -173,7 +174,7 @@ export function UtmSetForm({
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-end pt-2 gap-2">
+      <div className="flex flex-col justify-end gap-2 pt-2 md:flex-row">
         {isEditing && (
           <Button
             type="button"

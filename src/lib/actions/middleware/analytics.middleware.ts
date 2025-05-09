@@ -1,7 +1,8 @@
 import { env } from "@/env.mjs";
-import PostHogClient from "@/lib/posthog";
 import { Session } from "next-auth";
 import { createMiddleware } from "next-safe-action";
+
+import PostHogClient from "@/lib/posthog";
 
 export const analyticsMiddleware = createMiddleware<{
   metadata: {

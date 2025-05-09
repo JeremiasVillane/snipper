@@ -1,5 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
+import { Menu } from "lucide-react";
+import { useSession } from "next-auth/react";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -8,13 +13,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Link2, Menu } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useState } from "react";
-import { AuthButtons, ThemeToggle } from "./modules";
-import Image from "next/image";
+
 import { SnipperLogo } from "../../../../public/snipper-logo";
+import { AuthButtons, ThemeToggle } from "./modules";
 
 type DataLink = {
   href: string;
@@ -44,8 +45,8 @@ export function SiteHeader() {
         href={link.href}
         className={
           isMobile
-            ? "flex items-center gap-2 p-2 hover:bg-secondary rounded-md"
-            : "text-sm font-medium hover:text-primary transition-colors"
+            ? "flex items-center gap-2 rounded-md p-2 hover:bg-secondary"
+            : "text-sm font-medium transition-colors hover:text-primary"
         }
         onClick={isMobile ? () => setOpen(false) : undefined}
       >
@@ -54,14 +55,14 @@ export function SiteHeader() {
     ));
 
   return (
-    <header className="fixed top-0 w-full h-16 border-b bg-background z-50">
-      <div className="container flex justify-between items-center h-16">
+    <header className="fixed top-0 z-50 h-16 w-full border-b bg-background">
+      <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-1.5">
           <SnipperLogo className="size-5 text-primary" />
           <span className="text-xl font-bold">Snipper</span>
         </Link>
 
-        <div className="hidden md:flex items-center space-x-6">
+        <div className="hidden items-center space-x-6 md:flex">
           <nav className="flex items-center space-x-6">
             {renderNavLinks(NAV_LINKS)}
           </nav>
@@ -81,7 +82,7 @@ export function SiteHeader() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-            <nav className="flex flex-col gap-4 mt-8">
+            <nav className="mt-8 flex flex-col gap-4">
               {renderNavLinks(NAV_LINKS, true)}
               {renderNavLinks(DASHBOARD_LINKS, true)}
 

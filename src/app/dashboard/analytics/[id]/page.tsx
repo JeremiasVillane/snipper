@@ -1,18 +1,19 @@
+import { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { format } from "date-fns";
+import { ArrowLeft } from "lucide-react";
+
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
+import { getShortLink, getShortLinkAnalytics } from "@/lib/actions/short-links";
+import { auth } from "@/lib/auth";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
   AnalyticsHeader,
   AnalyticsTabs,
   DateRangePicker,
 } from "@/components/dashboard/analytics";
-import { Alert } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
-import { getShortLink, getShortLinkAnalytics } from "@/lib/actions/short-links";
-import { auth } from "@/lib/auth";
-import { format } from "date-fns";
-import { ArrowLeft } from "lucide-react";
-import { Metadata } from "next";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 
 interface GenerateMetadataProps {
   params: Promise<{ id: string }>;
@@ -34,7 +35,7 @@ export async function generateMetadata({
     : null;
 
   const shortLinkResponse = await getShortLink({ id }).then((res) =>
-    getSafeActionResponse(res)
+    getSafeActionResponse(res),
   );
   const shortCode = shortLinkResponse.success
     ? shortLinkResponse.data.shortCode
@@ -96,15 +97,15 @@ export default async function AnalyticsPage({
   const endDate = rangeParams?.to ? new Date(rangeParams.to) : undefined;
 
   const shortLink = await getShortLink({ id }).then((res) =>
-    getSafeActionResponse(res)
+    getSafeActionResponse(res),
   );
 
   if (!shortLink.success) {
     console.warn(
-      `Short link ${id} not found or user ${session.user.id} lacks permission.`
+      `Short link ${id} not found or user ${session.user.id} lacks permission.`,
     );
     return (
-      <main className="flex-1 container min-h-screen py-6">
+      <main className="container min-h-screen flex-1 py-6">
         <Alert variant="destructive" styleVariant="fill" withIcon>
           {shortLink.error}
         </Alert>
@@ -121,7 +122,7 @@ export default async function AnalyticsPage({
   if (!ShortLinkAnalytics.success) {
     console.error(`Failed to get analytics: ${ShortLinkAnalytics.error}`);
     return (
-      <main className="flex-1 container min-h-screen py-6">
+      <main className="container min-h-screen flex-1 py-6">
         <Alert variant="destructive" styleVariant="fill" withIcon>
           {ShortLinkAnalytics.error}
         </Alert>
@@ -130,8 +131,8 @@ export default async function AnalyticsPage({
   }
 
   return (
-    <main className="flex-1 container min-h-screen py-6">
-      <div className="flex flex-col md:flex-row gap-3 md:gap-0 items-start justify-between mb-6">
+    <main className="container min-h-screen flex-1 py-6">
+      <div className="mb-6 flex flex-col items-start justify-between gap-3 md:flex-row md:gap-0">
         <section className="flex items-start gap-2">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/dashboard">

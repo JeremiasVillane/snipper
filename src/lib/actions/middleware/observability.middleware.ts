@@ -1,6 +1,6 @@
-import { createMiddleware } from "next-safe-action";
-import * as Sentry from "@sentry/nextjs";
 import { env } from "@/env.mjs";
+import * as Sentry from "@sentry/nextjs";
+import { createMiddleware } from "next-safe-action";
 
 export const sentryMiddleware = createMiddleware<{
   metadata: { name: string };

@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db/prisma";
-
 import type { ClickEvent, Prisma } from "@prisma/client";
+
+import { prisma } from "@/lib/db/prisma";
 
 export const clickEventsRepository = {
   async create(data: Prisma.ClickEventCreateInput): Promise<ClickEvent> {
@@ -24,7 +24,7 @@ export const clickEventsRepository = {
   async findByDateRange(
     shortLinkId: string,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
   ): Promise<ClickEvent[]> {
     return prisma.clickEvent.findMany({
       where: {

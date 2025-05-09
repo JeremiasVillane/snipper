@@ -1,9 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useIsMounted } from "@/hooks";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+
+import { Button } from "@/components/ui/button";
 
 interface ThemeToggleProps {
   isMobile?: boolean;
@@ -22,7 +23,7 @@ export function ThemeToggle({ isMobile = false }: ThemeToggleProps) {
       <Button
         variant="ghost"
         onClick={handleToggleTheme}
-        className="flex items-center gap-2 w-full justify-start p-2 hover:bg-secondary rounded-md"
+        className="flex w-full items-center justify-start gap-2 rounded-md p-2 hover:bg-secondary"
       >
         <Sun className="h-4 w-4" />
         <span>Toggle Theme</span>
@@ -40,7 +41,7 @@ export function ThemeToggle({ isMobile = false }: ThemeToggleProps) {
       <Button
         variant="ghost"
         onClick={handleToggleTheme}
-        className="flex items-center gap-2 w-full justify-start p-2 hover:bg-secondary rounded-md text-base hover:text-foreground"
+        className="flex w-full items-center justify-start gap-2 rounded-md p-2 text-base hover:bg-secondary hover:text-foreground"
       >
         {theme === "light" ? (
           <Sun className="h-4 w-4" />

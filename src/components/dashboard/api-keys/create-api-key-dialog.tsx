@@ -1,5 +1,19 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+
+import { createApiKey } from "@/lib/actions/api-keys";
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
+import {
+  CreateApiKeyFormData,
+  createApiKeySchema,
+} from "@/lib/schemas/api-key.schema";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
@@ -30,19 +44,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { toast } from "@/components/ui/simple-toast";
-import { createApiKey } from "@/lib/actions/api-keys";
-import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
-import {
-  CreateApiKeyFormData,
-  createApiKeySchema,
-} from "@/lib/schemas/api-key.schema";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 
 interface CreateApiKeyDialogProps {
   children: React.ReactNode;
@@ -84,7 +85,7 @@ export default function CreateApiKeyDialog({
   const onSubmit = async (data: CreateApiKeyFormData) => {
     try {
       const result = await createApiKey({ data }).then((res) =>
-        getSafeActionResponse(res)
+        getSafeActionResponse(res),
       );
 
       toast({
@@ -172,7 +173,7 @@ export default function CreateApiKeyDialog({
                               }
                               className={cn(
                                 "w-full justify-start text-left font-normal",
-                                !field.value && "text-muted-foreground"
+                                !field.value && "text-muted-foreground",
                               )}
                             >
                               {field.value ? (
@@ -193,7 +194,7 @@ export default function CreateApiKeyDialog({
                             }
                             initialFocus
                           />
-                          <div className="p-3 border-t border-border">
+                          <div className="border-t border-border p-3">
                             <Button
                               type="button"
                               variant="ghost"
@@ -249,7 +250,7 @@ export default function CreateApiKeyDialog({
                     content={createdKey}
                   />
                 </div>
-                <p className="text-sm text-muted-foreground mt-2 px-1">
+                <p className="mt-2 px-1 text-sm text-muted-foreground">
                   This key will only be shown once. Make sure to copy it now.
                 </p>
               </div>

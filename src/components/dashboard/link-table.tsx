@@ -1,5 +1,19 @@
 "use client";
 
+import Link from "next/link";
+import {
+  BarChart2,
+  ExternalLink,
+  MoreHorizontal,
+  Pencil,
+  QrCode,
+  Trash,
+} from "lucide-react";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
+import { buildShortUrl } from "@/lib/helpers";
+import type { ShortLinkFromRepository } from "@/lib/types";
+import { cn, formatDate, formatNumber } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,10 +23,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import {
   Table,
@@ -22,22 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { buildShortUrl, buildUrlWithUtm } from "@/lib/helpers";
-import type { ShortLinkFromRepository, UTMParamData } from "@/lib/types";
-import { cn, formatDate, formatNumber } from "@/lib/utils";
-import {
-  BarChart2,
-  Copy,
-  ExternalLink,
-  MoreHorizontal,
-  Pencil,
-  QrCode,
-  Share2,
-  Trash,
-} from "lucide-react";
-import Link from "next/link";
-import { Tooltip as ReactTooltip } from "react-tooltip";
-import { CopyToClipboardButton } from "../ui/copy-to-clipboard-button";
+
 import { LinkPreview } from "../ui/link-preview";
 import { CopyOptionsMenu } from "./copy-options-menu";
 
@@ -61,7 +56,7 @@ export function LinkTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="ps-4 pe-0 w-[180px]">Short URL</TableHead>
+            <TableHead className="w-[180px] pe-0 ps-4">Short URL</TableHead>
             <TableHead>Original URL</TableHead>
             <TableHead>Created</TableHead>
             <TableHead>Expires</TableHead>
@@ -80,15 +75,17 @@ export function LinkTable({
                   key={link.id}
                   className={isExpired ? "opacity-60" : ""}
                 >
-                  <TableCell className="font-medium ps-4 pe-1">
+                  <TableCell className="pe-1 ps-4 font-medium">
                     <div className="flex items-center justify-start gap-2">
                       <Link
                         href={`/${link.shortCode}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={cn(
-                          "text-primary hover:underline whitespace-nowrap truncate",
-                          isExpired ? "text-destructive cursor-not-allowed" : ""
+                          "truncate whitespace-nowrap text-primary hover:underline",
+                          isExpired
+                            ? "cursor-not-allowed text-destructive"
+                            : "",
                         )}
                         title={buildShortUrl(link.shortCode)}
                         aria-disabled={isExpired}
@@ -109,8 +106,8 @@ export function LinkTable({
                       <LinkPreview
                         url={link.originalUrl}
                         className={cn(
-                          "hover:underline truncate min-w-0",
-                          isExpired ? "text-muted-foreground" : ""
+                          "min-w-0 truncate hover:underline",
+                          isExpired ? "text-muted-foreground" : "",
                         )}
                       >
                         {link.originalUrl}
@@ -141,7 +138,7 @@ export function LinkTable({
                     {formatNumber(link.clicks)}
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-wrap gap-1 max-w-[150px]">
+                    <div className="flex max-w-[150px] flex-wrap gap-1">
                       {link.tags.length > 0 ? (
                         link.tags.map((tag) => (
                           <Badge
@@ -153,7 +150,7 @@ export function LinkTable({
                           </Badge>
                         ))
                       ) : (
-                        <span className="text-muted-foreground text-xs italic">
+                        <span className="text-xs italic text-muted-foreground">
                           No tags
                         </span>
                       )}
@@ -211,7 +208,7 @@ export function LinkTable({
         place="bottom"
         offset={15}
         float
-        className="max-w-md lg:max-w-xl !whitespace-normal !break-words z-50"
+        className="z-50 max-w-md !whitespace-normal !break-words lg:max-w-xl"
       />
     </section>
   );

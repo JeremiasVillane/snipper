@@ -1,7 +1,8 @@
+import { NextResponse } from "next/server";
 import { isSpoofedBot } from "@arcjet/inspect";
 import { ArcjetDecision } from "@arcjet/next";
 import withAuth, { type NextRequestWithAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+
 import { aj } from "./lib/arcjet";
 
 export default withAuth(
@@ -16,17 +17,17 @@ export default withAuth(
           if (decision.reason.isRateLimit()) {
             return NextResponse.json(
               { error: "Too Many Requests", reason: decision.reason },
-              { status: 429 }
+              { status: 429 },
             );
           } else if (decision.reason.isBot()) {
             return NextResponse.json(
               { error: "No bots allowed", reason: decision.reason },
-              { status: 403 }
+              { status: 403 },
             );
           } else {
             return NextResponse.json(
               { error: "Forbidden", reason: decision.reason },
-              { status: 403 }
+              { status: 403 },
             );
           }
         }
@@ -35,14 +36,14 @@ export default withAuth(
         if (decision.results.some(isSpoofedBot)) {
           return NextResponse.json(
             { error: "Forbidden", reason: decision.reason },
-            { status: 403 }
+            { status: 403 },
           );
         }
       } catch (error) {
         console.error("Arcjet middleware error:", error);
         return NextResponse.json(
           { error: "Security check failed" },
-          { status: 500 }
+          { status: 500 },
         );
       }
     }
@@ -65,7 +66,7 @@ export default withAuth(
       signIn: "/login",
       error: "/auth/error",
     },
-  }
+  },
 );
 
 export const config = {

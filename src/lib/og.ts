@@ -1,4 +1,4 @@
-import { publicUrl } from "@/env.mjs"
+import { publicUrl } from "@/env.mjs";
 
 /** This function generates a URL for an Open Graph image with the specified title, type, and mode.
  * It constructs the URL using the public URL and appends query parameters for the heading, type, and mode.
@@ -12,18 +12,18 @@ import { publicUrl } from "@/env.mjs"
 export const generateOgImageUrl = ({
   title,
   type,
-  mode = "light"
+  mode = "light",
 }: {
-  title: string
-  type: string
-  mode?: "light" | "dark"
+  title: string;
+  type: string;
+  mode?: "light" | "dark";
 }) => {
-  const url = publicUrl
+  const url = publicUrl;
 
-  const ogUrl = new URL(`${url}/api/og`)
-  ogUrl.searchParams.set("heading", title)
-  ogUrl.searchParams.set("type", type)
-  ogUrl.searchParams.set("mode", mode)
+  const ogUrl = new URL(`${url}/api/og`);
+  ogUrl.searchParams.set("heading", title);
+  ogUrl.searchParams.set("type", type);
+  ogUrl.searchParams.set("mode", mode);
 
-  return ogUrl.toString()
-}
+  return ogUrl.toString();
+};

@@ -1,4 +1,5 @@
 import { ShortLinkFromRepository } from "@/lib/types";
+
 import { LinkCard } from "./link-card";
 
 interface LinkGridProps {
@@ -18,10 +19,7 @@ export function LinkGrid({
   return (
     <section {...props}>
       {links.map((link) => (
-        <LinkCard
-          key={link.id}
-          {...{ link, onEdit, onDelete, onQrCode }}
-        />
+        <LinkCard key={link.id} {...{ link, onEdit, onDelete, onQrCode }} />
       ))}
     </section>
   );

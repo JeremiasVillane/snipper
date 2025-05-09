@@ -1,10 +1,10 @@
-import { PasswordProtection } from "@/components/shortCode/password-protection";
-import { shortLinksRepository } from "@/lib/db/repositories";
-import { redirect } from "next/navigation";
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
 import { publicUrl } from "@/env.mjs";
+
+import { shortLinksRepository } from "@/lib/db/repositories";
 import { buildShortUrl } from "@/lib/helpers";
+import { PasswordProtection } from "@/components/shortCode/password-protection";
 
 interface GenerateMetadataProps {
   params: Promise<{ shortCode: string }>;

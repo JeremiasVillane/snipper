@@ -1,5 +1,7 @@
-import { ShortLinkFromRepository } from "@/lib/types";
 import { Prisma } from "@prisma/client";
+
+import { ShortLinkFromRepository } from "@/lib/types";
+
 import { prisma } from "../prisma";
 
 export const shortLinksRepository = {

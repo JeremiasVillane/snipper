@@ -1,5 +1,12 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
+import { deleteShortLink } from "@/lib/actions/short-links";
+import type { ShortLinkFromRepository } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
   Credenza,
@@ -10,13 +17,8 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui/credenza";
-import { deleteShortLink } from "@/lib/actions/short-links";
-import type { ShortLinkFromRepository } from "@/lib/types";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Tooltip as ReactTooltip } from "react-tooltip";
+
 import { toast } from "../ui/simple-toast";
-import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 
 interface DeleteLinkDialogProps {
   link: ShortLinkFromRepository;
@@ -37,7 +39,7 @@ export default function DeleteLinkDialog({
       setIsLoading(true);
 
       const result = await deleteShortLink({ id: link.id }).then((res) =>
-        getSafeActionResponse(res)
+        getSafeActionResponse(res),
       );
 
       toast({
@@ -70,12 +72,12 @@ export default function DeleteLinkDialog({
             undone.
           </CredenzaDescription>
         </CredenzaHeader>
-        <CredenzaBody className="py-4 overflow-x-hidden">
+        <CredenzaBody className="overflow-x-hidden py-4">
           <p className="text-sm font-medium">Short URL: {link.shortCode}</p>
           <p
             data-tooltip-id="url-tooltip"
             data-tooltip-content={link.originalUrl}
-            className="text-sm text-muted-foreground mt-1 truncate cursor-default"
+            className="mt-1 cursor-default truncate text-sm text-muted-foreground"
           >
             Original URL: {link.originalUrl}
           </p>
@@ -96,7 +98,7 @@ export default function DeleteLinkDialog({
         <ReactTooltip
           id="url-tooltip"
           offset={15}
-          className="max-w-sm md:max-w-md lg:max-w-xl whitespace-normal break-words"
+          className="max-w-sm whitespace-normal break-words md:max-w-md lg:max-w-xl"
         />
       </CredenzaContent>
     </Credenza>

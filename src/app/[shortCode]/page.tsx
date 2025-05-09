@@ -1,8 +1,9 @@
-import { PasswordProtection } from "@/components/shortCode/password-protection";
-import { processShortLink } from "@/lib/actions/short-links";
-import { shortLinksRepository } from "@/lib/db/repositories";
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+
+import { processShortLink } from "@/lib/actions/short-links";
+import { shortLinksRepository } from "@/lib/db/repositories";
+import { PasswordProtection } from "@/components/shortCode/password-protection";
 
 interface GenerateMetadataProps {
   params: Promise<{ shortCode: string }>;

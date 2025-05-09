@@ -40,18 +40,18 @@ const faqData: FAQItem[] = [
 
 export function PricingFAQ() {
   return (
-    <section id="faq" className="py-20 bg-muted/50">
+    <section id="faq" className="bg-muted/50 py-20">
       <div className="container px-4 md:px-6">
-        <div className="text-center space-y-4 mb-12">
+        <div className="mb-12 space-y-4 text-center">
           <h2 className="text-3xl font-bold tracking-tighter">
             Frequently Asked Questions
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-muted-foreground">
             Find answers to common questions about our pricing and features.
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:gap-12 max-w-4xl mx-auto">
+        <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2 lg:gap-12">
           {faqData.map((item, index) => (
             <BlurFade key={index} delay={0.25 + index * 0.05} inView>
               <div key={index} className="space-y-2">

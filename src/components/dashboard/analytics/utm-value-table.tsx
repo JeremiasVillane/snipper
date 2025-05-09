@@ -1,3 +1,12 @@
+import { useMemo } from "react";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -6,14 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useMemo } from "react";
+
 import { processAndSortData } from "./analytics-helpers";
 
 interface UtmValueTableProps {
@@ -62,7 +64,7 @@ export function UtmValueTable({ title, paramName, data }: UtmValueTableProps) {
             ) : (
               sortedData.map((item) => (
                 <TableRow key={item.name}>
-                  <TableCell className="font-medium break-words">
+                  <TableCell className="break-words font-medium">
                     {item.name}
                   </TableCell>
                   <TableCell className="text-center">{item.clicks}</TableCell>

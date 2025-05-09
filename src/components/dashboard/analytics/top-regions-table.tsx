@@ -1,5 +1,11 @@
 "use client";
 
+import { useMemo } from "react";
+import ReactCountryFlag from "react-country-flag";
+
+import { getCountryName } from "@/lib/helpers";
+import type { ShortLinkAnalyticsData } from "@/lib/types";
+import { formatNumber } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -9,11 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getCountryName } from "@/lib/helpers";
-import type { ShortLinkAnalyticsData } from "@/lib/types";
-import { formatNumber } from "@/lib/utils";
-import { useMemo } from "react";
-import ReactCountryFlag from "react-country-flag";
+
 import { prepareChartData } from "./analytics-helpers";
 
 interface TopRegionsTable {
@@ -24,25 +26,25 @@ interface TopRegionsTable {
 export function TopRegionsTable({ countryData, cityData }: TopRegionsTable) {
   const countryTableData = useMemo(
     () => prepareChartData(countryData, 10),
-    [countryData]
+    [countryData],
   );
   const countryTotal = useMemo(
     () => Object.values(countryData).reduce((sum, value) => sum + value, 0),
-    [countryData]
+    [countryData],
   );
 
   const cityTableData = useMemo(
     () => prepareChartData(cityData, 10),
-    [cityData]
+    [cityData],
   );
   const cityTotal = useMemo(
     () => Object.values(cityData).reduce((sum, value) => sum + value, 0),
-    [cityData]
+    [cityData],
   );
 
   if (countryTableData.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[300px] bg-muted/20 rounded-md">
+      <div className="flex h-[300px] items-center justify-center rounded-md bg-muted/20">
         <p className="text-muted-foreground">No data available</p>
       </div>
     );

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Button,
-  LeftInsetButton,
-  RightInsetButton,
-} from "@/components/ui/button";
-import { ShortLinkFromRepository } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { useMemo, useRef, useState } from "react";
 import {
   CircleXIcon,
   Filter,
@@ -17,9 +11,17 @@ import {
   X,
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
-import { useMemo, useRef, useState } from "react";
-import { Badge } from "../ui/badge";
-import { Input } from "../ui/input";
+
+import { ShortLinkFromRepository } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import {
+  Button,
+  LeftInsetButton,
+  RightInsetButton,
+} from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 import DeleteLinkDialog from "./delete-link-dialog";
 import { LinkDialog } from "./link-dialog";
 import { LinkGrid } from "./link-grid";
@@ -35,16 +37,16 @@ export function LinkList({ links }: LinkListProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useQueryState(
     "search",
-    parseAsString.withDefault("")
+    parseAsString.withDefault(""),
   );
   const [selectedTags, setSelectedTags] = useQueryState(
     "tags",
-    parseAsArrayOf(parseAsString).withDefault([])
+    parseAsArrayOf(parseAsString).withDefault([]),
   );
 
   const [displayView, setDisplayView] = useQueryState(
     "display",
-    parseAsString.withDefault("table")
+    parseAsString.withDefault("table"),
   );
 
   const [editingLink, setEditingLink] =
@@ -72,13 +74,13 @@ export function LinkList({ links }: LinkListProps) {
       result = result.filter(
         (link) =>
           link.shortCode.toLowerCase().includes(query) ||
-          link.originalUrl.toLowerCase().includes(query)
+          link.originalUrl.toLowerCase().includes(query),
       );
     }
     const currentSelectedTags = Array.isArray(selectedTags) ? selectedTags : [];
     if (currentSelectedTags.length > 0) {
       result = result.filter((link) =>
-        currentSelectedTags.some((tag) => link.tags?.includes(tag))
+        currentSelectedTags.some((tag) => link.tags?.includes(tag)),
       );
     }
 
@@ -96,18 +98,18 @@ export function LinkList({ links }: LinkListProps) {
     setSelectedTags((prevTags) =>
       prevTags.includes(tag)
         ? prevTags.filter((t) => t !== tag)
-        : [...prevTags, tag]
+        : [...prevTags, tag],
     );
   };
 
   if (links.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="rounded-full bg-primary/10 p-3 mb-4">
+        <div className="mb-4 rounded-full bg-primary/10 p-3">
           <Link2 className="h-6 w-6 text-primary" />
         </div>
         <h3 className="text-lg font-semibold">No links yet</h3>
-        <p className="text-muted-foreground mt-1 mb-4">
+        <p className="mb-4 mt-1 text-muted-foreground">
           Create your first shortened link to get started
         </p>
         <LinkDialog>
@@ -120,7 +122,7 @@ export function LinkList({ links }: LinkListProps) {
   return (
     <div className="space-y-6">
       <section className="flex items-center gap-4">
-        <Button size="sm" variant="outline" className="hidden md:flex w-fit">
+        <Button size="sm" variant="outline" className="hidden w-fit md:flex">
           <LeftInsetButton
             onClick={() => setDisplayView("table")}
             className={
@@ -148,7 +150,7 @@ export function LinkList({ links }: LinkListProps) {
           placeholder="Search by URL or short code..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          startIcon={<Search className="size-4 text-muted-foreground mr-0.5" />}
+          startIcon={<Search className="mr-0.5 size-4 text-muted-foreground" />}
           endIcon={
             searchQuery ? (
               <CircleXIcon
@@ -165,7 +167,7 @@ export function LinkList({ links }: LinkListProps) {
       </section>
 
       {(searchQuery || selectedTags.length > 0) && (
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
+        <div className="flex flex-col items-start gap-2 md:flex-row md:items-center">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
@@ -174,7 +176,7 @@ export function LinkList({ links }: LinkListProps) {
           </div>
 
           {selectedTags.length > 0 && (
-            <div className="flex items-start md:items-center gap-2 ml-2">
+            <div className="ml-2 flex items-start gap-2 md:items-center">
               <span className="text-sm text-muted-foreground">Tags:</span>
               <div className="flex flex-wrap gap-1">
                 {selectedTags.map((tag) => (
@@ -199,7 +201,7 @@ export function LinkList({ links }: LinkListProps) {
         onQrCode={setShowingQrCode}
         className={cn(
           "hidden",
-          displayView === "table" ? "md:flex" : "md:hidden"
+          displayView === "table" ? "md:flex" : "md:hidden",
         )}
       />
 
@@ -212,7 +214,7 @@ export function LinkList({ links }: LinkListProps) {
           "grid grid-cols-1 gap-6",
           displayView === "grid"
             ? "md:grid md:grid-cols-2 lg:grid-cols-3"
-            : "md:hidden"
+            : "md:hidden",
         )}
       />
 

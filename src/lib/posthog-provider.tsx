@@ -1,12 +1,10 @@
 "use client";
 
+import { Suspense, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
-import { usePostHog } from "posthog-js/react";
-
-import posthog from "posthog-js";
-import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { env } from "@/env.mjs";
+import posthog from "posthog-js";
+import { PostHogProvider as PHProvider, usePostHog } from "posthog-js/react";
 
 const isPosthogConfigured =
   !!env.NEXT_PUBLIC_POSTHOG_KEY && !!env.NEXT_PUBLIC_POSTHOG_HOST;
@@ -16,7 +14,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     isPosthogConfigured
       ? posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY!, {
           api_host: env.NEXT_PUBLIC_POSTHOG_HOST!,
-          person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
+          person_profiles: "identified_only",
           capture_pageview: false, // Disable automatic pageview capture, as we capture manually
         })
       : null;

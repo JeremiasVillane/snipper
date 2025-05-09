@@ -1,5 +1,13 @@
 "use client";
 
+import { useActionState } from "react";
+import { Loader2, Lock } from "lucide-react";
+import { useFormStatus } from "react-dom";
+
+import {
+  verifyPasswordAndProcessShortLink,
+  type VerifyPasswordState,
+} from "@/lib/actions/short-links";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,14 +18,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Lock } from "lucide-react";
-import { useFormStatus } from "react-dom";
-
-import {
-  verifyPasswordAndProcessShortLink,
-  type VerifyPasswordState,
-} from "@/lib/actions/short-links";
-import { useActionState } from "react";
 
 interface PasswordProtectionProps {
   shortCode: string;
@@ -52,16 +52,16 @@ export function PasswordProtection({
   const verifyPasswordWithShortCode = verifyPasswordAndProcessShortLink.bind(
     null,
     shortCode,
-    resolvedSearchParams
+    resolvedSearchParams,
   );
 
   const [state, formAction] = useActionState(
     verifyPasswordWithShortCode,
-    initialState
+    initialState,
   );
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 dark:bg-slate-900">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">

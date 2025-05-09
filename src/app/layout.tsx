@@ -1,10 +1,13 @@
-import Providers from "@/app/providers";
+import { publicUrl } from "@/env.mjs";
+
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/simple-toast";
 import { SiteHeader } from "@/components/layout/header/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { Toaster } from "@/components/ui/simple-toast";
-import { publicUrl } from "@/env.mjs";
-import { cn } from "@/lib/utils";
+import Providers from "@/app/providers";
+
 import "@/styles/globals.css";
+
 import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import { PageTracker } from "react-page-tracker";
@@ -85,8 +88,8 @@ export default function RootLayout({
         <Providers>
           <SiteHeader />
 
-          <div className="fixed top-16 bottom-0 left-0 right-0 overflow-y-auto">
-            <div className="min-h-[calc(100vh-4rem)] flex flex-col">
+          <div className="fixed bottom-0 left-0 right-0 top-16 overflow-y-auto">
+            <div className="flex min-h-[calc(100vh-4rem)] flex-col">
               {children}
               <SiteFooter />
             </div>

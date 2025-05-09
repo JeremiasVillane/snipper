@@ -1,5 +1,12 @@
 "use client";
 
+import type React from "react";
+import { useState } from "react";
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
+
+import { buildShortUrl, generateShortCode } from "@/lib/helpers";
+import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
@@ -7,12 +14,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ShineBorder } from "@/components/ui/shine-border";
 import { toast } from "@/components/ui/simple-toast";
-import { buildShortUrl, generateShortCode } from "@/lib/helpers";
-import { cn } from "@/lib/utils";
-import { ExternalLink } from "lucide-react";
-import Link from "next/link";
-import type React from "react";
-import { useState } from "react";
 
 export function ShortenerForm() {
   const [url, setUrl] = useState("");
@@ -62,7 +63,7 @@ export function ShortenerForm() {
   return (
     <Card
       id="shorten"
-      className="relative w-full overflow-hidden hover:border-border hover:scale-105 transition-all duration-300"
+      className="relative w-full overflow-hidden transition-all duration-300 hover:scale-105 hover:border-border"
     >
       <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
       <CardContent className="pt-6">
@@ -107,23 +108,23 @@ export function ShortenerForm() {
                 size="icon"
                 variant="outline"
                 title="Open short link (Demo)"
-                className="text-muted-foreground px-2"
+                className="px-2 text-muted-foreground"
               >
                 <ExternalLink className="size-4" />
               </Button>
             </div>
             <p
               id="url-helper-text"
-              className="text-sm text-muted-foreground mt-2"
+              className="mt-2 text-sm text-muted-foreground"
             >
               This is a demo link and has not been saved.{" "}
               <Link
                 href={`/register?redirect=/dashboard&pendingUrl=${encodeURIComponent(
-                  url
+                  url,
                 )}`}
                 className={cn(
                   buttonVariants({ variant: "link" }),
-                  "p-0 h-auto"
+                  "h-auto p-0",
                 )}
               >
                 Create an account
@@ -131,11 +132,11 @@ export function ShortenerForm() {
               o{" "}
               <Link
                 href={`/login?redirect=/dashboard&pendingUrl=${encodeURIComponent(
-                  url
+                  url,
                 )}`}
                 className={cn(
                   buttonVariants({ variant: "link" }),
-                  "p-0 h-auto"
+                  "h-auto p-0",
                 )}
               >
                 sign in

@@ -1,5 +1,3 @@
-import { BlurFade } from "@/components/ui/blur-fade";
-import { Card } from "@/components/ui/card";
 import {
   Calendar,
   Globe,
@@ -7,6 +5,9 @@ import {
   Smartphone,
   type LucideIcon,
 } from "lucide-react";
+
+import { BlurFade } from "@/components/ui/blur-fade";
+import { Card } from "@/components/ui/card";
 
 interface InfoCardItem {
   icon: LucideIcon;
@@ -49,11 +50,11 @@ export default function WhyChooseInfoCards() {
         >
           <Card
             key={index}
-            className="rounded-lg p-6 flex flex-col items-center text-center space-y-2 h-full"
+            className="flex h-full flex-col items-center space-y-2 rounded-lg p-6 text-center"
           >
-            <card.icon className="h-8 w-8 text-primary mb-2" />
+            <card.icon className="mb-2 h-8 w-8 text-primary" />
             <h3 className="font-medium">{card.title}</h3>
-            <p className="text-sm text-muted-foreground text-pretty">
+            <p className="text-pretty text-sm text-muted-foreground">
               {card.description}
             </p>
           </Card>

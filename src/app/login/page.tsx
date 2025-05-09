@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { LoginForm } from "@/components/login/login-form";
+import { auth } from "@/lib/auth";
+import { constructMetadata } from "@/lib/metadata";
+import { generateOgImageUrl } from "@/lib/og";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,9 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { auth } from "@/lib/auth";
-import { constructMetadata } from "@/lib/metadata";
-import { generateOgImageUrl } from "@/lib/og";
+import { LoginForm } from "@/components/login/login-form";
 
 export const generateMetadata = async () => {
   const title = "Login - Snipper Account | Access your Links";
@@ -46,7 +46,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-900 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 dark:bg-slate-900">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Login</CardTitle>
@@ -58,15 +58,15 @@ export default async function LoginPage() {
           <LoginForm />
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <div className="text-sm text-center text-muted-foreground">
+          <div className="text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="text-primary hover:underline">
               Sign up
             </Link>
           </div>
 
-          <div className="flex items-center justify-center mt-6 h-9 bg-muted rounded-md w-full">
-            <p className="text-sm text-muted-foreground text-center">
+          <div className="mt-6 flex h-9 w-full items-center justify-center rounded-md bg-muted">
+            <p className="text-center text-sm text-muted-foreground">
               <strong>Demo Account:</strong> demo@example.com / password123
             </p>
           </div>

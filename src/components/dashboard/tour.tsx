@@ -1,9 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { onboardingSteps } from "@/data/onboarding-steps";
+
 import { IntroDisclosure } from "@/components/ui/intro-disclosure";
 import { toast } from "@/components/ui/simple-toast";
-import { onboardingSteps } from "@/data/onboarding-steps";
-import { useEffect, useState } from "react";
 
 export function Tour() {
   const [open, setOpen] = useState(true);

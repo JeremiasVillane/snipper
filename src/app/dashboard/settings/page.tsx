@@ -1,5 +1,8 @@
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+import { auth } from "@/lib/auth";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,8 +13,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { auth } from "@/lib/auth";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Account Settings - Snipper",
@@ -28,8 +29,8 @@ export default async function SettingsPage() {
   if (!session?.user) redirect("/login");
 
   return (
-    <main className="flex-1 min-h-screen container py-6">
-      <div className="flex items-center justify-between mb-6">
+    <main className="container min-h-screen flex-1 py-6">
+      <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-muted-foreground">Manage your account settings</p>
@@ -108,7 +109,7 @@ export default async function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="rounded-md border border-destructive/50 p-4">
                 <h3 className="text-lg font-medium">Delete Account</h3>
-                <p className="text-sm text-muted-foreground mt-1 mb-4">
+                <p className="mb-4 mt-1 text-sm text-muted-foreground">
                   Once you delete your account, there is no going back. All your
                   data will be permanently removed.
                 </p>

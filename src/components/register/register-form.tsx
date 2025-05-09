@@ -1,5 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+
+import { registerFormSchema, RegisterFormValues } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,11 +17,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/simple-toast";
-import { registerFormSchema, RegisterFormValues } from "@/lib/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -46,7 +47,7 @@ export function RegisterForm() {
 
       if (!res.ok) {
         throw new Error(
-          data.error || "Failed to create account. Please try again."
+          data.error || "Failed to create account. Please try again.",
         );
       }
 

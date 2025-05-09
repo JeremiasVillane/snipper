@@ -1,3 +1,6 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { z } from "zod";
+
 import { shortLinksRepository, tagsRepository } from "@/lib/db/repositories";
 import {
   buildShortUrl,
@@ -5,8 +8,6 @@ import {
   generateShortCode,
   validateApiKey,
 } from "@/lib/helpers";
-import { type NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 const createLinkSchema = z.object({
   url: z.string().url(),
@@ -55,13 +56,12 @@ export async function POST(request: NextRequest) {
 
     let shortCode = validatedData.customAlias;
     if (shortCode) {
-      const existingLink = await shortLinksRepository.findByShortCode(
-        shortCode
-      );
+      const existingLink =
+        await shortLinksRepository.findByShortCode(shortCode);
       if (existingLink) {
         return NextResponse.json(
           { error: "Custom alias already taken" },
-          { status: 400 }
+          { status: 400 },
         );
       }
     } else {
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       const tagOperationsPromises = validatedData.tags.map(async (tagName) => {
         const tag = await tagsRepository.findOrCreate(
           tagName,
-          apiKeyRecord.user.id
+          apiKeyRecord.user.id,
         );
 
         await tagsRepository.addTagToLink(shortLink.id, tag.id);
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json(
       { error: "Failed to create short link" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

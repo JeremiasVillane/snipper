@@ -1,12 +1,13 @@
-import { Facebook, Github, Instagram, Twitter } from "lucide-react";
 import Link from "next/link";
+import { Facebook, Github, Instagram, Twitter } from "lucide-react";
+
 import { SnipperLogo } from "../../../public/snipper-logo";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t bg-secondary/50 mt-auto">
+    <footer className="mt-auto border-t bg-secondary/50">
       <div className="container py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-4">
             <div className="flex items-center space-x-1.5">
               <SnipperLogo className="size-5 text-primary" />
@@ -163,8 +164,8 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="border-t mt-12 pt-6">
-          <p className="text-sm text-muted-foreground text-center">
+        <div className="mt-12 border-t pt-6">
+          <p className="text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} Snipper. All rights reserved.
           </p>
         </div>

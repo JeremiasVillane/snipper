@@ -1,8 +1,10 @@
 "use server";
 
-import { apiKeysRepository } from "@/lib/db/repositories";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+
+import { apiKeysRepository } from "@/lib/db/repositories";
+
 import { authActionClient } from "../safe-action";
 
 const deleteApiKeySchema = z.object({

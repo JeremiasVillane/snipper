@@ -1,12 +1,14 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
+import bcrypt from "bcryptjs";
+import { z } from "zod";
+
 import { prisma } from "@/lib/db/prisma";
 import { generateShortCode } from "@/lib/helpers";
 import { createLinkSchema } from "@/lib/schemas";
-import { Prisma } from "@prisma/client";
-import bcrypt from "bcryptjs";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
+
 import { authActionClient } from "../safe-action";
 
 const createShortLinkSchema = z.object({
@@ -39,7 +41,7 @@ export const createShortLink = authActionClient({
       });
       if (existingLink) {
         throw new Error(
-          `The alias "${formData.shortCode}" is already taken. Please choose another one.`
+          `The alias "${formData.shortCode}" is already taken. Please choose another one.`,
         );
       }
       shortCode = formData.shortCode;
@@ -80,7 +82,7 @@ export const createShortLink = authActionClient({
             data: utmParamsToCreate,
           });
           console.log(
-            `Created ${utmParamsToCreate.length} UTMParam sets for link ${shortLink.id}`
+            `Created ${utmParamsToCreate.length} UTMParam sets for link ${shortLink.id}`,
           );
         }
 
@@ -105,7 +107,7 @@ export const createShortLink = authActionClient({
             skipDuplicates: true,
           });
           console.log(
-            `Associated ${tags.length} tags with link ${shortLink.id}`
+            `Associated ${tags.length} tags with link ${shortLink.id}`,
           );
         }
 
@@ -124,14 +126,14 @@ export const createShortLink = authActionClient({
       ) {
         if ((error.meta as any)?.target?.includes("shortCode")) {
           throw new Error(
-            `The alias "${shortCode}" is already taken or was generated concurrently. Please try again.`
+            `The alias "${shortCode}" is already taken or was generated concurrently. Please try again.`,
           );
         }
       }
 
       if (error instanceof Error) throw error;
       throw new Error(
-        "Failed to create the short link due to a database error."
+        "Failed to create the short link due to a database error.",
       );
     }
   });

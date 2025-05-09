@@ -1,4 +1,3 @@
-import { buildShortUrl, generateQRCode } from "@/lib/helpers";
 import { faker } from "@faker-js/faker";
 import {
   PlanType,
@@ -68,7 +67,7 @@ async function main() {
 
   // --- 0. Clean up previous data for the demo user ---
   console.log(
-    `Attempting to clean up previous ShortLink data for user: ${demoUserEmail}...`
+    `Attempting to clean up previous ShortLink data for user: ${demoUserEmail}...`,
   );
   const userForCleanup = await prisma.user.findUnique({
     where: { email: demoUserEmail },
@@ -77,7 +76,7 @@ async function main() {
 
   if (userForCleanup) {
     console.log(
-      `Found user ${demoUserEmail} (ID: ${userForCleanup.id}). Deleting associated data...`
+      `Found user ${demoUserEmail} (ID: ${userForCleanup.id}). Deleting associated data...`,
     );
     await prisma.subscription.deleteMany({
       where: { userId: userForCleanup.id },
@@ -109,7 +108,7 @@ async function main() {
     console.log(`   - Deleted ${deletedApiKeysResult.count} ApiKey(s).`);
   } else {
     console.log(
-      `User ${demoUserEmail} not found. No previous data to delete for this user.`
+      `User ${demoUserEmail} not found. No previous data to delete for this user.`,
     );
   }
   console.log("Deleting existing Plans to recreate them...");
@@ -160,12 +159,12 @@ async function main() {
     },
   });
   console.log(
-    `Created/Updated DEMO user: ${demoUser.email} (ID: ${demoUser.id})`
+    `Created/Updated DEMO user: ${demoUser.email} (ID: ${demoUser.id})`,
   );
 
   // --- 3b. Create a Subscription for the Demo User ---
   console.log(
-    `Creating subscription for user ${demoUser.email} to plan ${freePlan.name}...`
+    `Creating subscription for user ${demoUser.email} to plan ${freePlan.name}...`,
   );
 
   await prisma.subscription.create({
@@ -179,7 +178,7 @@ async function main() {
   });
 
   console.log(
-    `   - Created ACTIVE subscription linking User ${demoUser.id} to Plan ${freePlan.id} with no expiration date (currentPeriodEnd: null).`
+    `   - Created ACTIVE subscription linking User ${demoUser.id} to Plan ${freePlan.id} with no expiration date (currentPeriodEnd: null).`,
   );
 
   // --- 4. Define and Ensure Tags Exist for the Demo User ---
@@ -311,7 +310,7 @@ async function main() {
   for (const linkData of shortLinksData) {
     const numClicksForThisLink = faker.number.int({ min: 50, max: 250 });
     console.log(
-      ` --> Processing ShortLink: ${linkData.shortCode} (${numClicksForThisLink} clicks)`
+      ` --> Processing ShortLink: ${linkData.shortCode} (${numClicksForThisLink} clicks)`,
     );
 
     const randomCreatedAt = faker.date.past({ years: 1, refDate: new Date() });
@@ -329,19 +328,19 @@ async function main() {
       },
     });
     console.log(
-      `   - Created ShortLink: ${shortLink.shortCode} (ID: ${shortLink.id}) with URL: ${linkData.originalUrl}`
+      `   - Created ShortLink: ${shortLink.shortCode} (ID: ${shortLink.id}) with URL: ${linkData.originalUrl}`,
     );
 
     // --- 6b. Create UTMParam records for each defined set ---
     if (linkData.utmSets && linkData.utmSets.length > 0) {
       console.log(
-        `   - Found ${linkData.utmSets.length} UTM definition(s). Creating UTMParam records...`
+        `   - Found ${linkData.utmSets.length} UTM definition(s). Creating UTMParam records...`,
       );
       for (const utmDef of linkData.utmSets) {
         // Ensure campaign exists, otherwise skip (shouldn't happen with mandatory type)
         if (!utmDef.campaign) {
           console.warn(
-            `   - Skipping UTM set for ${shortLink.shortCode} due to missing campaign name.`
+            `   - Skipping UTM set for ${shortLink.shortCode} due to missing campaign name.`,
           );
           continue;
         }
@@ -356,12 +355,12 @@ async function main() {
           },
         });
         console.log(
-          `     - Created UTMParam for campaign: "${utmDef.campaign}"`
+          `     - Created UTMParam for campaign: "${utmDef.campaign}"`,
         );
       }
     } else {
       console.log(
-        `   - No UTM definitions found for ${shortLink.shortCode}. Skipping UTMParam creation.`
+        `   - No UTM definitions found for ${shortLink.shortCode}. Skipping UTMParam creation.`,
       );
     }
 
@@ -379,7 +378,7 @@ async function main() {
       console.log(
         `   - Assigned tags: ${linkData.tagsToAssign.join(", ")} (${
           linkTagCreationResult.count
-        } relations created).`
+        } relations created).`,
       );
     }
 
@@ -460,7 +459,7 @@ async function main() {
         data: { clicks: creationResult.count },
       });
       console.log(
-        `   - Updated ShortLink click count to ${creationResult.count}.`
+        `   - Updated ShortLink click count to ${creationResult.count}.`,
       );
     } else {
       console.log(`   - No ClickEvents to add (count was 0).`);

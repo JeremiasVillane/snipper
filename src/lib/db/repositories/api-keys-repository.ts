@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db/prisma";
-
 import type { ApiKey, Prisma, User } from "@prisma/client";
+
+import { prisma } from "@/lib/db/prisma";
 
 type ApiKeyWithUser = ApiKey & { user: User };
 

@@ -1,5 +1,12 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+
+import { deleteApiKey } from "@/lib/actions/api-keys";
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
+import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,12 +17,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/simple-toast";
-import { deleteApiKey } from "@/lib/actions/api-keys";
-import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
-import { formatDate } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 interface ApiKey {
   id: string;
@@ -45,7 +46,7 @@ export default function DeleteApiKeyDialog({
       setIsLoading(true);
 
       const result = await deleteApiKey({ id: apiKey.id }).then((res) =>
-        getSafeActionResponse(res)
+        getSafeActionResponse(res),
       );
 
       toast({
@@ -80,7 +81,7 @@ export default function DeleteApiKeyDialog({
         </DialogHeader>
         <div className="py-4">
           <p className="text-sm font-medium">Name: {apiKey.name}</p>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Created: {formatDate(apiKey.createdAt)}
           </p>
         </div>

@@ -1,12 +1,13 @@
-import { prisma } from "@/lib/db/prisma";
-import { usersRepository } from "@/lib/db/repositories";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { DefaultSession, getServerSession, NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 // import GitHubProvider from "next-auth/providers/github";
 import { env } from "@/env.mjs";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
+import { DefaultSession, getServerSession, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+
+import { prisma } from "@/lib/db/prisma";
+import { usersRepository } from "@/lib/db/repositories";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -57,7 +58,7 @@ export const authOptions: NextAuthOptions = {
 
           const passwordMatch = await bcrypt.compare(
             credentials.password,
-            user.password
+            user.password,
           );
           if (!passwordMatch) {
             return null;
@@ -110,7 +111,7 @@ export async function auth() {
 export async function signUp(
   email: string,
   name: string,
-  passwordPlain: string
+  passwordPlain: string,
 ) {
   try {
     const existingUser = await usersRepository.findByEmail(email);

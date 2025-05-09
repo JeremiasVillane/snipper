@@ -1,5 +1,6 @@
-import { authorizationMiddlewareProps } from "@/lib/types";
 import { createMiddleware } from "next-safe-action";
+
+import { authorizationMiddlewareProps } from "@/lib/types";
 
 export const authorizationMiddleware = (props: authorizationMiddlewareProps) =>
   createMiddleware<{
@@ -25,7 +26,7 @@ export const authorizationMiddleware = (props: authorizationMiddlewareProps) =>
 
     if (!!roles && roles !== "ALL" && !roles.some((r) => user?.role === r)) {
       throw new Error(
-        `This feature is not available for ${user?.role.toLowerCase()} users`
+        `This feature is not available for ${user?.role.toLowerCase()} users`,
       );
     }
 
@@ -36,8 +37,8 @@ export const authorizationMiddleware = (props: authorizationMiddlewareProps) =>
         user?.subscriptions.some(
           (sub) =>
             sub.plan.name.includes(p) &&
-            ["ACTIVE", "TRIALING"].includes(sub.status)
-        )
+            ["ACTIVE", "TRIALING"].includes(sub.status),
+        ),
       )
     ) {
       throw new Error("This feature is not available in your current plan");

@@ -1,10 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { HyperText } from "@/components/ui/hyper-text";
-import { NumberTicker } from "@/components/ui/number-ticker";
+import Link from "next/link";
+
 import { buildShortUrl } from "@/lib/helpers";
 import { ShortLinkAnalyticsData, ShortLinkFromRepository } from "@/lib/types";
 import { formatDate, formatNumber } from "@/lib/utils";
-import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { HyperText } from "@/components/ui/hyper-text";
+import { NumberTicker } from "@/components/ui/number-ticker";
 
 interface AnalyticsHeaderProps {
   analytics: ShortLinkAnalyticsData;
@@ -74,17 +75,17 @@ export function AnalyticsHeader({
           <CardTitle className="text-sm font-medium">Original URL</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-sm font-medium min-w-0">
+          <div className="min-w-0 text-sm font-medium">
             <Link
               href={shortLink.originalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:underline block truncate"
+              className="block truncate hover:underline"
             >
               {shortLink.originalUrl}
             </Link>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="mt-1 text-xs text-muted-foreground">
             Short URL: {buildShortUrl(shortLink.shortCode)}
           </p>
         </CardContent>

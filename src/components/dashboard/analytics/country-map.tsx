@@ -1,8 +1,9 @@
 "use client";
 
-import { ShortLinkAnalyticsData } from "@/lib/types";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import geography from "@/data/world_countries.json";
 import { scaleQuantize } from "d3-scale";
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { X } from "lucide-react";
 import {
   ComposableMap,
   Geographies,
@@ -10,9 +11,9 @@ import {
   ZoomableGroup,
 } from "react-simple-maps";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import geography from "@/data/world_countries.json";
+
+import { ShortLinkAnalyticsData } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 
 interface CityPopoverInfo {
   countryName: string;
@@ -35,7 +36,7 @@ export function CountryMap({ data }: CountryMapProps) {
     }
 
     const clicksArray = Object.values(data).map(
-      (countryData) => countryData?.totalClicks || 0
+      (countryData) => countryData?.totalClicks || 0,
     );
 
     return Math.max(...clicksArray);
@@ -57,7 +58,7 @@ export function CountryMap({ data }: CountryMapProps) {
 
   const handleCountryClick = (
     event: React.MouseEvent<SVGPathElement>,
-    geo: any
+    geo: any,
   ) => {
     const countryName = geo.properties.NAME;
     const countryCode = geo.properties.ISO_A2;
@@ -102,11 +103,11 @@ export function CountryMap({ data }: CountryMapProps) {
   }, [cityPopover, handleClickOutside]);
 
   return (
-    <div className="border rounded-md overflow-hidden relative">
+    <div className="relative overflow-hidden rounded-md border">
       <ComposableMap
         projectionConfig={{ rotate: [-20, 0, 0] }}
         data-tooltip-id="country-tooltip"
-        className="m-0 lg:-my-16 focus:outline-none"
+        className="m-0 focus:outline-none lg:-my-16"
       >
         <ZoomableGroup center={[0, 0]} zoom={1}>
           <Geographies {...{ geography }}>
@@ -176,9 +177,9 @@ export function CountryMap({ data }: CountryMapProps) {
             top: `${cityPopover.position.y}px`,
             transform: "translate(10px, 10px)",
           }}
-          className="relative bg-popover text-popover-foreground border rounded-md shadow-lg p-5 pr-7 w-auto max-w-xs z-50 animate-fade-in"
+          className="relative z-50 w-auto max-w-xs animate-fade-in rounded-md border bg-popover p-5 pr-7 text-popover-foreground shadow-lg"
         >
-          <div className="flex justify-between items-center mb-2">
+          <div className="mb-2 flex items-center justify-between">
             <h4 className="font-semibold text-popover-foreground">
               Cities in {cityPopover.countryName}
             </h4>
@@ -193,13 +194,13 @@ export function CountryMap({ data }: CountryMapProps) {
             </Button>
           </div>
 
-          <ul className="space-y-1 max-h-40 overflow-y-auto">
+          <ul className="max-h-40 space-y-1 overflow-y-auto">
             {Object.entries(cityPopover.cities)
               .sort(([, a], [, b]) => b - a)
               .map(([city, clicks]) => (
                 <li
                   key={city}
-                  className="flex justify-between gap-2 text-popover-foreground/80 text-sm"
+                  className="flex justify-between gap-2 text-sm text-popover-foreground/80"
                 >
                   <span>{city}:</span>
                   <span className="font-medium">{clicks} clicks</span>

@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
-import type { UtmSetFormData } from "@/lib/schemas";
 import { Pencil, X } from "lucide-react";
+
+import type { UtmSetFormData } from "@/lib/schemas";
+import { Button } from "@/components/ui/button";
 
 interface UtmSetDisplayProps {
   index: number;
@@ -25,22 +26,22 @@ export function UtmSetDisplay({
     .join(", ");
 
   return (
-    <div className="flex items-center justify-between gap-2 rounded-md border p-3 text-sm bg-background">
+    <div className="flex items-center justify-between gap-2 rounded-md border bg-background p-3 text-sm">
       <div className="flex flex-col gap-1 overflow-hidden">
         <p
-          className="font-semibold truncate text-primary"
+          className="truncate font-semibold text-primary"
           title={utmSet.campaign}
         >
           Campaign: {utmSet.campaign}
         </p>
         {summary && (
-          <p className="text-xs text-muted-foreground truncate" title={summary}>
+          <p className="truncate text-xs text-muted-foreground" title={summary}>
             {summary}
           </p>
         )}
       </div>
 
-      <div className="flex items-center shrink-0">
+      <div className="flex shrink-0 items-center">
         <Button
           type="button"
           variant="ghost"

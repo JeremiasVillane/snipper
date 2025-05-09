@@ -1,5 +1,7 @@
 "use client";
 
+import type { ClickEvent } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -8,8 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate } from "@/lib/utils";
-import type { ClickEvent } from "@/lib/types";
 
 interface ClicksTableProps {
   clicks: ClickEvent[];
@@ -18,7 +18,7 @@ interface ClicksTableProps {
 export function ClicksTable({ clicks }: ClicksTableProps) {
   if (clicks.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[200px] bg-muted/20 rounded-md">
+      <div className="flex h-[200px] items-center justify-center rounded-md bg-muted/20">
         <p className="text-muted-foreground">No click data available</p>
       </div>
     );

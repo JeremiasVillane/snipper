@@ -1,7 +1,8 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { z } from "zod";
+
 import { shortLinksRepository, tagsRepository } from "@/lib/db/repositories";
 import { buildShortUrl, generateQRCode, validateApiKey } from "@/lib/helpers";
-import { type NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 const updateLinkSchema = z.object({
   customAlias: z.string().optional(),
@@ -16,7 +17,7 @@ const updateLinkSchema = z.object({
 // GET /api/v1/links/[id] - Get a specific link
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const apiKeyRecord = await validateApiKey(request);
   if (!apiKeyRecord) {
@@ -52,7 +53,7 @@ export async function GET(
 // PATCH /api/v1/links/[id] - Update a specific link
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const apiKeyRecord = await validateApiKey(request);
   if (!apiKeyRecord) {
@@ -79,12 +80,12 @@ export async function PATCH(
       validatedData.customAlias !== link.shortCode
     ) {
       const existingLink = await shortLinksRepository.findByShortCode(
-        validatedData.customAlias
+        validatedData.customAlias,
       );
       if (existingLink && existingLink.id !== id) {
         return NextResponse.json(
           { error: "Custom alias already taken" },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
@@ -99,7 +100,7 @@ export async function PATCH(
       const tagIdPromises = validatedData.tags.map(async (tagName) => {
         const tag = await tagsRepository.findOrCreate(
           tagName,
-          apiKeyRecord.user.id
+          apiKeyRecord.user.id,
         );
         return tag.id;
       });
@@ -109,7 +110,7 @@ export async function PATCH(
     }
 
     const qrCodeUrl = await generateQRCode(
-      buildShortUrl(updatedLink.shortCode)
+      buildShortUrl(updatedLink.shortCode),
     );
 
     return NextResponse.json({
@@ -128,7 +129,7 @@ export async function PATCH(
     }
     return NextResponse.json(
       { error: "Failed to update link" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -136,7 +137,7 @@ export async function PATCH(
 // DELETE /api/v1/links/[id] - Delete a specific link
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const apiKeyRecord = await validateApiKey(request);
   if (!apiKeyRecord) {

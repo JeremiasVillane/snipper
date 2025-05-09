@@ -1,4 +1,5 @@
 import { DEFAULT_SERVER_ERROR_MESSAGE } from "next-safe-action";
+
 import { SafeActionResult } from "./safe-action-types";
 
 export const DEFAULT_VALIDATION_ERROR_MESSAGE =
@@ -21,7 +22,7 @@ type SafeActionResponse<TData> =
     };
 
 export function getSafeActionResponse<TData = unknown>(
-  result: SafeActionResult<TData> | null | undefined
+  result: SafeActionResult<TData> | null | undefined,
 ): SafeActionResponse<TData> {
   if (!result) {
     console.warn("getSafeActionResponse received null or undefined result.");

@@ -1,4 +1,4 @@
-import { Metadata } from "next"
+import { Metadata } from "next";
 
 /** This function constructs the metadata for the application,
  * including title, description, Open Graph data, and authors.
@@ -21,19 +21,19 @@ export const constructMetadata = (metadata: Metadata): Metadata => {
           url: "/og-image.png",
           height: 630,
           width: 1200,
-          alt: "Snipper"
-        }
+          alt: "Snipper",
+        },
       ],
       locale: "en_US",
-      ...metadata.openGraph
+      ...metadata.openGraph,
     },
     authors: [
       {
         name: "Jeremias Villane",
-        url: "https://github.com/snipper"
-      }
+        url: "https://github.com/snipper",
+      },
     ],
     manifest: "/site.webmanifest",
-    ...metadata
-  }
-}
+    ...metadata,
+  };
+};

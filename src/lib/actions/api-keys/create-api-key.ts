@@ -1,10 +1,12 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+
 import { apiKeysRepository } from "@/lib/db/repositories";
 import { generateApiKey } from "@/lib/helpers";
 import { createApiKeySchema } from "@/lib/schemas";
-import { revalidatePath } from "next/cache";
-import { z } from "zod";
+
 import { authActionClient } from "../safe-action";
 
 const createApiKeyActionSchema = z.object({

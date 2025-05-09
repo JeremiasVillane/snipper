@@ -1,9 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { LogIn, LogOut, User, UserPlus } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+
 import UserMenu from "./user-menu";
 
 interface AuthButtonsProps {
@@ -30,7 +32,7 @@ export function AuthButtons({
         href="/login"
         className={
           isMobile
-            ? "flex items-center gap-2 p-2 hover:bg-secondary rounded-md"
+            ? "flex items-center gap-2 rounded-md p-2 hover:bg-secondary"
             : undefined
         }
         onClick={isMobile ? () => setOpen(false) : undefined}
@@ -48,7 +50,7 @@ export function AuthButtons({
         href="/register"
         className={
           isMobile
-            ? "flex items-center gap-2 p-2 hover:bg-secondary rounded-md"
+            ? "flex items-center gap-2 rounded-md p-2 hover:bg-secondary"
             : undefined
         }
         onClick={isMobile ? () => setOpen(false) : undefined}
@@ -64,7 +66,7 @@ export function AuthButtons({
         <span>{session?.user?.name}</span>
       </div>
       <button
-        className="flex items-center gap-2 p-2 w-full text-left hover:bg-secondary rounded-md"
+        className="flex w-full items-center gap-2 rounded-md p-2 text-left hover:bg-secondary"
         onClick={() => {
           handleLogout();
           setOpen(false);

@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { CheckCircle2, X } from "lucide-react";
+
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,17 +12,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { List, ListItem } from "@/components/ui/list";
-import { CheckCircle2, X } from "lucide-react";
-import Link from "next/link";
 
 export function PricingTiers() {
   return (
     <section className="py-20">
       <div className="container px-4 md:px-6">
         <BlurFade>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {/* Free Plan */}
-            <Card className="flex flex-col h-full hover:scale-105 transition-transform">
+            <Card className="flex h-full flex-col transition-transform hover:scale-105">
               <CardHeader>
                 <CardTitle>Free</CardTitle>
                 <div className="mt-4">
@@ -62,9 +63,9 @@ export function PricingTiers() {
             </Card>
 
             {/* Pro Plan */}
-            <Card className="flex flex-col h-full border-primary hover:scale-105 transition-transform">
-              <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
-                <div className="py-1 px-3 bg-primary-foreground text-primary text-sm rounded-full w-fit font-medium mb-4">
+            <Card className="flex h-full flex-col border-primary transition-transform hover:scale-105">
+              <CardHeader className="rounded-t-lg bg-primary text-primary-foreground">
+                <div className="mb-4 w-fit rounded-full bg-primary-foreground px-3 py-1 text-sm font-medium text-primary">
                   Most Popular
                 </div>
                 <CardTitle>Pro</CardTitle>
@@ -80,7 +81,7 @@ export function PricingTiers() {
                 <List
                   icon={<CheckCircle2 className="size-5 text-primary" />}
                   spacing="relaxed"
-                  className="[&>li]:before:mr-1 pt-6"
+                  className="pt-6 [&>li]:before:mr-1"
                 >
                   <ListItem>Up to 500 short links</ListItem>
                   <ListItem>Advanced analytics dashboard</ListItem>
@@ -108,7 +109,7 @@ export function PricingTiers() {
             </Card>
 
             {/* Business Plan */}
-            <Card className="flex flex-col h-full hover:scale-105 transition-transform">
+            <Card className="flex h-full flex-col transition-transform hover:scale-105">
               <CardHeader>
                 <CardTitle>Business</CardTitle>
                 <div className="mt-4">
@@ -147,8 +148,8 @@ export function PricingTiers() {
         </BlurFade>
 
         <div className="mt-16 text-center">
-          <h3 className="text-xl font-bold mb-2">Need a custom plan?</h3>
-          <p className="text-muted-foreground mb-6">
+          <h3 className="mb-2 text-xl font-bold">Need a custom plan?</h3>
+          <p className="mb-6 text-muted-foreground">
             We offer custom enterprise plans for larger teams and specific
             requirements.
           </p>

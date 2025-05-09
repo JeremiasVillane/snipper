@@ -1,11 +1,13 @@
 "use server";
 
+import { z } from "zod";
+
 import {
   clickEventsRepository,
   shortLinksRepository,
 } from "@/lib/db/repositories";
 import { shortCodeSchema } from "@/lib/schemas";
-import { z } from "zod";
+
 import { noauthActionClient } from "../safe-action";
 
 const ClickEventInputDataSchema = z.object({

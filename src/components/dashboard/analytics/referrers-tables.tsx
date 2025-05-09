@@ -1,5 +1,8 @@
 "use client";
 
+import { useMemo } from "react";
+
+import { ShortLinkAnalyticsData } from "@/lib/types";
 import {
   Card,
   CardContent,
@@ -15,8 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ShortLinkAnalyticsData } from "@/lib/types";
-import { useMemo } from "react";
+
 import { processAndSortData } from "./analytics-helpers";
 
 interface ReferrersTable {
@@ -26,7 +28,7 @@ interface ReferrersTable {
 export function ReferrersTable({ referrersData }: ReferrersTable) {
   const data = useMemo(
     () => processAndSortData(referrersData, 10),
-    [referrersData]
+    [referrersData],
   );
 
   return (

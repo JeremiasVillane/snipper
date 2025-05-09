@@ -4,6 +4,7 @@ import {
   DEFAULT_SERVER_ERROR_MESSAGE,
 } from "next-safe-action";
 import { z, ZodError } from "zod";
+
 import { authorizationMiddlewareProps } from "../types";
 import { analyticsMiddleware } from "./middleware/analytics.middleware";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
@@ -12,11 +13,11 @@ import {
   loggingMiddleware,
   sentryMiddleware,
 } from "./middleware/observability.middleware";
+import { rateLimitingMiddleware } from "./middleware/ratelimit.middleware";
 import {
   DATABASE_ERROR_MESSAGE,
   DEFAULT_VALIDATION_ERROR_MESSAGE,
 } from "./safe-action-helpers";
-import { rateLimitingMiddleware } from "./middleware/ratelimit.middleware";
 
 // Base client which has server error handling, and metadata
 export const actionClientWithMeta = createSafeActionClient({
@@ -59,7 +60,7 @@ export const noauthActionClient = actionClientWithMeta
   .use(sentryMiddleware);
 
 export const authActionClient = <P extends authorizationMiddlewareProps>(
-  props: P
+  props: P,
 ) =>
   actionClientWithMeta
     .use(loggingMiddleware)

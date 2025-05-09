@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Tag } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,8 +13,6 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@/components/ui/credenza";
-import { Tag } from "lucide-react";
-import { useState } from "react";
 
 interface LinkTagFilterProps {
   selectedTags: string[];
@@ -31,7 +32,7 @@ export function LinkTagFilter({
     setCurrentTags((prevTags) =>
       prevTags.includes(tag)
         ? prevTags.filter((t) => t !== tag)
-        : [...prevTags, tag]
+        : [...prevTags, tag],
     );
   };
 

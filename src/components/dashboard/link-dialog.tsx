@@ -1,5 +1,20 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon, X } from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
+
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
+import { createShortLink, updateShortLink } from "@/lib/actions/short-links";
+import {
+  CreateLinkFormData,
+  createLinkSchema,
+  UtmSetFormData,
+} from "@/lib/schemas";
+import { ShortLinkFromRepository } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -37,22 +52,9 @@ import {
 import { toast } from "@/components/ui/simple-toast";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { createShortLink, updateShortLink } from "@/lib/actions/short-links";
-import {
-  CreateLinkFormData,
-  createLinkSchema,
-  UtmSetFormData,
-} from "@/lib/schemas";
-import { ShortLinkFromRepository } from "@/lib/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon, X } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+
 import { UtmSetDisplay } from "./utm-set-display";
 import { UtmSetForm } from "./utm-set-form";
-import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 
 interface LinkDialogProps {
   children?: React.ReactNode;
@@ -78,7 +80,7 @@ export function LinkDialog({
   const [editingUtmIndex, setEditingUtmIndex] = useState<number | null>(null);
 
   const calculateFormValues = (
-    data: ShortLinkFromRepository | undefined
+    data: ShortLinkFromRepository | undefined,
   ): CreateLinkFormData => {
     return {
       originalUrl: data?.originalUrl ?? "",
@@ -158,7 +160,7 @@ export function LinkDialog({
     setValue(
       "tags",
       currentTagsValue.filter((tag) => tag !== tagToRemove),
-      { shouldValidate: true }
+      { shouldValidate: true },
     );
   };
 
@@ -177,7 +179,7 @@ export function LinkDialog({
             formData: dataToSubmit,
           }).then((res) => getSafeActionResponse(res))
         : await createShortLink({ formData: dataToSubmit }).then((res) =>
-            getSafeActionResponse(res)
+            getSafeActionResponse(res),
           );
 
       toast({
@@ -212,7 +214,7 @@ export function LinkDialog({
 
   const handleAddUtmSet = (newSet: UtmSetFormData) => {
     const existingNames = (getValues("utmSets") ?? []).map(
-      (set) => set.campaign
+      (set) => set.campaign,
     );
     if (existingNames.includes(newSet.campaign)) {
       toast({
@@ -253,7 +255,7 @@ export function LinkDialog({
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
       {!!children && <CredenzaTrigger asChild>{children}</CredenzaTrigger>}
-      <CredenzaContent className="max-w-full md:max-w-3xl max-h-full md:max-h-[90vh] overflow-hidden md:overflow-y-auto">
+      <CredenzaContent className="max-h-full max-w-full overflow-hidden md:max-h-[90vh] md:max-w-3xl md:overflow-y-auto">
         <CredenzaHeader>
           <CredenzaTitle>
             {initialData?.id ? "Edit Link" : "Create New Link"}
@@ -265,7 +267,7 @@ export function LinkDialog({
           </CredenzaDescription>
         </CredenzaHeader>
 
-        <CredenzaBody className="overflow-y-auto flex-grow">
+        <CredenzaBody className="flex-grow overflow-y-auto">
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <Tabs variant="segmented" defaultValue="basic">
@@ -325,7 +327,7 @@ export function LinkDialog({
 
                       <FormItem>
                         <FormLabel>Tags</FormLabel>
-                        <div className="flex flex-wrap gap-2 mb-2">
+                        <div className="mb-2 flex flex-wrap gap-2">
                           {(currentTags || []).map((tag) => (
                             <Badge
                               key={tag}
@@ -402,7 +404,7 @@ export function LinkDialog({
                           control={control}
                           name="expiresAt"
                           render={({ field }) => (
-                            <FormItem className="flex flex-col ml-6 pt-2">
+                            <FormItem className="ml-6 flex flex-col pt-2">
                               <FormLabel>Select Date</FormLabel>
                               <Popover>
                                 <PopoverTrigger asChild>
@@ -477,7 +479,7 @@ export function LinkDialog({
                           control={control}
                           name="password"
                           render={({ field }) => (
-                            <FormItem className="ml-6 pt-2 space-y-2">
+                            <FormItem className="ml-6 space-y-2 pt-2">
                               <FormLabel>Password</FormLabel>
                               <FormControl>
                                 <Input
@@ -508,7 +510,7 @@ export function LinkDialog({
                     <CardContent className="space-y-4">
                       {utmSetFields.length > 0 && (
                         <div className="space-y-3 pt-2">
-                          <h4 className="font-medium text-sm text-muted-foreground">
+                          <h4 className="text-sm font-medium text-muted-foreground">
                             {initialData ? "Saved Sets" : "Added Sets"} (
                             {utmSetFields.length}):
                           </h4>
@@ -524,7 +526,7 @@ export function LinkDialog({
                         </div>
                       )}
                       {utmSetFields.length === 0 && (
-                        <p className="text-sm text-muted-foreground text-center py-4 italic">
+                        <p className="py-4 text-center text-sm italic text-muted-foreground">
                           No UTM sets added yet.
                         </p>
                       )}
@@ -544,15 +546,15 @@ export function LinkDialog({
               <div className="mt-6 flex">
                 <Button
                   type="submit"
-                  className="w-full md:w-fit m-0 md:ml-auto"
+                  className="m-0 w-full md:ml-auto md:w-fit"
                   isLoading={isSubmitting}
                   disabled={isSubmitting}
                 >
                   {isSubmitting
                     ? "Processing..."
                     : initialData?.id
-                    ? "Update Link"
-                    : "Create Link"}
+                      ? "Update Link"
+                      : "Create Link"}
                 </Button>
               </div>
             </form>

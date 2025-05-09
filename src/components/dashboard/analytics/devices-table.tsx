@@ -40,7 +40,7 @@ export function DevicesTable({ data }: DevicesTableProps) {
         ) : (
           data.map((item) => (
             <TableRow key={item.name}>
-              <TableCell className="font-medium break-all">
+              <TableCell className="break-all font-medium">
                 {item.name}
               </TableCell>
               <TableCell className="text-right">

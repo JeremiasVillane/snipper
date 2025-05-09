@@ -1,3 +1,5 @@
+import { ShortLinkAnalyticsData, UTMParamData } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -6,8 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShortLinkAnalyticsData, UTMParamData } from "@/lib/types";
-import { formatDate } from "@/lib/utils";
+
 import {
   Browsers,
   ClicksOverTime,
@@ -71,7 +72,7 @@ export function AnalyticsTabs({
         <TabsTrigger value="traffic">Traffic Sources</TabsTrigger>
       </TabsList>
 
-      <TabsContent value="overview" className="space-y-6 mt-6">
+      <TabsContent value="overview" className="mt-6 space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Clicks Over Time</CardTitle>
@@ -147,23 +148,23 @@ export function AnalyticsTabs({
             <CardDescription>Clicks by device, OS and browser</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-full pt-6">
+            <div className="grid h-full grid-cols-1 gap-4 pt-6 md:grid-cols-3">
               <div>
-                <h4 className="text-sm font-medium mb-2 text-center">
+                <h4 className="mb-2 text-center text-sm font-medium">
                   Browsers
                 </h4>
                 <Browsers data={analytics.clicksByBrowser} />
               </div>
 
               <div>
-                <h4 className="text-sm font-medium mb-2 text-center">
+                <h4 className="mb-2 text-center text-sm font-medium">
                   Operating Systems
                 </h4>
                 <OperatingSystems data={analytics.clicksByOS} />
               </div>
 
               <div>
-                <h4 className="text-sm font-medium mb-2 text-center">
+                <h4 className="mb-2 text-center text-sm font-medium">
                   Devices
                 </h4>
                 <DeviceTypes data={analytics.clicksByDevice} />
@@ -181,7 +182,7 @@ export function AnalyticsTabs({
 
       <TabsContent value="traffic" className="mt-6">
         <Tabs variant="underlined" defaultValue="campaigns">
-          <TabsList className="flex flex-wrap h-auto justify-start mb-4 border-b-0 md:w-auto">
+          <TabsList className="mb-4 flex h-auto flex-wrap justify-start border-b-0 md:w-auto">
             <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
             <TabsTrigger value="sources">Sources</TabsTrigger>
             <TabsTrigger value="mediums">Mediums</TabsTrigger>

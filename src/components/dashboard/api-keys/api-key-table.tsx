@@ -1,5 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import { Copy, Key, MoreHorizontal, Trash } from "lucide-react";
+
+import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
 import {
@@ -19,9 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate } from "@/lib/utils";
-import { Copy, Key, MoreHorizontal, Trash } from "lucide-react";
-import { useState } from "react";
+
 import CreateApiKeyDialog from "./create-api-key-dialog";
 import DeleteApiKeyDialog from "./delete-api-key-dialog";
 
@@ -52,11 +54,11 @@ export function ApiKeyTable({ apiKeys }: ApiKeyTableProps) {
   if (apiKeys.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="rounded-full bg-primary/10 p-3 mb-4">
+        <div className="mb-4 rounded-full bg-primary/10 p-3">
           <Key className="h-6 w-6 text-primary" />
         </div>
         <h3 className="text-lg font-semibold">No API keys yet</h3>
-        <p className="text-muted-foreground mt-1 mb-4">
+        <p className="mb-4 mt-1 text-muted-foreground">
           Create your first API key to get started
         </p>
         <CreateApiKeyDialog>
@@ -72,7 +74,7 @@ export function ApiKeyTable({ apiKeys }: ApiKeyTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="flex items-center ms-2">Name</TableHead>
+              <TableHead className="ms-2 flex items-center">Name</TableHead>
               <TableHead>Key</TableHead>
               <TableHead>Created</TableHead>
               <TableHead>Last Used</TableHead>
@@ -87,10 +89,10 @@ export function ApiKeyTable({ apiKeys }: ApiKeyTableProps) {
               return (
                 <TableRow
                   key={apiKey.id}
-                  className={isExpired ? "line-through text-destructive" : ""}
+                  className={isExpired ? "text-destructive line-through" : ""}
                 >
                   <TableCell className="font-medium">
-                    <span className="flex items-center ms-2">
+                    <span className="ms-2 flex items-center">
                       {apiKey.name}
                     </span>
                   </TableCell>

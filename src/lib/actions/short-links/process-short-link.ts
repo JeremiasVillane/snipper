@@ -1,16 +1,18 @@
 "use server";
 
-import { parseUserAgentImproved } from "@/lib/helpers";
-import { shortCodeSchema } from "@/lib/schemas";
 import { headers } from "next/headers";
 import { z } from "zod";
+
+import { parseUserAgentImproved } from "@/lib/helpers";
+import { shortCodeSchema } from "@/lib/schemas";
+
 import { noauthActionClient } from "../safe-action";
 import { recordClick } from "./record-click";
 
 const processShortLinkSchema = z.object({
   shortCode: shortCodeSchema,
   resolvedSearchParams: z.record(
-    z.union([z.string(), z.array(z.string()), z.undefined()])
+    z.union([z.string(), z.array(z.string()), z.undefined()]),
   ),
 });
 

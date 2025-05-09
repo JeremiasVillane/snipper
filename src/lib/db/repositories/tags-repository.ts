@@ -1,5 +1,6 @@
-import { prisma } from "../prisma";
 import { Tag } from "@prisma/client";
+
+import { prisma } from "../prisma";
 
 export const tagsRepository = {
   async create(data: Tag) {

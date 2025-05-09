@@ -1,14 +1,15 @@
-import { LinkDialog, LinkList } from "@/components/dashboard";
-import { Tour } from "@/components/dashboard/tour";
-import { Alert } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { Plus } from "lucide-react";
+
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
-import { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { LinkDialog, LinkList } from "@/components/dashboard";
+import { Tour } from "@/components/dashboard/tour";
 
 export const metadata: Metadata = {
   title: "Snipper Dashboard | Manage Your Links & Analytics",
@@ -27,12 +28,12 @@ export default async function DashboardPage() {
   if (!session?.user) redirect("/login");
 
   const { data, success, error } = await getUserShortLinks().then((res) =>
-    getSafeActionResponse(res)
+    getSafeActionResponse(res),
   );
 
   if (!success) {
     return (
-      <main className="flex-1 container min-h-screen py-6">
+      <main className="container min-h-screen flex-1 py-6">
         <Alert variant="destructive" styleVariant="fill" withIcon>
           {error}
         </Alert>
@@ -41,8 +42,8 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main className="flex-1 min-h-screen container py-6">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-3 md:gap-0">
+    <main className="container min-h-screen flex-1 py-6">
+      <div className="mb-6 flex flex-col items-start justify-between gap-3 md:flex-row md:items-center md:gap-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground">
@@ -54,8 +55,8 @@ export default async function DashboardPage() {
             iconLeft={<Plus className="size-4" />}
             iconAnimation="zoomIn"
             className={cn(
-              "hidden md:flex h-9 md:h-10",
-              data.length > 0 ? "flex" : ""
+              "hidden h-9 md:flex md:h-10",
+              data.length > 0 ? "flex" : "",
             )}
           >
             Create Link
