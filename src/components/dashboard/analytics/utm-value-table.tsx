@@ -24,11 +24,6 @@ interface UtmValueTableProps {
   data: Record<string, number> | null | undefined;
 }
 
-type SortedUtmValue = {
-  value: string;
-  clicks: number;
-};
-
 export function UtmValueTable({ title, paramName, data }: UtmValueTableProps) {
   const sortedData = useMemo(() => processAndSortData(data), [data]);
 
@@ -69,7 +64,7 @@ export function UtmValueTable({ title, paramName, data }: UtmValueTableProps) {
                   </TableCell>
                   <TableCell className="text-center">{item.clicks}</TableCell>
                   <TableCell className="text-right">
-                    {item.percentage.toFixed(1)} %
+                    {item.percentage}
                   </TableCell>
                 </TableRow>
               ))

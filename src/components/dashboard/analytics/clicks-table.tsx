@@ -2,6 +2,7 @@
 
 import { ClickEvent } from "@prisma/client";
 
+import { getCountryName } from "@/lib/helpers";
 import { formatDate } from "@/lib/utils";
 import {
   Table,
@@ -47,7 +48,9 @@ export function ClicksTable({ clicks }: ClicksTableProps) {
                 {new Date(click.timestamp).toLocaleTimeString()}
               </div>
             </TableCell>
-            <TableCell>{click.country || "Unknown"}</TableCell>
+            <TableCell>
+              {!!click.country ? getCountryName(click.country) : "Unknown"}
+            </TableCell>
             <TableCell>{click.city || "Unknown"}</TableCell>
             <TableCell>{click.device || "Unknown"}</TableCell>
             <TableCell>{click.browser || "Unknown"}</TableCell>

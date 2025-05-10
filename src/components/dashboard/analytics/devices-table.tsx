@@ -10,7 +10,7 @@ import {
 interface ProcessedItem {
   name: string;
   clicks: number;
-  percentage: number;
+  percentage: string;
 }
 
 interface DevicesTableProps {
@@ -23,7 +23,7 @@ export function DevicesTable({ data }: DevicesTableProps) {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[50%]">Name</TableHead>
-          <TableHead className="text-right">Clicks</TableHead>
+          <TableHead className="text-center">Clicks</TableHead>
           <TableHead className="text-right">Percentage</TableHead>
         </TableRow>
       </TableHeader>
@@ -43,12 +43,10 @@ export function DevicesTable({ data }: DevicesTableProps) {
               <TableCell className="break-all font-medium">
                 {item.name}
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-center">
                 {item.clicks.toLocaleString()}
               </TableCell>
-              <TableCell className="text-right">
-                {item.percentage.toFixed(1)}%
-              </TableCell>
+              <TableCell className="text-right">{item.percentage}</TableCell>
             </TableRow>
           ))
         )}

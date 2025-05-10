@@ -1,7 +1,7 @@
 interface ProcessedItem {
   name: string;
   clicks: number;
-  percentage: number;
+  percentage: string;
 }
 
 export const processAndSortData = (
@@ -19,7 +19,7 @@ export const processAndSortData = (
   const processedData = Object.entries(data).map(([name, clicks]) => ({
     name,
     clicks,
-    percentage: (clicks / totalClicks) * 100,
+    percentage: ((clicks / totalClicks) * 100).toFixed(1) + "%",
   }));
 
   processedData.sort((a, b) => b.clicks - a.clicks);

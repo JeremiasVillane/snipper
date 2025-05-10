@@ -17,10 +17,10 @@ export function PricingTiers() {
   return (
     <section className="py-20">
       <div className="container px-4 md:px-6">
-        <BlurFade>
+        <BlurFade direction="up" offset={12}>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {/* Free Plan */}
-            <Card className="flex h-full flex-col transition-transform hover:scale-105">
+            <Card className="flex h-full flex-col transition-transform duration-200 hover:scale-105">
               <CardHeader>
                 <CardTitle>Free</CardTitle>
                 <div className="mt-4">
@@ -37,7 +37,7 @@ export function PricingTiers() {
                   spacing="relaxed"
                   className="[&>li]:before:mr-1"
                 >
-                  <ListItem>Up to 10 short links</ListItem>
+                  <ListItem>Up to 100 short links</ListItem>
                   <ListItem>Basic click analytics</ListItem>
                   <ListItem>QR code generation</ListItem>
                 </List>
@@ -50,7 +50,6 @@ export function PricingTiers() {
                   <ListItem>Password protection</ListItem>
                   <ListItem>UTM builder</ListItem>
                   <ListItem>Link expiration</ListItem>
-                  <ListItem>Detailed analytics</ListItem>
                 </List>
               </CardContent>
               <CardFooter className="pt-4">
@@ -63,7 +62,7 @@ export function PricingTiers() {
             </Card>
 
             {/* Pro Plan */}
-            <Card className="flex h-full flex-col border-primary transition-transform hover:scale-105">
+            <Card className="flex h-full flex-col border-primary transition-transform duration-200 hover:scale-105">
               <CardHeader className="rounded-t-lg bg-primary text-primary-foreground">
                 <div className="mb-4 w-fit rounded-full bg-primary-foreground px-3 py-1 text-sm font-medium text-primary">
                   Most Popular
@@ -85,11 +84,12 @@ export function PricingTiers() {
                 >
                   <ListItem>Up to 500 short links</ListItem>
                   <ListItem>Advanced analytics dashboard</ListItem>
-                  <ListItem>QR code generation & customization</ListItem>
+                  <ListItem>QR code generation</ListItem>
                   <ListItem>Custom short URLs</ListItem>
                   <ListItem>Password protection</ListItem>
-                  <ListItem>UTM builder</ListItem>
                   <ListItem>Link expiration</ListItem>
+                  <ListItem>Custom preview link image</ListItem>
+                  <ListItem>UTM builder (1 campaign)</ListItem>
                 </List>
                 <List
                   icon={<X className="size-5 text-muted-foreground" />}
@@ -109,11 +109,11 @@ export function PricingTiers() {
             </Card>
 
             {/* Business Plan */}
-            <Card className="flex h-full flex-col transition-transform hover:scale-105">
+            <Card className="flex h-full flex-col transition-transform duration-200 hover:scale-105">
               <CardHeader>
                 <CardTitle>Business</CardTitle>
                 <div className="mt-4">
-                  <span className="text-3xl font-bold">$29</span>
+                  <span className="text-3xl font-bold">$19</span>
                   <span className="text-muted-foreground">/month</span>
                 </div>
                 <CardDescription className="mt-2">
@@ -128,11 +128,13 @@ export function PricingTiers() {
                 >
                   <ListItem>Unlimited short links</ListItem>
                   <ListItem>Comprehensive analytics with exports</ListItem>
-                  <ListItem>Advanced QR customization</ListItem>
+                  {/* <ListItem>Advanced QR customization</ListItem> */}
+                  <ListItem>QR code generation</ListItem>
                   <ListItem>Custom short URLs</ListItem>
                   <ListItem>Password protection</ListItem>
+                  <ListItem>Link expiration</ListItem>
+                  <ListItem>Custom preview link image</ListItem>
                   <ListItem>Advanced UTM campaign tools</ListItem>
-                  <ListItem>Link expiration & scheduling</ListItem>
                   <ListItem>API access</ListItem>
                 </List>
               </CardContent>

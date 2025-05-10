@@ -64,7 +64,7 @@ export function ReferrersTable({ referrersData }: ReferrersTable) {
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell className="text-center">{item.clicks}</TableCell>
                   <TableCell className="text-right">
-                    {item.percentage.toFixed(1)} %
+                    {item.percentage}
                   </TableCell>
                 </TableRow>
               ))

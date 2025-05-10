@@ -21,6 +21,7 @@ import {
 import { AnalyticsDevices } from "./analytics-devices";
 import { ClicksTable } from "./clicks-table";
 import { CountryMap } from "./country-map";
+import PdfExportButton from "./pdf-export-button";
 import { ReferrersTable } from "./referrers-tables";
 import { TopRegionsTable } from "./top-regions-table";
 import { UtmValueTable } from "./utm-value-table";
@@ -50,19 +51,6 @@ export function AnalyticsTabs({
       </Card>
     );
   }
-
-  const names = new Set<string>();
-  analytics.definedCampaigns?.forEach((c) => names.add(c.campaign));
-  Object.keys(analytics.clicksByCampaign || {})
-    .filter((name) => name !== "Unknown")
-    .forEach((name) => names.add(name));
-
-  const map = new Map<string, UTMParam>();
-  analytics.definedCampaigns?.forEach((def) => {
-    if (def.campaign) {
-      map.set(def.campaign, def);
-    }
-  });
 
   return (
     <Tabs variant="segmented" defaultValue="overview" className="mt-6">
@@ -112,6 +100,20 @@ export function AnalyticsTabs({
       </TabsContent>
 
       <TabsContent value="clicks" className="mt-6">
+        <PdfExportButton
+          reportTitle="Analytics: Clicks"
+          tableHeaders={[
+            "Time",
+            "Country",
+            "City",
+            "Device",
+            "Browser",
+            "OS",
+            "Referrer",
+          ]}
+          data={analytics.recentClicks}
+        />
+
         <Card>
           <CardHeader>
             <CardTitle>Recent Clicks</CardTitle>
@@ -126,6 +128,12 @@ export function AnalyticsTabs({
       </TabsContent>
 
       <TabsContent value="geography" className="mt-6">
+        <PdfExportButton
+          reportTitle="Analytics: Geography"
+          tableHeaders={["Country", "Clicks"]}
+          data={Object.entries(analytics.clicksByCountry)}
+        />
+
         <Card>
           <CardHeader>
             <CardTitle>Geography</CardTitle>
@@ -194,6 +202,12 @@ export function AnalyticsTabs({
           </TabsList>
 
           <TabsContent value="campaigns">
+            <PdfExportButton
+              reportTitle="Analytics: Campaigns"
+              tableHeaders={["Campaign", "Clicks"]}
+              data={Object.entries(analytics.clicksByCampaign)}
+            />
+
             <UtmValueTable
               title="Campaign Values"
               paramName="utm_campaign"
@@ -202,6 +216,12 @@ export function AnalyticsTabs({
           </TabsContent>
 
           <TabsContent value="sources">
+            <PdfExportButton
+              reportTitle="Analytics: Sources"
+              tableHeaders={["Source", "Clicks"]}
+              data={Object.entries(analytics.clicksBySource)}
+            />
+
             <UtmValueTable
               title="Source Values"
               paramName="utm_source"
@@ -210,6 +230,12 @@ export function AnalyticsTabs({
           </TabsContent>
 
           <TabsContent value="mediums">
+            <PdfExportButton
+              reportTitle="Analytics: Mediums"
+              tableHeaders={["Medium", "Clicks"]}
+              data={Object.entries(analytics.clicksByMedium)}
+            />
+
             <UtmValueTable
               title="Medium Values"
               paramName="utm_medium"
@@ -218,6 +244,12 @@ export function AnalyticsTabs({
           </TabsContent>
 
           <TabsContent value="terms">
+            <PdfExportButton
+              reportTitle="Analytics: Terms"
+              tableHeaders={["Term", "Clicks"]}
+              data={Object.entries(analytics.clicksByTerm)}
+            />
+
             <UtmValueTable
               title="Term Values"
               paramName="utm_term"
@@ -226,6 +258,12 @@ export function AnalyticsTabs({
           </TabsContent>
 
           <TabsContent value="contents">
+            <PdfExportButton
+              reportTitle="Analytics: Contents"
+              tableHeaders={["Content", "Clicks"]}
+              data={Object.entries(analytics.clicksByContent)}
+            />
+
             <UtmValueTable
               title="Content Values"
               paramName="utm_content"
@@ -234,6 +272,12 @@ export function AnalyticsTabs({
           </TabsContent>
 
           <TabsContent value="referrers">
+            <PdfExportButton
+              reportTitle="Analytics: Referrers"
+              tableHeaders={["Referrer", "Clicks"]}
+              data={Object.entries(analytics.clicksByReferrer)}
+            />
+
             <ReferrersTable referrersData={analytics.clicksByReferrer} />
           </TabsContent>
         </Tabs>

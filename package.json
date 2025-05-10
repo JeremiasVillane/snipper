@@ -43,6 +43,8 @@
     "d3-scale": "^4.0.2",
     "date-fns": "^4.1.0",
     "import-in-the-middle": "^1.13.1",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.488.0",
     "motion": "^12.7.3",
     "nanoid": "^5.1.5",

@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { processAndSortData } from "./analytics-helpers";
 import { DevicesTable } from "./devices-table";
+import PdfExportButton from "./pdf-export-button";
 
 interface AnalyticsDevicesProps {
   clicksByBrowser: ShortLinkAnalyticsData["clicksByBrowser"];
@@ -38,12 +39,27 @@ export function AnalyticsDevices({
       </TabsList>
 
       <TabsContent value="browser">
+        <PdfExportButton
+          reportTitle="Analytics: Clicks by Browser"
+          tableHeaders={["Browser", "Clicks"]}
+          data={Object.entries(clicksByBrowser)}
+        />
         <DevicesTable data={browserData} />
       </TabsContent>
       <TabsContent value="os">
+        <PdfExportButton
+          reportTitle="Analytics: Clicks by OS"
+          tableHeaders={["OS", "Clicks"]}
+          data={Object.entries(clicksByOS)}
+        />
         <DevicesTable data={osData} />
       </TabsContent>
       <TabsContent value="device">
+        <PdfExportButton
+          reportTitle="Analytics: Clicks by Device"
+          tableHeaders={["Device", "Clicks"]}
+          data={Object.entries(clicksByDevice)}
+        />
         <DevicesTable data={deviceData} />
       </TabsContent>
     </Tabs>
