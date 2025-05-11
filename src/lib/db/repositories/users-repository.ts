@@ -3,14 +3,17 @@ import type { Plan, Prisma, Subscription, User } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 
 export const usersRepository = {
-  async findById(
-    id: string,
-  ): Promise<
-    (User & { subscriptions: (Subscription & { plan: Plan })[] }) | null
+  async findById(id: string): Promise<
+    | (User & {
+        subscriptions: (Subscription & { plan: Plan })[];
+        _count: { shortLinks: number };
+      })
+    | null
   > {
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
+        _count: { select: { shortLinks: true } },
         subscriptions: {
           include: { plan: true },
         },

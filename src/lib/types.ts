@@ -47,6 +47,7 @@ interface ShortLinkBaseResponse {
 
 export interface ShortLinkFromRepository extends ShortLinkBaseResponse {
   isPasswordEnabled: boolean;
+  isExpirationEnabled: boolean;
 }
 
 export type authorizationMiddlewareProps =

@@ -62,7 +62,7 @@ export function LinkTable({
             <TableHead>Expires</TableHead>
             <TableHead className="text-center">Clicks</TableHead>
             <TableHead>Tags</TableHead>
-            <TableHead className="w-[80px]"></TableHead>
+            <TableHead className="w-6"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -101,7 +101,7 @@ export function LinkTable({
                     <div
                       data-tooltip-id="table-url-tooltip"
                       data-tooltip-content={link.originalUrl}
-                      className="flex items-center gap-2"
+                      className="flex w-fit items-center gap-2"
                     >
                       <LinkPreview
                         url={link.originalUrl}

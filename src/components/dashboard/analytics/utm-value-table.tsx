@@ -38,26 +38,23 @@ export function UtmValueTable({ title, paramName, data }: UtmValueTableProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Value</TableHead>
-              <TableHead className="w-[100px] text-center">Clicks</TableHead>
-              <TableHead className="w-[100px] text-right">Percentage</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedData.length === 0 ? (
+        {sortedData.length === 0 ? (
+          <div className="my-4 flex h-[300px] items-center justify-center rounded-md bg-muted/20">
+            <p className="text-muted-foreground">No data available</p>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell
-                  colSpan={3}
-                  className="text-center text-muted-foreground"
-                >
-                  No data available.
-                </TableCell>
+                <TableHead>Value</TableHead>
+                <TableHead className="w-[100px] text-center">Clicks</TableHead>
+                <TableHead className="w-[100px] text-right">
+                  Percentage
+                </TableHead>
               </TableRow>
-            ) : (
-              sortedData.map((item) => (
+            </TableHeader>
+            <TableBody>
+              {sortedData.map((item) => (
                 <TableRow key={item.name}>
                   <TableCell className="break-words font-medium">
                     {item.name}
@@ -67,10 +64,10 @@ export function UtmValueTable({ title, paramName, data }: UtmValueTableProps) {
                     {item.percentage}
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   );

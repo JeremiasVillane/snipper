@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { shortLinksRepository } from "@/lib/db/repositories";
+import { validateShortLinkFeatures } from "@/lib/feature-access";
 import { createLinkSchema } from "@/lib/schemas";
 
 import { authActionClient } from "../safe-action";
@@ -29,7 +30,9 @@ export const createShortLink = authActionClient({
   .schema(createShortLinkSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { formData } = parsedInput;
-    const { userId } = ctx;
+    const { userId, activeUserPlans, totalUserLinks } = ctx;
+
+    validateShortLinkFeatures(formData, activeUserPlans, totalUserLinks);
 
     try {
       const result = await shortLinksRepository.create(
@@ -45,7 +48,7 @@ export const createShortLink = authActionClient({
 
       revalidatePath("/dashboard/links");
 
-      return { shortCode: result.shortCode };
+      return result;
     } catch (error) {
       console.error("Error in shortLinksRepository.create:", error);
 

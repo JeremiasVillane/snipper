@@ -78,7 +78,7 @@ model Subscription {
 
 enum PlanType {
   FREE
-  PREMIUM
+  PAID
 }
 
 model Plan {
@@ -88,6 +88,10 @@ model Plan {
   description String?
   maxLinks    Int?
   maxUtmSets  Int?
+  custom      Boolean  @default(false)
+  password    Boolean  @default(false)
+  expiration  Boolean  @default(false)
+  thumbnail   Boolean  @default(false)
   price       Float?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

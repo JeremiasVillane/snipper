@@ -4,6 +4,7 @@ import { calculateShortLinkAnalytics } from "@/lib/analytics";
 import {
   clickEventsRepository,
   shortLinksRepository,
+  usersRepository,
 } from "@/lib/db/repositories";
 import { validateApiKey } from "@/lib/helpers";
 import { APIGetLinkAnalytics } from "@/lib/types";
@@ -28,7 +29,21 @@ export async function GET(
 
     const clickEvents = await clickEventsRepository.findByShortLinkId(id);
 
-    const data = await calculateShortLinkAnalytics(shortLink, clickEvents);
+    const dbUser = await usersRepository.findById(apiKeyRecord.userId);
+
+    if (!dbUser) throw new Error("User not found");
+
+    const isPremiumOrDemoUser =
+      dbUser.subscriptions
+        .filter((sub) => ["ACTIVE", "TRIALING"].includes(sub.status))
+        .map((s) => s.plan)
+        .some((p) => p.type === "PAID") || dbUser?.role === "DEMO";
+
+    const data = await calculateShortLinkAnalytics(
+      shortLink,
+      clickEvents,
+      isPremiumOrDemoUser,
+    );
 
     return NextResponse.json({
       totalClicks: data.totalClicks,

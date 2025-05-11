@@ -200,16 +200,14 @@ export function LinkDialog({
             } successfully.`
           : result.error,
         type: result.success ? "success" : "error",
+        duration: result.success ? 3000 : 9000,
       });
 
-      // if (result.success) {
-      //   initialFormValuesRef.current = calculateFormValues(
-      //     result.data as ShortLinkFromRepository,
-      //   );
-      // }
-
-      onOpenChange(false);
-      router.refresh();
+      if (result.success) {
+        initialFormValuesRef.current = calculateFormValues(result.data);
+        onOpenChange(false);
+        router.refresh();
+      }
     } catch (error: any) {
       console.error("Error submitting form:", error);
       toast({
@@ -300,8 +298,7 @@ export function LinkDialog({
 
                 <TabsContent value="basic">
                   <Card>
-                    <CardHeader></CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="mt-5 space-y-4">
                       <FormField
                         control={control}
                         name="originalUrl"
@@ -340,8 +337,8 @@ export function LinkDialog({
                               />
                             </FormControl>
                             <FormDescription>
-                              Memorable link alias (3-15 alphanumeric chars
-                              recommended). Leave blank for random.
+                              Memorable link alias (3-15 characters). Leave
+                              blank for random.
                             </FormDescription>
                             <FormMessage />
                           </FormItem>

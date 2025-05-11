@@ -124,22 +124,45 @@ async function main() {
       type: PlanType.FREE,
       description: "Basic plan with essential features and limits.",
       maxLinks: 100,
-      maxUtmSets: 200,
+      maxUtmSets: 100,
+      custom: false,
+      password: false,
+      expiration: false,
+      thumbnail: false,
       price: 0.0,
     },
   });
   console.log(`Created plan: ${freePlan.name} (ID: ${freePlan.id})`);
-  const premiumPlan = await prisma.plan.create({
+  const proPlan = await prisma.plan.create({
     data: {
-      name: "Premium",
-      type: PlanType.PREMIUM,
-      description: "Unlimited access and advanced features.",
-      maxLinks: null,
-      maxUtmSets: null,
-      price: 9.99,
+      name: "Pro",
+      type: PlanType.PAID,
+      description: "Advanced access and features.",
+      maxLinks: 500,
+      maxUtmSets: 1500,
+      custom: true,
+      password: true,
+      expiration: true,
+      thumbnail: true,
+      price: 9.0,
     },
   });
-  console.log(`Created plan: ${premiumPlan.name} (ID: ${premiumPlan.id})`);
+  console.log(`Created plan: ${proPlan.name} (ID: ${proPlan.id})`);
+  const businessPlan = await prisma.plan.create({
+    data: {
+      name: "Business",
+      type: PlanType.PAID,
+      description: "Unlimited access and premium features.",
+      maxLinks: null,
+      maxUtmSets: null,
+      custom: true,
+      password: true,
+      expiration: true,
+      thumbnail: true,
+      price: 19.0,
+    },
+  });
+  console.log(`Created plan: ${businessPlan.name} (ID: ${businessPlan.id})`);
   console.log("Standard plans created.");
 
   // --- 2. Hash the demo password ---

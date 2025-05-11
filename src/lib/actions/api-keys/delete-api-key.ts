@@ -13,7 +13,7 @@ const deleteApiKeySchema = z.object({
 
 export const deleteApiKey = authActionClient({
   roles: ["USER"],
-  plans: ["Premium"],
+  plans: ["Business"],
 })
   .metadata({
     name: "delete-api-key",

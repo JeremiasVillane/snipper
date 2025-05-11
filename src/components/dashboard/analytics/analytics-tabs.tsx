@@ -1,4 +1,6 @@
-import { UTMParam } from "@prisma/client";
+"use client";
+
+import { parseAsString, useQueryState } from "nuqs";
 
 import { ShortLinkAnalyticsData } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
@@ -21,22 +23,30 @@ import {
 import { AnalyticsDevices } from "./analytics-devices";
 import { ClicksTable } from "./clicks-table";
 import { CountryMap } from "./country-map";
-import PdfExportButton from "./pdf-export-button";
-import { ReferrersTable } from "./referrers-tables";
+import { ExportPDFButton } from "./export-pdf-button";
+import { ReferrersTable } from "./referrers-table";
 import { TopRegionsTable } from "./top-regions-table";
+import { TrafficSources } from "./traffic-sources";
 import { UtmValueTable } from "./utm-value-table";
 
 interface AnalyticsTabsProps {
   analytics: ShortLinkAnalyticsData | null;
   startDate?: Date;
   endDate?: Date;
+  isPremiumOrDemoUser: boolean;
 }
 
 export function AnalyticsTabs({
   analytics,
   startDate,
   endDate,
+  isPremiumOrDemoUser,
 }: AnalyticsTabsProps) {
+  const [activeTab, setActiveTab] = useQueryState(
+    "tab",
+    parseAsString.withDefault("overview"),
+  );
+
   if (!analytics) {
     return (
       <Card className="mt-6">
@@ -53,13 +63,23 @@ export function AnalyticsTabs({
   }
 
   return (
-    <Tabs variant="segmented" defaultValue="overview" className="mt-6">
+    <Tabs
+      variant="segmented"
+      defaultValue="overview"
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="mt-6"
+    >
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="clicks">Clicks</TabsTrigger>
-        <TabsTrigger value="geography">Geography</TabsTrigger>
-        <TabsTrigger value="devices">Devices & Browsers</TabsTrigger>
-        <TabsTrigger value="traffic">Traffic Sources</TabsTrigger>
+        {isPremiumOrDemoUser && (
+          <>
+            <TabsTrigger value="geography">Geography</TabsTrigger>
+            <TabsTrigger value="devices">Devices & Browsers</TabsTrigger>
+            <TabsTrigger value="traffic">Traffic Sources</TabsTrigger>
+          </>
+        )}
       </TabsList>
 
       <TabsContent value="overview" className="mt-6 space-y-6">
@@ -100,7 +120,7 @@ export function AnalyticsTabs({
       </TabsContent>
 
       <TabsContent value="clicks" className="mt-6">
-        <PdfExportButton
+        <ExportPDFButton
           reportTitle="Analytics: Clicks"
           tableHeaders={[
             "Time",
@@ -127,161 +147,85 @@ export function AnalyticsTabs({
         </Card>
       </TabsContent>
 
-      <TabsContent value="geography" className="mt-6">
-        <PdfExportButton
-          reportTitle="Analytics: Geography"
-          tableHeaders={["Country", "Clicks"]}
-          data={Object.entries(analytics.clicksByCountry)}
-        />
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Geography</CardTitle>
-            <CardDescription>
-              Detailed information about geographic location
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <CountryMap data={analytics.clicksByCountryWithCities} />
-            <TopRegionsTable
-              countryData={analytics.clicksByCountry}
-              cityData={analytics.clicksByCity}
-            />
-          </CardContent>
-        </Card>
-      </TabsContent>
-
-      <TabsContent value="devices" className="mt-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Devices & Browsers</CardTitle>
-            <CardDescription>Clicks by device, OS and browser</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid h-full grid-cols-1 gap-4 pt-6 md:grid-cols-3">
-              <div>
-                <h4 className="mb-2 text-center text-sm font-medium">
-                  Browsers
-                </h4>
-                <Browsers data={analytics.clicksByBrowser} />
-              </div>
-
-              <div>
-                <h4 className="mb-2 text-center text-sm font-medium">
-                  Operating Systems
-                </h4>
-                <OperatingSystems data={analytics.clicksByOS} />
-              </div>
-
-              <div>
-                <h4 className="mb-2 text-center text-sm font-medium">
-                  Devices
-                </h4>
-                <DeviceTypes data={analytics.clicksByDevice} />
-              </div>
-            </div>
-
-            <AnalyticsDevices
-              clicksByBrowser={analytics.clicksByBrowser}
-              clicksByDevice={analytics.clicksByDevice}
-              clicksByOS={analytics.clicksByOS}
-            />
-          </CardContent>
-        </Card>
-      </TabsContent>
-
-      <TabsContent value="traffic" className="mt-6">
-        <Tabs variant="underlined" defaultValue="campaigns">
-          <TabsList className="mb-4 flex h-auto flex-wrap justify-start border-b-0 md:w-auto">
-            <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
-            <TabsTrigger value="sources">Sources</TabsTrigger>
-            <TabsTrigger value="mediums">Mediums</TabsTrigger>
-            <TabsTrigger value="terms">Terms</TabsTrigger>
-            <TabsTrigger value="contents">Contents</TabsTrigger>
-            <TabsTrigger value="referrers">Referrers</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="campaigns">
-            <PdfExportButton
-              reportTitle="Analytics: Campaigns"
-              tableHeaders={["Campaign", "Clicks"]}
-              data={Object.entries(analytics.clicksByCampaign)}
+      {isPremiumOrDemoUser && (
+        <>
+          <TabsContent value="geography" className="mt-6">
+            <ExportPDFButton
+              reportTitle="Analytics: Geography"
+              tableHeaders={["Country", "Clicks"]}
+              data={Object.entries(analytics.clicksByCountry)}
             />
 
-            <UtmValueTable
-              title="Campaign Values"
-              paramName="utm_campaign"
-              data={analytics.clicksByCampaign}
-            />
+            <Card>
+              <CardHeader>
+                <CardTitle>Geography</CardTitle>
+                <CardDescription>
+                  Detailed information about geographic location
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <CountryMap data={analytics.clicksByCountryWithCities} />
+                <TopRegionsTable
+                  countryData={analytics.clicksByCountry}
+                  cityData={analytics.clicksByCity}
+                />
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          <TabsContent value="sources">
-            <PdfExportButton
-              reportTitle="Analytics: Sources"
-              tableHeaders={["Source", "Clicks"]}
-              data={Object.entries(analytics.clicksBySource)}
-            />
+          <TabsContent value="devices" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Devices & Browsers</CardTitle>
+                <CardDescription>
+                  Clicks by device, OS and browser
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid h-full grid-cols-1 gap-4 pt-6 md:grid-cols-3">
+                  <div>
+                    <h4 className="mb-2 text-center text-sm font-medium">
+                      Browsers
+                    </h4>
+                    <Browsers data={analytics.clicksByBrowser} />
+                  </div>
 
-            <UtmValueTable
-              title="Source Values"
-              paramName="utm_source"
-              data={analytics.clicksBySource}
-            />
+                  <div>
+                    <h4 className="mb-2 text-center text-sm font-medium">
+                      Operating Systems
+                    </h4>
+                    <OperatingSystems data={analytics.clicksByOS} />
+                  </div>
+
+                  <div>
+                    <h4 className="mb-2 text-center text-sm font-medium">
+                      Devices
+                    </h4>
+                    <DeviceTypes data={analytics.clicksByDevice} />
+                  </div>
+                </div>
+
+                <AnalyticsDevices
+                  clicksByBrowser={analytics.clicksByBrowser}
+                  clicksByDevice={analytics.clicksByDevice}
+                  clicksByOS={analytics.clicksByOS}
+                />
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          <TabsContent value="mediums">
-            <PdfExportButton
-              reportTitle="Analytics: Mediums"
-              tableHeaders={["Medium", "Clicks"]}
-              data={Object.entries(analytics.clicksByMedium)}
-            />
-
-            <UtmValueTable
-              title="Medium Values"
-              paramName="utm_medium"
-              data={analytics.clicksByMedium}
+          <TabsContent value="traffic" className="mt-6">
+            <TrafficSources
+              clicksByCampaign={analytics.clicksByCampaign}
+              clicksBySource={analytics.clicksBySource}
+              clicksByMedium={analytics.clicksByMedium}
+              clicksByTerm={analytics.clicksByTerm}
+              clicksByContent={analytics.clicksByContent}
+              clicksByReferrer={analytics.clicksByReferrer}
             />
           </TabsContent>
-
-          <TabsContent value="terms">
-            <PdfExportButton
-              reportTitle="Analytics: Terms"
-              tableHeaders={["Term", "Clicks"]}
-              data={Object.entries(analytics.clicksByTerm)}
-            />
-
-            <UtmValueTable
-              title="Term Values"
-              paramName="utm_term"
-              data={analytics.clicksByTerm}
-            />
-          </TabsContent>
-
-          <TabsContent value="contents">
-            <PdfExportButton
-              reportTitle="Analytics: Contents"
-              tableHeaders={["Content", "Clicks"]}
-              data={Object.entries(analytics.clicksByContent)}
-            />
-
-            <UtmValueTable
-              title="Content Values"
-              paramName="utm_content"
-              data={analytics.clicksByContent}
-            />
-          </TabsContent>
-
-          <TabsContent value="referrers">
-            <PdfExportButton
-              reportTitle="Analytics: Referrers"
-              tableHeaders={["Referrer", "Clicks"]}
-              data={Object.entries(analytics.clicksByReferrer)}
-            />
-
-            <ReferrersTable referrersData={analytics.clicksByReferrer} />
-          </TabsContent>
-        </Tabs>
-      </TabsContent>
+        </>
+      )}
     </Tabs>
   );
 }

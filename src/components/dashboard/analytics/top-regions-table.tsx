@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { parseAsString, useQueryState } from "nuqs";
 import ReactCountryFlag from "react-country-flag";
 
 import { getCountryName } from "@/lib/helpers";
@@ -24,6 +25,11 @@ interface TopRegionsTable {
 }
 
 export function TopRegionsTable({ countryData, cityData }: TopRegionsTable) {
+  const [activeTab, setActiveTab] = useQueryState(
+    "region",
+    parseAsString.withDefault("countries"),
+  );
+
   const countryTableData = useMemo(
     () => prepareChartData(countryData, 10),
     [countryData],
@@ -51,7 +57,12 @@ export function TopRegionsTable({ countryData, cityData }: TopRegionsTable) {
   }
 
   return (
-    <Tabs variant="underlined" defaultValue="countries">
+    <Tabs
+      variant="underlined"
+      defaultValue="countries"
+      value={activeTab}
+      onValueChange={setActiveTab}
+    >
       <TabsList>
         <TabsTrigger value="countries">Countries</TabsTrigger>
         <TabsTrigger value="cities">Cities</TabsTrigger>

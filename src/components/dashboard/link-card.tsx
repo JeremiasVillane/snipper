@@ -89,18 +89,20 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
       </CardContent>
 
       <BubbleMenu className="mb-2 ml-auto mr-auto mt-1 xl:mr-2">
-        <CopyOptionsMenu {...{ link, isExpired }} />
+        <CopyOptionsMenu
+          {...{ link, isExpired, className: "hover:bg-transparent size-full" }}
+        />
         <QrCode
           role="button"
           onClick={() => onQrCode(link)}
-          className="size-full p-3"
+          className="size-full p-3 text-muted-foreground hover:text-primary"
           aria-label="View QR Code"
         />
         <Link
           href={`/dashboard/analytics/${link.id}`}
           aria-label="View Link Analytics"
         >
-          <LineChart className="size-full p-3" />
+          <LineChart className="size-full p-3 text-muted-foreground hover:text-primary" />
         </Link>
         <Link
           href={buildShortUrl(link.shortCode)}
@@ -108,18 +110,18 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
           rel="noopener noreferrer"
           aria-label="Visit Short Link"
         >
-          <ExternalLink className="size-full p-3" />
+          <ExternalLink className="size-full p-3 text-muted-foreground hover:text-primary" />
         </Link>
         <Pencil
           role="button"
           onClick={() => onEdit(link)}
-          className="size-full p-3"
+          className="size-full p-3 text-muted-foreground hover:text-primary"
           aria-label="Update Short Link"
         />
         <Trash2
           role="button"
           onClick={() => onDelete(link)}
-          className="size-full p-3 text-destructive"
+          className="size-full p-3 text-destructive hover:text-red-500"
           aria-label="Delete Short Link"
         />
       </BubbleMenu>

@@ -17,7 +17,7 @@ export const generateOgImageUrl = ({
   title: string;
   type: string;
   mode?: "light" | "dark";
-}) => {
+}): string => {
   const url = publicUrl;
 
   const ogUrl = new URL(`${url}/api/og`);

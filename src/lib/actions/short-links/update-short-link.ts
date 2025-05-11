@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { shortLinksRepository } from "@/lib/db/repositories";
+import { validateShortLinkFeatures } from "@/lib/feature-access";
 import { createLinkSchema } from "@/lib/schemas";
 
 import { authActionClient } from "../safe-action";
@@ -29,7 +30,9 @@ export const updateShortLink = authActionClient({
   .schema(updateShortLinkSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { linkId, formData } = parsedInput;
-    const { userId } = ctx;
+    const { userId, activeUserPlans } = ctx;
+
+    validateShortLinkFeatures(formData, activeUserPlans);
 
     try {
       const result = await shortLinksRepository.update(
@@ -41,7 +44,7 @@ export const updateShortLink = authActionClient({
       revalidatePath("/dashboard");
       revalidatePath(`/dashboard/analytics/${linkId}`);
 
-      return { shortCode: result.shortCode };
+      return result;
     } catch (error) {
       console.error(`Error updating link ${linkId}:`, error);
       if (error instanceof Error) throw error;

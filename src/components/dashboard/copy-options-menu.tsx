@@ -2,6 +2,7 @@ import { Copy, Share2 } from "lucide-react";
 
 import { buildShortUrl, buildUrlWithUtm } from "@/lib/helpers";
 import { ShortLinkFromRepository } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,9 +22,14 @@ import { CopyToClipboardButton } from "../ui/copy-to-clipboard-button";
 interface CopyOptionsMenuProps {
   link: ShortLinkFromRepository;
   isExpired: boolean;
+  className?: string;
 }
 
-export function CopyOptionsMenu({ link, isExpired }: CopyOptionsMenuProps) {
+export function CopyOptionsMenu({
+  link,
+  isExpired,
+  className,
+}: CopyOptionsMenuProps) {
   const baseShortUrl = buildShortUrl(link.shortCode);
   const hasUtmParams = link.utmParams && link.utmParams.length > 0;
 
@@ -33,7 +39,10 @@ export function CopyOptionsMenu({ link, isExpired }: CopyOptionsMenuProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-7 w-7 shrink-0 text-muted-foreground hover:text-white"
+          className={cn(
+            "h-7 w-7 shrink-0 text-muted-foreground hover:text-primary",
+            className,
+          )}
           disabled={isExpired}
           aria-label="Copy link options"
         >
@@ -41,7 +50,7 @@ export function CopyOptionsMenu({ link, isExpired }: CopyOptionsMenuProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
-        <DropdownMenuLabel>Copy Link</DropdownMenuLabel>
+        <DropdownMenuLabel className="select-none">Copy Link</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild className="p-0">
           <CopyToClipboardButton
@@ -56,13 +65,15 @@ export function CopyOptionsMenu({ link, isExpired }: CopyOptionsMenuProps) {
         </DropdownMenuItem>
         {hasUtmParams && (
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger className="hover:text-white data-[state=open]:text-white">
               <Share2 className="mr-2 h-4 w-4" />
               <span>Copy with Campaign...</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
-                <DropdownMenuLabel>Select Campaign</DropdownMenuLabel>
+                <DropdownMenuLabel className="select-none">
+                  Select Campaign
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {link.utmParams.map((utmSet) => {
                   const urlWithUtm = buildUrlWithUtm(baseShortUrl, utmSet);

@@ -16,13 +16,14 @@ const getAnalyticsSchema = z.object({
   id: z.string().min(1, "Short link ID is required"),
   startDate: z.date().optional(),
   endDate: z.date().optional(),
+  isPremiumOrDemoUser: z.boolean(),
 });
 
 export const getShortLinkAnalytics = authActionClient({})
   .metadata({ name: "get-short-link-analytics" })
   .schema(getAnalyticsSchema)
   .action(async ({ parsedInput, ctx }): Promise<ShortLinkAnalyticsData> => {
-    const { id, startDate, endDate } = parsedInput;
+    const { id, startDate, endDate, isPremiumOrDemoUser } = parsedInput;
     const { userId } = ctx;
 
     try {
@@ -46,7 +47,11 @@ export const getShortLinkAnalytics = authActionClient({})
         clickEvents = await clickEventsRepository.findByShortLinkId(id);
       }
 
-      return await calculateShortLinkAnalytics(shortLink, clickEvents);
+      return await calculateShortLinkAnalytics(
+        shortLink,
+        clickEvents,
+        isPremiumOrDemoUser,
+      );
     } catch (error) {
       console.error(`Error fetching analytics for link ${id}:`, error);
       if (error instanceof Error) {

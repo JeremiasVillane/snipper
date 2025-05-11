@@ -34,12 +34,18 @@ export const authorizationMiddleware = (props: authorizationMiddlewareProps) =>
         ),
       )
     ) {
-      throw new Error("This feature is not available in your current plan");
+      throw new Error("This feature is not available for your current plan");
     }
+
+    const activeUserPlans = user.subscriptions
+      .filter((sub) => ["ACTIVE", "TRIALING"].includes(sub.status))
+      .map((s) => s.plan);
+    const totalUserLinks = user._count.shortLinks;
 
     return next({
       ctx: {
-        user: user,
+        activeUserPlans,
+        totalUserLinks,
       },
     });
   });

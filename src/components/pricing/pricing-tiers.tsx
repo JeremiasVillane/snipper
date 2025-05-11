@@ -39,6 +39,7 @@ export function PricingTiers() {
                 >
                   <ListItem>Up to 100 short links</ListItem>
                   <ListItem>Basic click analytics</ListItem>
+                  <ListItem>UTM builder (1 campaign per link)</ListItem>
                   <ListItem>QR code generation</ListItem>
                 </List>
                 <List
@@ -48,8 +49,8 @@ export function PricingTiers() {
                 >
                   <ListItem>Custom short URLs</ListItem>
                   <ListItem>Password protection</ListItem>
-                  <ListItem>UTM builder</ListItem>
                   <ListItem>Link expiration</ListItem>
+                  <ListItem>Custom preview link image</ListItem>
                 </List>
               </CardContent>
               <CardFooter className="pt-4">
@@ -89,7 +90,7 @@ export function PricingTiers() {
                   <ListItem>Password protection</ListItem>
                   <ListItem>Link expiration</ListItem>
                   <ListItem>Custom preview link image</ListItem>
-                  <ListItem>UTM builder (1 campaign)</ListItem>
+                  <ListItem>UTM builder (3 campaigns per link)</ListItem>
                 </List>
                 <List
                   icon={<X className="size-5 text-muted-foreground" />}

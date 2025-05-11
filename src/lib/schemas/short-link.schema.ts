@@ -5,15 +5,36 @@ import { utmSetSchema } from "./utm-param.schema";
 export const shortCodeSchema = z
   .string()
   .min(3, { message: "Alias must be at least 3 characters" })
-  .max(20, { message: "Alias cannot exceed 20 characters" })
+  .max(15, { message: "Alias cannot exceed 15 characters" })
   .regex(/^[a-zA-Z0-9-_]+$/, {
     message: "Only alphanumeric, hyphen, underscore allowed",
   });
 
-export const shortLinkPassword = z
-  .string()
-  .min(6, "Password must be at least 6 character long")
-  .max(33, "Password must be less than 33 characters long");
+export const shortLinkPassword = z.string().superRefine((val, ctx) => {
+  if (val === "") {
+    return;
+  }
+  if (val.length < 6) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.too_small,
+      minimum: 6,
+      type: "string",
+      inclusive: true,
+      fatal: true,
+      message: "Password must be at least 6 characters long",
+    });
+  }
+  if (val.length > 33) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.too_big,
+      maximum: 33,
+      type: "string",
+      inclusive: true,
+      fatal: true,
+      message: "Password must be less than 33 characters long",
+    });
+  }
+});
 
 const baseLinkSchema = z.object({
   originalUrl: z.string().url({ message: "Please enter a valid URL" }),

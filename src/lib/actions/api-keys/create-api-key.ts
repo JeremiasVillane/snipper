@@ -15,7 +15,7 @@ const createApiKeyActionSchema = z.object({
 
 export const createApiKey = authActionClient({
   roles: ["USER"],
-  plans: ["Premium"],
+  plans: ["Business"],
 })
   .metadata({
     name: "create-api-key",

@@ -96,6 +96,8 @@ export const shortLinksRepository = {
         ...shortLink,
         tags: createdTags.map((t) => t.name),
         utmParams: createdUtmParams,
+        isPasswordEnabled: !!shortLink.password,
+        isExpirationEnabled: !!shortLink.expiresAt,
       };
     });
 
@@ -124,6 +126,7 @@ export const shortLinksRepository = {
       tags: shortLink.linkTags.map((lt) => lt.tag.name),
       utmParams: shortLink.utmParams,
       isPasswordEnabled: !!shortLink.password,
+      isExpirationEnabled: !!shortLink.expiresAt,
     };
   },
 
@@ -161,6 +164,7 @@ export const shortLinksRepository = {
       tags: link.linkTags.map((lt) => lt.tag.name),
       utmParams: link.utmParams,
       isPasswordEnabled: !!link.password,
+      isExpirationEnabled: !!link.expiresAt,
     }));
   },
 

@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getShortLink, getShortLinkAnalytics } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
+import { usersRepository } from "@/lib/db/repositories";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -100,6 +101,15 @@ export default async function AnalyticsPage({
     getSafeActionResponse(res),
   );
 
+  const dbUser = await usersRepository.findById(session.user.id);
+
+  const isPremiumOrDemoUser = Boolean(
+    dbUser?.subscriptions
+      .filter((sub) => ["ACTIVE", "TRIALING"].includes(sub.status))
+      .map((s) => s.plan)
+      .some((p) => p.type === "PAID") || dbUser?.role === "DEMO",
+  );
+
   if (!shortLink.success) {
     console.warn(
       `Short link ${id} not found or user ${session.user.id} lacks permission.`,
@@ -117,6 +127,7 @@ export default async function AnalyticsPage({
     id,
     startDate,
     endDate,
+    isPremiumOrDemoUser,
   }).then((res) => getSafeActionResponse(res));
 
   if (!ShortLinkAnalytics.success) {
@@ -162,6 +173,7 @@ export default async function AnalyticsPage({
         analytics={ShortLinkAnalytics.data}
         startDate={startDate}
         endDate={endDate}
+        isPremiumOrDemoUser={isPremiumOrDemoUser}
       />
     </main>
   );

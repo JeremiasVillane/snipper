@@ -40,26 +40,23 @@ export function ReferrersTable({ referrersData }: ReferrersTable) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Referrer</TableHead>
-              <TableHead className="w-[100px] text-center">Clicks</TableHead>
-              <TableHead className="w-[100px] text-right">Percentage</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.length === 0 ? (
+        {data.length === 0 ? (
+          <div className="my-4 flex h-[300px] items-center justify-center rounded-md bg-muted/20">
+            <p className="text-muted-foreground">No data available</p>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell
-                  colSpan={3}
-                  className="text-center text-muted-foreground"
-                >
-                  No data available.
-                </TableCell>
+                <TableHead>Referrer</TableHead>
+                <TableHead className="w-[100px] text-center">Clicks</TableHead>
+                <TableHead className="w-[100px] text-right">
+                  Percentage
+                </TableHead>
               </TableRow>
-            ) : (
-              data.map((item, index) => (
+            </TableHeader>
+            <TableBody>
+              {data.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell className="text-center">{item.clicks}</TableCell>
@@ -67,10 +64,10 @@ export function ReferrersTable({ referrersData }: ReferrersTable) {
                     {item.percentage}
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   );

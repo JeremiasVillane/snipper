@@ -6,6 +6,7 @@ import { ShortLinkAnalyticsData, ShortLinkFromRepository } from "./types";
 export async function calculateShortLinkAnalytics(
   shortLink: ShortLinkFromRepository,
   clickEvents: ClickEvent[],
+  isPremiumOrDemoUser: boolean,
 ) {
   const definedCampaigns: UTMParam[] = shortLink.utmParams;
   const totalClicks = clickEvents.length;
@@ -28,35 +29,39 @@ export async function calculateShortLinkAnalytics(
     {} as ShortLinkAnalyticsData["clicksByCountry"],
   );
 
-  const clicksByCity = clickEvents.reduce(
-    (acc, click) => {
-      const city = click.city || "Unknown";
-      acc[city] = (acc[city] || 0) + 1;
-      return acc;
-    },
-    {} as ShortLinkAnalyticsData["clicksByCity"],
-  );
+  const clicksByCity = isPremiumOrDemoUser
+    ? clickEvents.reduce(
+        (acc, click) => {
+          const city = click.city || "Unknown";
+          acc[city] = (acc[city] || 0) + 1;
+          return acc;
+        },
+        {} as ShortLinkAnalyticsData["clicksByCity"],
+      )
+    : {};
 
-  const clicksByCountryWithCities = clickEvents.reduce(
-    (acc, click) => {
-      const country = click.country || "Unknown";
-      const city = click.city || "Unknown";
+  const clicksByCountryWithCities = isPremiumOrDemoUser
+    ? clickEvents.reduce(
+        (acc, click) => {
+          const country = click.country || "Unknown";
+          const city = click.city || "Unknown";
 
-      if (!acc[country]) {
-        acc[country] = {
-          totalClicks: 0,
-          cities: {},
-        };
-      }
-      acc[country].totalClicks += 1;
-      if (!acc[country].cities[city]) {
-        acc[country].cities[city] = 0;
-      }
-      acc[country].cities[city] += 1;
-      return acc;
-    },
-    {} as ShortLinkAnalyticsData["clicksByCountryWithCities"],
-  );
+          if (!acc[country]) {
+            acc[country] = {
+              totalClicks: 0,
+              cities: {},
+            };
+          }
+          acc[country].totalClicks += 1;
+          if (!acc[country].cities[city]) {
+            acc[country].cities[city] = 0;
+          }
+          acc[country].cities[city] += 1;
+          return acc;
+        },
+        {} as ShortLinkAnalyticsData["clicksByCountryWithCities"],
+      )
+    : {};
 
   const clicksByDevice = clickEvents.reduce(
     (acc, click) => {
@@ -67,38 +72,54 @@ export async function calculateShortLinkAnalytics(
     {} as ShortLinkAnalyticsData["clicksByDevice"],
   );
 
-  const clicksByBrowser = clickEvents.reduce(
-    (acc, click) => {
-      const browser = click.browser || "Unknown";
-      acc[browser] = (acc[browser] || 0) + 1;
-      return acc;
-    },
-    {} as ShortLinkAnalyticsData["clicksByBrowser"],
-  );
+  const clicksByBrowser = isPremiumOrDemoUser
+    ? clickEvents.reduce(
+        (acc, click) => {
+          const browser = click.browser || "Unknown";
+          acc[browser] = (acc[browser] || 0) + 1;
+          return acc;
+        },
+        {} as ShortLinkAnalyticsData["clicksByBrowser"],
+      )
+    : {};
 
-  const clicksByOS = clickEvents.reduce(
-    (acc, click) => {
-      const os = click.os || "Unknown";
-      acc[os] = (acc[os] || 0) + 1;
-      return acc;
-    },
-    {} as ShortLinkAnalyticsData["clicksByOS"],
-  );
+  const clicksByOS = isPremiumOrDemoUser
+    ? clickEvents.reduce(
+        (acc, click) => {
+          const os = click.os || "Unknown";
+          acc[os] = (acc[os] || 0) + 1;
+          return acc;
+        },
+        {} as ShortLinkAnalyticsData["clicksByOS"],
+      )
+    : {};
 
-  const clicksByReferrer = clickEvents.reduce(
-    (acc, click) => {
-      const referrer = click.referrer || "Direct";
-      acc[referrer] = (acc[referrer] || 0) + 1;
-      return acc;
-    },
-    {} as ShortLinkAnalyticsData["clicksByReferrer"],
-  );
+  const clicksByReferrer = isPremiumOrDemoUser
+    ? clickEvents.reduce(
+        (acc, click) => {
+          const referrer = click.referrer || "Direct";
+          acc[referrer] = (acc[referrer] || 0) + 1;
+          return acc;
+        },
+        {} as ShortLinkAnalyticsData["clicksByReferrer"],
+      )
+    : {};
 
-  const clicksByCampaign = aggregateUtmParam(clickEvents, "utmCampaign");
-  const clicksBySource = aggregateUtmParam(clickEvents, "utmSource");
-  const clicksByMedium = aggregateUtmParam(clickEvents, "utmMedium");
-  const clicksByTerm = aggregateUtmParam(clickEvents, "utmTerm");
-  const clicksByContent = aggregateUtmParam(clickEvents, "utmContent");
+  const clicksByCampaign = isPremiumOrDemoUser
+    ? aggregateUtmParam(clickEvents, "utmCampaign")
+    : {};
+  const clicksBySource = isPremiumOrDemoUser
+    ? aggregateUtmParam(clickEvents, "utmSource")
+    : {};
+  const clicksByMedium = isPremiumOrDemoUser
+    ? aggregateUtmParam(clickEvents, "utmMedium")
+    : {};
+  const clicksByTerm = isPremiumOrDemoUser
+    ? aggregateUtmParam(clickEvents, "utmTerm")
+    : {};
+  const clicksByContent = isPremiumOrDemoUser
+    ? aggregateUtmParam(clickEvents, "utmContent")
+    : {};
 
   const recentClicks = clickEvents
     .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
