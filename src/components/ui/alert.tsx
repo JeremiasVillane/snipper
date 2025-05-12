@@ -15,20 +15,20 @@ interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const alertVariants = cva(
-  "relative w-full rounded-lg border p-4 [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4",
+  "relative w-full rounded-lg border p-4 [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:-translate-y-0.5 flex flex-col gap-1.5",
   {
     variants: {
       variant: {
         default: "[&>svg]:text-foreground",
         destructive: "text-destructive [&>svg]:text-destructive",
         success: "text-emerald-600 [&>svg]:text-emerald-600",
-        warning: "text-amber-500 [&>svg]:text-amber-500",
+        warning: "text-amber-600 [&>svg]:text-amber-600",
         info: "text-cyan-600 [&>svg]:text-cyan-600"
       },
       styleVariant: {
-        outline: "bg-background",
-        fill: "border-transparent",
-        bootstrap: "border"
+        outline: "bg-background [&>div]:text-muted-foreground",
+        fill: "border-transparent [&>div]:text-white",
+        bootstrap: "border [&>div]:text-muted-foreground"
       }
     },
     compoundVariants: [
@@ -149,9 +149,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
       role="alert"
       className={cn(
         alertVariants({ variant, styleVariant }),
-        withIcon
-          ? "flex items-baseline gap-2 pl-10 [&>svg]:translate-y-[2.5px]"
-          : "flex items-baseline gap-2 pl-4",
+        withIcon ? "pl-10" : "pl-4",
         className
       )}
       {...props}
@@ -169,7 +167,7 @@ const AlertTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    className={cn("font-medium leading-none tracking-tight", className)}
     {...props}
   />
 ))

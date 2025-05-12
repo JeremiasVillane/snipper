@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
-import { useMediaQuery } from "@/hooks/use-media-query"
+import { cn } from "@/lib/utils";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   Dialog,
   DialogClose,
@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -23,20 +23,20 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
+} from "@/components/ui/drawer";
 
 interface BaseProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 interface RootCredenzaProps extends BaseProps {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 interface CredenzaProps extends BaseProps {
-  className?: string
-  asChild?: true
+  className?: string;
+  asChild?: true;
 }
 
 const CredenzaContext = React.createContext<{ isDesktop: boolean }>({
@@ -66,7 +66,6 @@ const Credenza = ({ children, ...props }: RootCredenzaProps) => {
   );
 };
 
-
 const CredenzaTrigger = ({ className, children, ...props }: CredenzaProps) => {
   const { isDesktop } = useCredenzaContext();
   const CredenzaTrigger = isDesktop ? DialogTrigger : DrawerTrigger;
@@ -94,7 +93,7 @@ const CredenzaContent = ({ className, children, ...props }: CredenzaProps) => {
   const CredenzaContent = isDesktop ? DialogContent : DrawerContent;
 
   return (
-    <CredenzaContent className={className} {...props}>
+    <CredenzaContent className={cn(isDesktop && "p-0", className)} {...props}>
       {children}
     </CredenzaContent>
   );
@@ -120,7 +119,13 @@ const CredenzaHeader = ({ className, children, ...props }: CredenzaProps) => {
   const CredenzaHeader = isDesktop ? DialogHeader : DrawerHeader;
 
   return (
-    <CredenzaHeader className={className} {...props}>
+    <CredenzaHeader
+      className={cn(
+        isDesktop && "sticky -top-1 z-10 bg-background px-4 py-6",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </CredenzaHeader>
   );
@@ -139,7 +144,7 @@ const CredenzaTitle = ({ className, children, ...props }: CredenzaProps) => {
 
 const CredenzaBody = ({ className, children, ...props }: CredenzaProps) => {
   return (
-    <div className={cn("px-4 md:px-0", className)} {...props}>
+    <div className={cn("px-4", className)} {...props}>
       {children}
     </div>
   );
@@ -150,7 +155,13 @@ const CredenzaFooter = ({ className, children, ...props }: CredenzaProps) => {
   const CredenzaFooter = isDesktop ? DialogFooter : DrawerFooter;
 
   return (
-    <CredenzaFooter className={className} {...props}>
+    <CredenzaFooter
+      className={cn(
+        isDesktop && "sticky bottom-0 bg-background p-4",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </CredenzaFooter>
   );
@@ -166,4 +177,4 @@ export {
   CredenzaTitle,
   CredenzaBody,
   CredenzaFooter,
-}
+};

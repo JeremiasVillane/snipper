@@ -31,9 +31,10 @@ import QrCodeDialog from "./qr-code-dialog";
 
 interface LinkListProps {
   links: ShortLinkFromRepository[];
+  isPremiumOrDemoUser: boolean;
 }
 
-export function LinkList({ links }: LinkListProps) {
+export function LinkList({ links, isPremiumOrDemoUser }: LinkListProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useQueryState(
     "search",
@@ -239,6 +240,7 @@ export function LinkList({ links }: LinkListProps) {
           link={showingQrCode}
           open={!!showingQrCode}
           onOpenChange={() => setShowingQrCode(null)}
+          isPremiumOrDemoUser={isPremiumOrDemoUser}
         />
       )}
     </div>

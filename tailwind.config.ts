@@ -83,7 +83,10 @@ const config: Config = {
             opacity: "0",
             transform: "translate(10px, 10px) scale(0.95)",
           },
-          to: { opacity: "1", transform: "translate(10px, 10px) scale(1)" },
+          to: {
+            opacity: "1",
+            transform: "translate(10px, 10px) scale(1)",
+          },
         },
         "toast-fade-in": {
           "0%": {
@@ -315,6 +318,14 @@ const config: Config = {
           "0%": { "stroke-dashoffset": "0" },
           "100%": { "stroke-dashoffset": "-24" },
         },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
       },
       animation: {
         "fade-in": "fade-in 0.1s ease-out",
@@ -341,6 +352,8 @@ const config: Config = {
         "check-unfill": "check-unfill 0.3s ease-out",
         "check-draw": "check-draw 0.3s ease-out forwards",
         "check-erase": "check-erase 0.2s ease-in forwards",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },

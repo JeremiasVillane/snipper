@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
+import { usersRepository } from "@/lib/db/repositories";
 import { cn } from "@/lib/utils";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,15 @@ export default async function DashboardPage() {
 
   const { data, success, error } = await getUserShortLinks().then((res) =>
     getSafeActionResponse(res),
+  );
+
+  const dbUser = await usersRepository.findById(session.user.id);
+
+  const isPremiumOrDemoUser = Boolean(
+    dbUser?.subscriptions
+      .filter((sub) => ["ACTIVE", "TRIALING"].includes(sub.status))
+      .map((s) => s.plan)
+      .some((p) => p.type === "PAID") || dbUser?.role === "DEMO",
   );
 
   if (!success) {
@@ -64,7 +74,7 @@ export default async function DashboardPage() {
         </LinkDialog>
       </div>
 
-      <LinkList links={data} />
+      <LinkList links={data} isPremiumOrDemoUser={isPremiumOrDemoUser} />
       <Tour />
     </main>
   );
