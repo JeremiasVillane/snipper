@@ -90,13 +90,8 @@ export async function dataURLtoFile(
   }
 
   const mime = mimeMatch ? mimeMatch[1] : "";
-  const bstr = atob(arr[1]);
-  let n = bstr.length;
-  const u8arr = new Uint8Array(n);
-
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
+  const buffer = Buffer.from(arr[1], "base64");
+  const u8arr = new Uint8Array(buffer);
 
   const blob = new Blob([u8arr], { type: mime });
   return new File([blob], filename, { type: mime });
