@@ -43,6 +43,7 @@
     "clsx": "^2.1.1",
     "d3-scale": "^4.0.2",
     "date-fns": "^4.1.0",
+    "idb": "^8.0.3",
     "import-in-the-middle": "^1.13.1",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",

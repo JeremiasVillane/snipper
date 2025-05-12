@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ImageIcon, UploadIcon, XIcon } from "lucide-react";
 
 import { FileUploadActions, FileUploadState } from "@/hooks/use-file-upload";
-import { Alert } from "@/components/ui/alert";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
 interface ImgUploaderProps {
@@ -61,9 +61,11 @@ export function ImgUploader({
           />
           {previewUrl ? (
             <div className="absolute inset-0 flex items-center justify-center p-4">
-              <Image
+              <img
                 src={previewUrl}
                 alt={fileName || "Uploaded image"}
+                width={111}
+                height={111}
                 className="mx-auto max-h-full rounded object-contain"
               />
             </div>
@@ -115,8 +117,8 @@ export function ImgUploader({
 
       {/* Display the first error from useFileUpload */}
       {errors.length > 0 && (
-        <Alert withIcon variant="destructive" className="py-2">
-          <span>{errors[0]}</span>
+        <Alert withIcon variant="destructive">
+          <AlertTitle className="font-bold">{errors[0]}</AlertTitle>
         </Alert>
       )}
     </div>

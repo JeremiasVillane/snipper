@@ -1,12 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useFileUpload, type FileWithPreview } from "@/hooks";
 import { Download } from "lucide-react";
 import { QRCodeCanvas } from "qrcode.react";
 
 import { buildShortUrl } from "@/lib/helpers";
+import {
+  dataURLtoFile,
+  loadQrPreferences,
+  saveQrPreferences,
+} from "@/lib/qr-preferences-db";
 import type { ShortLinkFromRepository } from "@/lib/types";
-import { useFileUpload, type FileWithPreview } from "@/hooks/use-file-upload";
 import {
   Accordion,
   AccordionContent,
@@ -53,6 +58,22 @@ export default function QrCodeDialog({
   const [fgColor, setFgColor] = useState(DEFAULT_FG_COLOR);
   const [bgColor, setBgColor] = useState(DEFAULT_BG_COLOR);
 
+  const handleColorChange = (
+    setter: React.Dispatch<React.SetStateAction<string>>,
+  ) => {
+    let lastUpdate = 0;
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      const now = Date.now();
+      if (now - lastUpdate > 50) {
+        setter(e.target.value);
+        lastUpdate = now;
+      }
+    };
+  };
+
+  const handleFgColorChange = useCallback(handleColorChange(setFgColor), []);
+  const handleBgColorChange = useCallback(handleColorChange(setBgColor), []);
+
   const [
     { files, isDragging, errors },
     {
@@ -64,6 +85,7 @@ export default function QrCodeDialog({
       removeFile,
       getInputProps,
       clearFiles,
+      addFiles,
     },
   ] = useFileUpload({
     multiple: false,
@@ -75,6 +97,36 @@ export default function QrCodeDialog({
   const selectedLogoDataUrl = selectedLogoFileWithPreview?.preview || null;
 
   const qrCodeRef = useRef<HTMLCanvasElement>(null);
+
+  // --- Effect to Load preferences when the dialog opens ---
+  useEffect(() => {
+    if (open && link?.shortCode) {
+      const loadPreferences = async () => {
+        try {
+          const preferences = await loadQrPreferences(link.shortCode);
+
+          if (preferences) {
+            setFgColor(preferences.fgColor);
+            setBgColor(preferences.bgColor);
+
+            if (preferences.logoDataUrl && isPremiumOrDemoUser) {
+              if (preferences.logoDataUrl.startsWith("data:")) {
+                const logoFile = await dataURLtoFile(
+                  preferences.logoDataUrl,
+                  `logo_${link.shortCode}`,
+                );
+                addFiles([logoFile]);
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error loading preferences:", error);
+        }
+      };
+
+      loadPreferences();
+    }
+  }, [open, link?.shortCode, isPremiumOrDemoUser]);
 
   const handleDownload = () => {
     const canvas = qrCodeRef.current;
@@ -104,16 +156,55 @@ export default function QrCodeDialog({
 
   const shortUrl = buildShortUrl(link.shortCode);
 
+  const savePreferences = async () => {
+    if (link?.shortCode && isPremiumOrDemoUser) {
+      let logoDataUrl: string | null = null;
+
+      if (files.length > 0) {
+        const file = files[0];
+        logoDataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject();
+          // Use the actual Blob from file object if available
+          const fileToRead = "file" in file ? file.file : file;
+          reader.readAsDataURL(fileToRead as Blob);
+        });
+      }
+
+      const currentPreferences = {
+        fgColor,
+        bgColor,
+        logoDataUrl,
+      };
+
+      try {
+        await saveQrPreferences(link.shortCode, currentPreferences);
+      } catch (error) {
+        console.error(`Error saving preferences: ${error}`);
+      }
+    }
+
+    if (files.length > 0) {
+      requestAnimationFrame(() => clearFiles());
+    }
+    setFgColor(DEFAULT_FG_COLOR);
+    setBgColor(DEFAULT_BG_COLOR);
+  };
+
   return (
     <Credenza
       open={open}
       onOpenChange={(isOpen) => {
         if (!isOpen) {
-          if (files.length > 0) {
-            requestAnimationFrame(() => {
-              clearFiles();
+          savePreferences().catch((error) => {
+            console.error("Failed to save logo configuration:", error);
+            toast({
+              title: "Error",
+              description: "Failed to save logo configuration",
+              type: "error",
             });
-          }
+          });
         }
         onOpenChange(isOpen);
       }}
@@ -187,8 +278,8 @@ export default function QrCodeDialog({
                       <Input
                         id="fgColor"
                         type="color"
-                        value={fgColor}
-                        onChange={(e) => setFgColor(e.target.value)}
+                        defaultValue={fgColor} // Usar defaultValue en lugar de value
+                        onChange={handleFgColorChange}
                         className="h-10 w-full hover:border-muted-foreground/60"
                       />
                     </div>
@@ -198,8 +289,8 @@ export default function QrCodeDialog({
                       <Input
                         id="bgColor"
                         type="color"
-                        value={bgColor}
-                        onChange={(e) => setBgColor(e.target.value)}
+                        defaultValue={bgColor}
+                        onChange={handleBgColorChange}
                         className="h-10 w-full"
                       />
                     </div>
