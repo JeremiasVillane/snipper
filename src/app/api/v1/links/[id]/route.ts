@@ -34,7 +34,7 @@ export async function GET(
     ...shortLink,
     shortUrl,
     qrCodeUrl,
-  });
+  } satisfies APIGetLink);
 }
 
 // PATCH /api/v1/links/[id] - Update a specific link
@@ -74,7 +74,10 @@ export async function PATCH(
       tags: updatedLink.tags,
       utmParams: updatedLink.utmParams,
       qrCodeUrl,
-    });
+      customOgImageUrl: updatedLink.customOgImageUrl,
+      customOgTitle: updatedLink.customOgTitle,
+      customOgDescription: updatedLink.customOgDescription,
+    } satisfies APIGetLink);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -112,5 +115,5 @@ export async function DELETE(
 
   await shortLinksRepository.delete(id);
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true } satisfies APIDeleteLink);
 }

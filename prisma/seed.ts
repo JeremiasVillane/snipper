@@ -143,7 +143,7 @@ async function main() {
       custom: true,
       password: true,
       expiration: true,
-      thumbnail: true,
+      thumbnail: false,
       price: 9.0,
     },
   });

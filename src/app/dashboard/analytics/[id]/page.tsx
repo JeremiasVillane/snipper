@@ -8,7 +8,7 @@ import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getShortLink, getShortLinkAnalytics } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
 import { usersRepository } from "@/lib/db/repositories";
-import { Alert } from "@/components/ui/alert";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   AnalyticsHeader,
@@ -117,7 +117,7 @@ export default async function AnalyticsPage({
     return (
       <main className="container min-h-screen flex-1 py-6">
         <Alert variant="destructive" styleVariant="fill" withIcon>
-          {shortLink.error}
+          <AlertTitle>{shortLink.error}</AlertTitle>
         </Alert>
       </main>
     );
@@ -135,7 +135,7 @@ export default async function AnalyticsPage({
     return (
       <main className="container min-h-screen flex-1 py-6">
         <Alert variant="destructive" styleVariant="fill" withIcon>
-          {ShortLinkAnalytics.error}
+          <AlertTitle>{ShortLinkAnalytics.error}</AlertTitle>
         </Alert>
       </main>
     );

@@ -138,7 +138,7 @@ export function LinkTable({
                     {formatNumber(link.clicks)}
                   </TableCell>
                   <TableCell>
-                    <div className="flex max-w-[150px] flex-wrap gap-1">
+                    <div className="flex max-w-[240px] flex-wrap gap-1">
                       {link.tags.length > 0 ? (
                         link.tags.map((tag) => (
                           <Badge

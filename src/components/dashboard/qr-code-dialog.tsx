@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useFileUpload, type FileWithPreview } from "@/hooks";
 import { Download } from "lucide-react";
 import { QRCodeCanvas } from "qrcode.react";
@@ -324,14 +325,14 @@ export default function QrCodeDialog({
                       Upgrade your plan to access QR Code customization options.
                       <br />
                       <span className="text-sm">
-                        <a
+                        <Link
                           href="/pricing"
                           className="text-blue-500 underline"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           Upgrade Now
-                        </a>
+                        </Link>
                       </span>
                     </AlertDescription>
                   </Alert>

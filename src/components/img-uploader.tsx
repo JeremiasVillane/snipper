@@ -20,6 +20,8 @@ interface ImgUploaderProps {
   errors: FileUploadState["errors"];
   acceptedTypes: string;
   maxSize: number;
+  previewWidth?: number;
+  previewHeight?: number;
 }
 
 export function ImgUploader({
@@ -35,6 +37,8 @@ export function ImgUploader({
   errors,
   acceptedTypes,
   maxSize,
+  previewWidth = 111,
+  previewHeight = 111,
 }: ImgUploaderProps) {
   const previewUrl = files[0]?.preview || null;
   const fileName =
@@ -61,12 +65,13 @@ export function ImgUploader({
           />
           {previewUrl ? (
             <div className="absolute inset-0 flex items-center justify-center p-4">
-              <img
+              <Image
                 src={previewUrl}
                 alt={fileName || "Uploaded image"}
-                width={111}
-                height={111}
+                width={previewWidth}
+                height={previewHeight}
                 className="mx-auto max-h-full rounded object-contain"
+                draggable={false}
               />
             </div>
           ) : (

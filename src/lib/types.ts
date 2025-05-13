@@ -41,6 +41,9 @@ interface ShortLinkBaseResponse {
   clicks: number;
   tags: string[];
   utmParams: UTMParam[];
+  customOgImageUrl: string | null;
+  customOgTitle: string | null;
+  customOgDescription: string | null;
   createdAt: Date;
   expiresAt: Date | null;
 }
@@ -48,6 +51,7 @@ interface ShortLinkBaseResponse {
 export interface ShortLinkFromRepository extends ShortLinkBaseResponse {
   isPasswordEnabled: boolean;
   isExpirationEnabled: boolean;
+  isCustomOgEnabled: boolean;
 }
 
 export type authorizationMiddlewareProps =
@@ -67,7 +71,14 @@ export interface APIGetLink extends ShortLinkBaseResponse {
   qrCodeUrl: string;
 }
 export type APIGetAllLinks = { links: Omit<APIGetLink, "qrCodeUrl">[] };
-export type APIPostLink = Omit<APIGetLink, "userId" | "clicks">;
+export type APIPostLink = Omit<
+  APIGetLink,
+  | "userId"
+  | "clicks"
+  | "customOgImageUrl"
+  | "customOgTitle"
+  | "customOgDescription"
+>;
 export type APIDeleteLink = { success: boolean };
 export type APIGetLinkAnalytics = Omit<
   ShortLinkAnalyticsData,

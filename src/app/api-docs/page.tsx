@@ -149,6 +149,10 @@ export default function ApiDocsPage() {
                                     ),
                                   },
                                 ],
+                                customOgImageUrl: "https://imgurl.com",
+                                customOgTitle: "Custom preview image title",
+                                customOgDescription:
+                                  "Custom preview image description",
                               },
                             ],
                           } satisfies APIGetAllLinks,
@@ -268,6 +272,10 @@ export default function ApiDocsPage() {
                               },
                             ],
                             qrCodeUrl: "data:image/png;base64,...",
+                            customOgImageUrl: "https://imgurl.com",
+                            customOgTitle: "Custom preview image title",
+                            customOgDescription:
+                              "Custom preview image description",
                           } satisfies APIGetLink,
                           null,
                           2,
@@ -330,6 +338,10 @@ export default function ApiDocsPage() {
                               },
                             ],
                             qrCodeUrl: "data:image/png;base64,...",
+                            customOgImageUrl: "https://imgurl.com",
+                            customOgTitle: "Custom preview image title",
+                            customOgDescription:
+                              "Custom preview image description",
                           } satisfies APIGetLink,
                           null,
                           2,

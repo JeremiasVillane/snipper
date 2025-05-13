@@ -7,7 +7,7 @@ import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
 import { usersRepository } from "@/lib/db/repositories";
 import { cn } from "@/lib/utils";
-import { Alert } from "@/components/ui/alert";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { LinkDialog, LinkList } from "@/components/dashboard";
 import { Tour } from "@/components/dashboard/tour";
@@ -45,7 +45,7 @@ export default async function DashboardPage() {
     return (
       <main className="container min-h-screen flex-1 py-6">
         <Alert variant="destructive" styleVariant="fill" withIcon>
-          {error}
+          <AlertTitle>{error}</AlertTitle>
         </Alert>
       </main>
     );

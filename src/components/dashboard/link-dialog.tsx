@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { CalendarIcon, X } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
+import { deleteImage, uploadImage } from "@/lib/actions/dashboard";
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { createShortLink, updateShortLink } from "@/lib/actions/short-links";
 import {
@@ -54,6 +55,7 @@ import { toast } from "@/components/ui/simple-toast";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { OgPreviewCustomizer } from "./og-preview-customizer";
 import { UtmSetDisplay } from "./utm-set-display";
 import { UtmSetForm } from "./utm-set-form";
 
@@ -77,8 +79,10 @@ export function LinkDialog({
     controlledOpen !== undefined && setControlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : internalOpen;
   const onOpenChange = isControlled ? setControlledOpen : setInternalOpen;
+
   const [newTag, setNewTag] = useState("");
   const [editingUtmIndex, setEditingUtmIndex] = useState<number | null>(null);
+  const [ogImageFile, setOgImageFile] = useState<File | null>(null);
 
   const initialFormValuesRef = useRef<CreateLinkFormData | null>(null);
 
@@ -101,6 +105,10 @@ export function LinkDialog({
           term: p.term ?? "",
           content: p.content ?? "",
         })) ?? [],
+      isCustomOgEnabled: data?.isCustomOgEnabled,
+      customOgTitle: data?.customOgTitle ?? null,
+      customOgDescription: data?.customOgDescription ?? null,
+      customOgImageUrl: data?.customOgImageUrl ?? null,
     };
   };
 
@@ -176,11 +184,64 @@ export function LinkDialog({
 
   const onSubmit = async (data: CreateLinkFormData) => {
     try {
+      let customOgImageUrl: string | null = null;
+
+      if (data.isCustomOgEnabled && !!ogImageFile) {
+        const customFile = new File(
+          [ogImageFile],
+          `custom-og-image-${getValues("shortCode")}`,
+          { type: ogImageFile.type },
+        );
+        const { data, success, error } = await uploadImage({
+          file: customFile,
+        }).then((res) => getSafeActionResponse(res));
+
+        if (error) {
+          console.error("Error uploading image:", error);
+          toast({
+            title: "Error uploading image. Try again later.",
+            type: "error",
+          });
+        }
+
+        if (success) customOgImageUrl = data;
+      }
+
+      if (
+        (!data.isCustomOgEnabled || !ogImageFile) &&
+        initialData?.customOgImageUrl
+      ) {
+        const imgsToRemove = initialData.customOgImageUrl
+          .split("/")
+          .at(-1) as string;
+        const { data, success, error } = await deleteImage({
+          imgsToRemove,
+        }).then((res) => getSafeActionResponse(res));
+
+        if (error) {
+          console.error("Error deleting image:", error);
+          toast({
+            title: "Error deleting image. Try again later.",
+            type: "error",
+          });
+        }
+
+        if (success) toast({ title: data.message });
+      }
+
       const dataToSubmit = {
         ...data,
+        id: initialData?.id,
         password: data.isPasswordEnabled ? data.password : undefined,
         expiresAt: data.isExpirationEnabled ? data.expiresAt : undefined,
-        id: initialData?.id,
+        customOgImageUrl,
+        ...(!data.isCustomOgEnabled
+          ? {
+              customOgTitle: null,
+              customOgDescription: null,
+              customOgImageUrl: null,
+            }
+          : {}),
       };
 
       const result = !!initialData
@@ -293,7 +354,8 @@ export function LinkDialog({
                 <TabsList className="mb-4">
                   <TabsTrigger value="basic">Basic</TabsTrigger>
                   <TabsTrigger value="advanced">Advanced</TabsTrigger>
-                  <TabsTrigger value="tracking">UTM Tracking</TabsTrigger>
+                  <TabsTrigger value="tracking">Tracking</TabsTrigger>
+                  <TabsTrigger value="preview">Preview</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="basic">
@@ -565,9 +627,21 @@ export function LinkDialog({
                     </CardContent>
                   </Card>
                 </TabsContent>
+
+                <TabsContent value="preview">
+                  <OgPreviewCustomizer
+                    {...{
+                      control,
+                      setValue,
+                      getValues,
+                      errors,
+                      setOgImageFile,
+                    }}
+                  />
+                </TabsContent>
               </Tabs>
 
-              <div className="mt-6 flex">
+              <div className="flex pb-3 pt-6">
                 <Button
                   type="submit"
                   className="m-0 w-full md:ml-auto md:w-fit"

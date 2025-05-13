@@ -159,19 +159,22 @@ model UTMParam {
 }
 
 model ShortLink {
-  id          String       @id @default(uuid())
-  originalUrl String
-  shortCode   String       @unique
-  expiresAt   DateTime?
-  password    String?
-  userId      String?
-  user        User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
-  clicks      Int          @default(0)
-  clickEvents ClickEvent[]
-  linkTags    LinkTag[]
-  utmParams   UTMParam[]
-  description String?
-  createdAt   DateTime     @default(now())
+  id                  String       @id @default(uuid())
+  originalUrl         String
+  shortCode           String       @unique
+  expiresAt           DateTime?
+  password            String?
+  userId              String?
+  user                User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  clicks              Int          @default(0)
+  clickEvents         ClickEvent[]
+  linkTags            LinkTag[]
+  utmParams           UTMParam[]
+  description         String?
+  customOgImageUrl    String?
+  customOgTitle       String?
+  customOgDescription String?
+  createdAt           DateTime     @default(now())
 }
 
 model ClickEvent {

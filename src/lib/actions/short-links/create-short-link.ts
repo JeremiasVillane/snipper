@@ -42,11 +42,14 @@ export const createShortLink = authActionClient({
           tags: formData.tags,
           expiresAt: formData.expiresAt || null,
           password: formData.password || null,
+          customOgTitle: formData.customOgTitle,
+          customOgDescription: formData.customOgDescription,
+          customOgImageUrl: formData.customOgImageUrl,
         },
         userId,
       );
 
-      revalidatePath("/dashboard/links");
+      revalidatePath("/dashboard");
 
       return result;
     } catch (error) {

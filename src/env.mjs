@@ -10,6 +10,7 @@ export const env = createEnv({
     NEXTAUTH_SECRET: z.string(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
+    UPLOADTHING_TOKEN: z.string(),
     ARCJET_KEY: z.string().optional(),
     SENTRY_ORG: z.string().optional(),
     SENTRY_PROJECT: z.string().optional(),
@@ -28,6 +29,7 @@ export const env = createEnv({
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
     ARCJET_KEY: process.env.ARCJET_KEY,
     SENTRY_ORG: process.env.SENTRY_ORG,
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,
@@ -47,7 +49,7 @@ const publicUrl = process.env.NEXT_PUBLIC_APP_URL || vercelUrl;
 
 if (!publicUrl) {
   throw new Error(
-    "Missing NEXT_PUBLIC_APP_URL or NEXT_PUBLIC_VERCEL_URL variables!"
+    "Missing NEXT_PUBLIC_APP_URL or NEXT_PUBLIC_VERCEL_URL variables!",
   );
 }
 

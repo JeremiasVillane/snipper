@@ -32,6 +32,7 @@ export type FileUploadOptions = {
   initialFiles?: FileMetadata[]
   onFilesChange?: (files: FileWithPreview[]) => void // Callback when files change
   onFilesAdded?: (addedFiles: FileWithPreview[]) => void // Callback when new files are added
+  onFilesRemoved?: () => void // Callback when files are removed
 }
 
 export type FileUploadState = {
@@ -69,6 +70,7 @@ export const useFileUpload = (
     initialFiles = [],
     onFilesChange,
     onFilesAdded,
+    onFilesRemoved,
   } = options
 
   const [state, setState] = useState<FileUploadState>({
@@ -288,6 +290,11 @@ export const useFileUpload = (
 
         const newFiles = prev.files.filter((file) => file.id !== id)
         onFilesChange?.(newFiles)
+        !!onFilesRemoved &&
+          setTimeout(() => {
+            onFilesRemoved();
+          }, 0)
+
 
         return {
           ...prev,

@@ -63,6 +63,17 @@ export function validateShortLinkFeatures(
       errorMessage:
         "Your current plan only allows you to set up three campaigns per link. Upgrade your plan to set unlimited campaigns.",
     },
+    {
+      condition: Boolean(
+        formData?.isCustomOgEnabled ||
+          formData?.customOgImageUrl ||
+          formData?.customOgTitle ||
+          formData?.customOgDescription,
+      ),
+      planAllows: activeUserPlans.some((p) => p.thumbnail),
+      errorMessage:
+        "Your current plan does not allow you to set custom preview images. Upgrade your plan to create personalized, branded links.",
+    },
   ];
 
   validateFeatures(validations);

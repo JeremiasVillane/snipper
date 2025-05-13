@@ -28,9 +28,12 @@ export async function GET(
     clicks: link.clicks,
     tags: link.tags ?? [],
     utmParams: link.utmParams ?? [],
+    customOgImageUrl: link.customOgImageUrl,
+    customOgTitle: link.customOgTitle,
+    customOgDescription: link.customOgDescription,
   }));
 
-  return NextResponse.json({ links: formattedLinks });
+  return NextResponse.json({ links: formattedLinks } satisfies APIGetAllLinks);
 }
 
 // POST /api/v1/links - Create a new short link
@@ -69,7 +72,7 @@ export async function POST(
       tags: shortLink.tags,
       utmParams: shortLink.utmParams,
       qrCodeUrl,
-    });
+    } satisfies APIPostLink);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

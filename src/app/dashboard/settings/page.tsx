@@ -44,12 +44,8 @@ export default async function SettingsPage() {
           withIcon
           className="w-full md:w-2/3 lg:w-1/2"
         >
-          <AlertTitle className="py-0.5">
-            Not available on demo account.
-          </AlertTitle>
-          <AlertDescription className="hidden md:flex">
-            Create an account to proceed.
-          </AlertDescription>
+          <AlertTitle>Not available on demo account.</AlertTitle>
+          <AlertDescription>Create an account to proceed.</AlertDescription>
         </Alert>
       ) : (
         <div className="space-y-6">

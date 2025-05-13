@@ -60,6 +60,24 @@ const formLinkSchema = z.object({
   isPasswordEnabled: z.boolean().optional(),
   password: baseLinkSchema.shape.password,
   utmSets: baseLinkSchema.shape.utmSets,
+  isCustomOgEnabled: z.boolean().optional(),
+  customOgTitle: z
+    .string()
+    .max(70, { message: "Preview title should be 70 characters or less." })
+    .optional()
+    .nullable(),
+  customOgDescription: z
+    .string()
+    .max(200, {
+      message: "Preview description should be 200 characters or less.",
+    })
+    .optional()
+    .nullable(),
+  customOgImageUrl: z
+    .string()
+    .url({ message: "Please provide a valid image URL." })
+    .optional()
+    .nullable(),
 });
 
 export const createLinkSchema = formLinkSchema

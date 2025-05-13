@@ -98,6 +98,10 @@ export const shortLinksRepository = {
         utmParams: createdUtmParams,
         isPasswordEnabled: !!shortLink.password,
         isExpirationEnabled: !!shortLink.expiresAt,
+        isCustomOgEnabled:
+          !!shortLink.customOgImageUrl ||
+          !!shortLink.customOgTitle ||
+          !!shortLink.customOgDescription,
       };
     });
 
@@ -125,8 +129,15 @@ export const shortLinksRepository = {
       clicks: shortLink.clicks,
       tags: shortLink.linkTags.map((lt) => lt.tag.name),
       utmParams: shortLink.utmParams,
+      customOgImageUrl: shortLink.customOgImageUrl,
+      customOgTitle: shortLink.customOgTitle,
+      customOgDescription: shortLink.customOgDescription,
       isPasswordEnabled: !!shortLink.password,
       isExpirationEnabled: !!shortLink.expiresAt,
+      isCustomOgEnabled:
+        !!shortLink.customOgImageUrl ||
+        !!shortLink.customOgTitle ||
+        !!shortLink.customOgDescription,
     };
   },
 
@@ -163,8 +174,15 @@ export const shortLinksRepository = {
       clicks: link.clicks,
       tags: link.linkTags.map((lt) => lt.tag.name),
       utmParams: link.utmParams,
+      customOgImageUrl: link.customOgImageUrl,
+      customOgTitle: link.customOgTitle,
+      customOgDescription: link.customOgDescription,
       isPasswordEnabled: !!link.password,
       isExpirationEnabled: !!link.expiresAt,
+      isCustomOgEnabled:
+        !!link.customOgImageUrl ||
+        !!link.customOgTitle ||
+        !!link.customOgDescription,
     }));
   },
 
@@ -199,9 +217,11 @@ export const shortLinksRepository = {
       await tx.shortLink.update({
         where: { id: linkId },
         data: {
-          originalUrl: data.originalUrl,
           expiresAt: data.expiresAt,
           password,
+          customOgTitle: data.customOgTitle,
+          customOgDescription: data.customOgDescription,
+          customOgImageUrl: data.customOgImageUrl,
         },
       });
 
