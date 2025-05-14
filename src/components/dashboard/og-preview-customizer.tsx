@@ -253,7 +253,11 @@ export function OgPreviewCustomizer({
               title={customOgTitle}
               description={customOgDescription}
               imageUrl={currentImageUrl}
-              siteName={new URL(getValues("originalUrl")).host}
+              siteName={
+                !!getValues("originalUrl")
+                  ? new URL(getValues("originalUrl")).host
+                  : "your-url.com"
+              }
             />
           </div>
         )}

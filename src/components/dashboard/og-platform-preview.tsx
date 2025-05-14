@@ -66,10 +66,10 @@ export function OGPlatformPreview({
         <div className="w-full max-w-96 border border-gray-300">
           <CommonPreview imageUrl={currentImageUrl} />
           <div className="grid gap-1 border-t border-gray-300 bg-[#f2f3f5] p-2">
-            <p className="text-xs uppercase text-foreground/80 md:text-sm">
+            <p className="text-xs uppercase text-[#606660] md:text-sm">
               {siteName}
             </p>
-            <p className="truncate text-xs font-bold text-[#1d2129] md:text-sm">
+            <p className="truncate text-xs font-bold text-[#1d2121] md:text-sm">
               {currentTitle}
             </p>
             <p className="mb-1 line-clamp-2 max-h-10 w-full rounded-md text-xs text-muted-foreground md:text-sm">
@@ -83,7 +83,7 @@ export function OGPlatformPreview({
         value="instagram"
         className="flex flex-grow items-center justify-center"
       >
-        <div className="grid max-w-96 grid-cols-2 gap-3 rounded-lg border border-[#8c8c8c33] px-4 py-3">
+        <div className="grid max-w-96 grid-cols-2 gap-3 rounded-lg border border-[#9c9c9c33] px-4 py-3">
           <div className="overflow-hidden rounded-lg">
             <CommonPreview imageUrl={currentImageUrl} />
           </div>
@@ -106,14 +106,14 @@ export function OGPlatformPreview({
           <div className="relative overflow-hidden rounded-2xl border border-gray-300">
             <CommonPreview imageUrl={currentImageUrl} />
             <div className="absolute bottom-2 left-0 w-full px-2">
-              <div className="w-fit max-w-full rounded bg-black/[0.77] px-1.5 py-px">
+              <div className="w-fit max-w-full rounded bg-black/[0.66] px-1.5 py-px">
                 <span className="block max-w-sm truncate text-xs text-white md:text-sm">
                   {currentTitle}
                 </span>
               </div>
             </div>
           </div>
-          <p className="mt-1 text-xs text-[#606770] md:text-sm">
+          <p className="mt-1 text-xs text-[#606660] md:text-sm">
             From {siteName}
           </p>
         </div>
