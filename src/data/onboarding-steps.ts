@@ -2,7 +2,7 @@ import { Step } from "@/components/ui/intro-disclosure";
 
 export const onboardingSteps: Step[] = [
   {
-    title: "Welcome to Snipper!",
+    title: "Welcome!",
     short_description: "Your new link management hub.",
     full_description:
       "Welcome aboard! We're excited to have you. Let's take a quick tour to show you how Snipper helps you shorten, manage, and track your links effortlessly.",
@@ -19,7 +19,14 @@ export const onboardingSteps: Step[] = [
       "Ready to shorten? Just paste your long URL into the main input field. You can also add a custom alias to personalize it. Hit 'Create Link', and your short link is ready!",
     media: {
       type: "image",
-      src: "/onboarding/create-link-step.gif",
+      src: [
+        "/onboarding/create-link-step-01.png",
+        "/onboarding/create-link-step-02.png",
+        "/onboarding/create-link-step-03.png",
+        "/onboarding/create-link-step-04.png",
+        "/onboarding/create-link-step-05.png",
+        "/onboarding/create-link-step-06.png",
+      ],
       alt: "Creating short link",
     },
   },
@@ -30,7 +37,11 @@ export const onboardingSteps: Step[] = [
       "All the links you create are neatly organized in your dashboard. From here, you can easily copy, edit details, view stats, or delete them whenever needed.",
     media: {
       type: "image",
-      src: "/onboarding/dashboard-overview.gif",
+      src: [
+        "/onboarding/dashboard-overview-01.png",
+        "/onboarding/dashboard-overview-02.png",
+        "/onboarding/dashboard-overview-03.png",
+      ],
       alt: "Overview of the user's link dashboard",
     },
   },
@@ -41,7 +52,14 @@ export const onboardingSteps: Step[] = [
       "Curious about clicks? Select any link in your dashboard to dive into detailed analytics. Discover click counts, visitor locations, device types, and more.",
     media: {
       type: "image",
-      src: "/onboarding/analytics-preview.gif",
+      src: [
+        "/onboarding/analytics-preview-01.png",
+        "/onboarding/analytics-preview-02.png",
+        "/onboarding/analytics-preview-03.png",
+        "/onboarding/analytics-preview-04.png",
+        "/onboarding/analytics-preview-05.png",
+        "/onboarding/analytics-preview-06.png",
+      ],
       alt: "Preview of the link analytics chart and data",
     },
   },
@@ -52,7 +70,12 @@ export const onboardingSteps: Step[] = [
       "Keep your links tidy by assigning tags. This makes it simple to categorize them. Later, use the search and filter options to find exactly what you need, fast.",
     media: {
       type: "image",
-      src: "/onboarding/tags-feature.gif",
+      src: [
+        "/onboarding/tags-feature-01.png",
+        "/onboarding/tags-feature-02.png",
+        "/onboarding/tags-feature-03.png",
+        "/onboarding/tags-feature-04.png",
+      ],
       alt: "Illustration showing how to add tags to links",
     },
   },
@@ -63,7 +86,14 @@ export const onboardingSteps: Step[] = [
       "Snipper offers more! Don't forget to explore other powerful features like generating QR Codes for offline sharing or securing links with passwords and expiration dates.",
     media: {
       type: "image",
-      src: "/onboarding/advanced-features.gif",
+      src: [
+        "/onboarding/advanced-features-01.png",
+        "/onboarding/advanced-features-02.png",
+        "/onboarding/advanced-features-03.png",
+        "/onboarding/advanced-features-04.png",
+        "/onboarding/advanced-features-05.png",
+        "/onboarding/advanced-features-06.png",
+      ],
       alt: "Collage of advanced features",
     },
   },

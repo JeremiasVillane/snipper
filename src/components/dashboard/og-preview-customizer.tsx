@@ -29,8 +29,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/simple-toast";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { ImgUploader } from "@/components/img-uploader";
 
+import { ImgUploader } from "./img-uploader";
 import { OGPlatformPreview } from "./og-platform-preview";
 
 interface OgPreviewCustomizerProps {

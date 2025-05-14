@@ -33,7 +33,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/simple-toast";
-import { ImgUploader } from "@/components/img-uploader";
+
+import { ImgUploader } from "./img-uploader";
 
 interface QrCodeDialogProps {
   link: ShortLinkFromRepository;
