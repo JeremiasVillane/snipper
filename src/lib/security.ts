@@ -56,3 +56,32 @@ export async function protectRequest(
     ip,
   };
 }
+
+export async function validateEmail(
+  email: string,
+): Promise<{ risk: "high" | "medium" | "low"; autocorrect?: string }> {
+  if (!env.ABSTRACT_API_KEY) {
+    console.warn(`Abstract API key not configured. Email validation disabled.`);
+    return { risk: "low" };
+  }
+
+  const response = await fetch(
+    `https://emailvalidation.abstractapi.com/v1/?api_key=${env.ABSTRACT_API_KEY}&email=${email}`,
+  );
+  const data = await response.json();
+
+  if (data.deliverability === "UNDELIVERABLE")
+    return { risk: "high", autocorrect: data.autocorrect };
+  if (data.is_disposable_email.value)
+    return { risk: "high", autocorrect: data.autocorrect };
+  if (!data.is_valid_format.value)
+    return { risk: "high", autocorrect: data.autocorrect };
+  if (!data.is_mx_found.value)
+    return { risk: "high", autocorrect: data.autocorrect };
+  if (!data.is_smtp_valid.value)
+    return { risk: "high", autocorrect: data.autocorrect };
+  if (data.quality_score < 0.5)
+    return { risk: "medium", autocorrect: data.autocorrect };
+
+  return { risk: "low", autocorrect: data.autocorrect };
+}

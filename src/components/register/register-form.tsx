@@ -45,19 +45,30 @@ export function RegisterForm() {
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(
-          data.error || "Failed to create account. Please try again.",
-        );
-      }
+      if (data?.autocorrect.length > 0) {
+        toast({
+          title: data.error,
+          description: `Did you mean ${data.autocorrect}?`,
+          type: "warning",
+          position: "top-center",
+          enterAnimationType: "zoom-in",
+          showProgressBar: false,
+          duration: 5000,
+        });
+        form.setValue("email", data.autocorrect);
+      } else {
+        toast({
+          title: data?.success ? "Success!" : "Error",
+          description: data?.success
+            ? "Your account has been created successfully."
+            : data.error,
+          type: data?.success ? "success" : "error",
+        });
 
-      toast({
-        title: "Success!",
-        description: "Your account has been created successfully.",
-        type: "success",
-      });
-      router.push("/dashboard");
-      router.refresh();
+        data.success && router.push("/dashboard");
+
+        router.refresh();
+      }
     } catch (error: unknown) {
       console.error("Registration error:", error);
       const errorMessage =
