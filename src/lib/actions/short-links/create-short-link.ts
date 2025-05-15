@@ -45,6 +45,7 @@ export const createShortLink = authActionClient({
           customOgTitle: formData.customOgTitle,
           customOgDescription: formData.customOgDescription,
           customOgImageUrl: formData.customOgImageUrl,
+          customDomain: formData.customDomain,
         },
         userId,
       );

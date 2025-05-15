@@ -111,7 +111,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
         >
           {startAddon && (
-            <div className="flex select-none items-center border-r border-input bg-accent px-3 text-foreground/80">
+            <div className="flex select-none items-center border-r border-input bg-muted/60 px-3 text-foreground/80">
               {startAddon}
             </div>
           )}

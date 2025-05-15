@@ -156,7 +156,7 @@ export default function QrCodeDialog({
     });
   };
 
-  const shortUrl = buildShortUrl(link.shortCode);
+  const shortUrl = buildShortUrl(link.shortCode, link.customDomain?.domain);
 
   const savePreferences = async () => {
     if (link?.shortCode && isPremiumOrDemoUser) {

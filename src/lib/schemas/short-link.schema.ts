@@ -1,14 +1,22 @@
 import { z } from "zod";
 
+import { REGEX, reservedWords } from "../constants";
+import { customDomainSchema } from "./custom-domain.schema";
 import { utmSetSchema } from "./utm-param.schema";
 
 export const shortCodeSchema = z
   .string()
   .min(3, { message: "Alias must be at least 3 characters" })
   .max(15, { message: "Alias cannot exceed 15 characters" })
-  .regex(/^[a-zA-Z0-9-_]+$/, {
+  .regex(REGEX.shortCode, {
     message: "Only alphanumeric, hyphen, underscore allowed",
-  });
+  })
+  .refine(
+    (data) => data === "" || !reservedWords.includes(data.toLowerCase()),
+    {
+      message: "This alias is reserved and cannot be used.",
+    },
+  );
 
 export const shortLinkPassword = z.string().superRefine((val, ctx) => {
   if (val === "") {
@@ -78,6 +86,7 @@ const formLinkSchema = z.object({
     .url({ message: "Please provide a valid image URL." })
     .optional()
     .nullable(),
+  customDomain: customDomainSchema.optional().nullable(),
 });
 
 export const createLinkSchema = formLinkSchema

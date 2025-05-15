@@ -4,7 +4,10 @@ import { shortLinksRepository } from "@/lib/db/repositories";
 
 import { authActionClient } from "../safe-action";
 
-export const getUserShortLinks = authActionClient({})
+export const getUserShortLinks = authActionClient({
+  roles: "ALL",
+  plans: "ALL",
+})
   .metadata({
     name: "get-user-short-links",
     limiter: {
@@ -16,5 +19,5 @@ export const getUserShortLinks = authActionClient({})
   })
   .action(async ({ ctx }) => {
     const { userId } = ctx;
-    return shortLinksRepository.findByUserId(userId);
+    return await shortLinksRepository.findByUserId(userId);
   });

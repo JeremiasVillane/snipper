@@ -10,8 +10,11 @@ import "@/styles/globals.css";
 
 import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
+import { headers } from "next/headers";
 import { PageTracker } from "react-page-tracker";
 import { WebSite, WithContext } from "schema-dts";
+
+import { extractSubdomainFromHost } from "@/lib/helpers";
 
 const nunito = Nunito_Sans({ subsets: ["latin"] });
 
@@ -63,11 +66,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const resolvedHeaders = await headers();
+  const host = resolvedHeaders.get("host") || "";
+  const subdomain = extractSubdomainFromHost(host);
+
   const jsonLd: WithContext<WebSite> = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -86,7 +93,7 @@ export default function RootLayout({
         />
 
         <Providers>
-          <SiteHeader />
+          {!subdomain && <SiteHeader />}
 
           <div className="fixed bottom-0 left-0 right-0 top-16 overflow-y-auto">
             <div className="flex min-h-[calc(100vh-4rem)] flex-col">

@@ -21,7 +21,7 @@ export async function GET(
     id: link.id,
     userId: link.userId,
     originalUrl: link.originalUrl,
-    shortUrl: buildShortUrl(link.shortCode),
+    shortUrl: buildShortUrl(link.shortCode, link.customDomain?.domain),
     shortCode: link.shortCode,
     createdAt: link.createdAt,
     expiresAt: link.expiresAt,

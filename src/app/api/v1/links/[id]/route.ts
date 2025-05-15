@@ -27,7 +27,10 @@ export async function GET(
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const shortUrl = buildShortUrl(shortLink.shortCode);
+  const shortUrl = buildShortUrl(
+    shortLink.shortCode,
+    shortLink.customDomain?.domain,
+  );
   const qrCodeUrl = await generateQRCode(shortUrl);
 
   return NextResponse.json({
@@ -59,7 +62,10 @@ export async function PATCH(
       validatedData,
     );
 
-    const shortUrl = buildShortUrl(updatedLink.shortCode);
+    const shortUrl = buildShortUrl(
+      updatedLink.shortCode,
+      updatedLink.customDomain?.domain,
+    );
     const qrCodeUrl = await generateQRCode(shortUrl);
 
     return NextResponse.json({

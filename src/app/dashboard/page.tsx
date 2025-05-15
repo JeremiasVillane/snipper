@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
 
+import { getUserCustomDomains } from "@/lib/actions/custom-domains";
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
@@ -28,9 +29,17 @@ export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  const { data, success, error } = await getUserShortLinks().then((res) =>
-    getSafeActionResponse(res),
-  );
+  const {
+    data: linksData,
+    success: linksSuccess,
+    error: linksError,
+  } = await getUserShortLinks().then((res) => getSafeActionResponse(res));
+
+  const {
+    data: customDomainsData,
+    success: cusomDomainsSucess,
+    error: customDomainsError,
+  } = await getUserCustomDomains().then((res) => getSafeActionResponse(res));
 
   const dbUser = await usersRepository.findById(session.user.id);
 
@@ -41,11 +50,11 @@ export default async function DashboardPage() {
       .some((p) => p.type === "PAID") || dbUser?.role === "DEMO",
   );
 
-  if (!success) {
+  if (!linksSuccess || !cusomDomainsSucess) {
     return (
       <main className="container min-h-screen flex-1 py-6">
         <Alert variant="destructive" styleVariant="fill" withIcon>
-          <AlertTitle>{error}</AlertTitle>
+          <AlertTitle>{linksError ?? customDomainsError}</AlertTitle>
         </Alert>
       </main>
     );
@@ -60,13 +69,13 @@ export default async function DashboardPage() {
             Manage and track your shortened links
           </p>
         </div>
-        <LinkDialog>
+        <LinkDialog userCustomDomains={customDomainsData}>
           <Button
             iconLeft={<Plus className="size-4" />}
             iconAnimation="zoomIn"
             className={cn(
               "hidden h-9 md:flex md:h-10",
-              data.length > 0 ? "flex" : "",
+              linksData.length > 0 ? "flex" : "",
             )}
           >
             Create Link
@@ -74,7 +83,11 @@ export default async function DashboardPage() {
         </LinkDialog>
       </div>
 
-      <LinkList links={data} isPremiumOrDemoUser={isPremiumOrDemoUser} />
+      <LinkList
+        links={linksData}
+        isPremiumOrDemoUser={isPremiumOrDemoUser}
+        userCustomDomains={customDomainsData}
+      />
       <Tour />
     </main>
   );

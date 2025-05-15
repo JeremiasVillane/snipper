@@ -86,7 +86,8 @@ export function AnalyticsHeader({
             </Link>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Short URL: {buildShortUrl(shortLink.shortCode)}
+            Short URL:{" "}
+            {buildShortUrl(shortLink.shortCode, shortLink.customDomain?.domain)}
           </p>
         </CardContent>
       </Card>

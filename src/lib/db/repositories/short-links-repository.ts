@@ -1,4 +1,4 @@
-import { UTMParam } from "@prisma/client";
+import { CustomDomain, UTMParam } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { generateShortCode } from "@/lib/helpers";
@@ -36,11 +36,15 @@ export const shortLinksRepository = {
     const result = await prisma.$transaction(async (tx) => {
       const shortLink = await tx.shortLink.create({
         data: {
-          ...data,
+          originalUrl: data.originalUrl,
           shortCode,
+          expiresAt: data.expiresAt,
           password,
           clicks: 0,
           user: { connect: { id: userId } },
+          customOgImageUrl: data.customOgImageUrl,
+          customOgTitle: data.customOgTitle,
+          customOgDescription: data.customOgDescription,
         },
       });
 
@@ -92,10 +96,46 @@ export const shortLinksRepository = {
         );
       }
 
+      let createdCustomDomain: CustomDomain | null = null;
+      if (!!data.customDomain) {
+        const existingCustomDomain = await tx.customDomain.findUnique({
+          where: { domain: data.customDomain },
+        });
+        if (existingCustomDomain) {
+          throw new Error(
+            `The custom domain "${data.customDomain}" already exists. Please choose another one.`,
+          );
+        }
+
+        createdCustomDomain = await tx.customDomain.findFirst({
+          where: { domain: data.customDomain, userId },
+        });
+        if (createdCustomDomain) {
+          throw new Error(
+            `The custom domain "${data.customDomain}" already exists in your dashboard. Please choose another one.`,
+          );
+        }
+
+        createdCustomDomain = await tx.customDomain.create({
+          data: {
+            domain: data.customDomain,
+            user: { connect: { id: userId } },
+          },
+        });
+        await tx.shortLink.update({
+          where: { id: shortLink.id },
+          data: { customDomain: { connect: { id: createdCustomDomain.id } } },
+        });
+        console.log(
+          `Created custom domain ${createdCustomDomain.domain} for link ${shortLink.id}`,
+        );
+      }
+
       return {
         ...shortLink,
         tags: createdTags.map((t) => t.name),
         utmParams: createdUtmParams,
+        customDomain: createdCustomDomain,
         isPasswordEnabled: !!shortLink.password,
         isExpirationEnabled: !!shortLink.expiresAt,
         isCustomOgEnabled:
@@ -116,6 +156,7 @@ export const shortLinksRepository = {
           include: { tag: true },
         },
         utmParams: true,
+        customDomain: true,
       },
     });
     if (!shortLink) return null;
@@ -123,6 +164,7 @@ export const shortLinksRepository = {
       id: shortLink.id,
       originalUrl: shortLink.originalUrl,
       shortCode: shortLink.shortCode,
+      customDomain: shortLink.customDomain,
       createdAt: shortLink.createdAt,
       expiresAt: shortLink.expiresAt,
       userId: shortLink.userId,
@@ -144,6 +186,7 @@ export const shortLinksRepository = {
   async findByShortCode(shortCode: string) {
     return await prisma.shortLink.findUnique({
       where: { shortCode },
+      include: { customDomain: true },
     });
   },
 
@@ -162,12 +205,14 @@ export const shortLinksRepository = {
           include: { tag: true },
         },
         utmParams: true,
+        customDomain: true,
       },
     });
     return shortLinks.map((link) => ({
       id: link.id,
       originalUrl: link.originalUrl,
       shortCode: link.shortCode,
+      customDomain: link.customDomain,
       createdAt: link.createdAt,
       expiresAt: link.expiresAt,
       userId: link.userId,
@@ -184,6 +229,18 @@ export const shortLinksRepository = {
         !!link.customOgTitle ||
         !!link.customOgDescription,
     }));
+  },
+
+  async findByShortCodeAndDomain(shortCode: string, domainId: string) {
+    return prisma.shortLink.findFirst({
+      where: {
+        shortCode,
+        AND: [
+          { customDomainId: domainId },
+          { user: { customDomains: { some: { id: domainId } } } },
+        ],
+      },
+    });
   },
 
   async update(linkId: string, userId: string, data: UpdateLinkFormData) {
@@ -270,6 +327,29 @@ export const shortLinksRepository = {
         );
       }
 
+      let createdCustomDomain: CustomDomain | null = null;
+      if (!!data.customDomain) {
+        if (shortLink.customDomain?.domain !== data.customDomain) {
+          createdCustomDomain = await tx.customDomain.upsert({
+            where: { domain: data.customDomain },
+            create: {
+              domain: data.customDomain,
+              user: { connect: { id: userId } },
+            },
+            update: {},
+          });
+
+          await tx.shortLink.update({
+            where: { id: linkId },
+            data: { customDomain: { connect: { id: createdCustomDomain.id } } },
+          });
+
+          console.log(
+            `Created custom domain ${createdCustomDomain.domain} for link ${linkId}`,
+          );
+        }
+      }
+
       return {
         ...shortLink,
         tags:
@@ -280,6 +360,7 @@ export const shortLinksRepository = {
           createdUtmParams.length > 0
             ? createdUtmParams
             : (shortLink.utmParams ?? []),
+        customDomain: createdCustomDomain ?? shortLink.customDomain,
       };
     });
 

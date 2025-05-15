@@ -1,8 +1,14 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
+import { publicUrl } from "@/env.mjs";
 
 import { processShortLink } from "@/lib/actions/short-links";
-import { shortLinksRepository } from "@/lib/db/repositories";
+import {
+  customDomainsRepository,
+  shortLinksRepository,
+} from "@/lib/db/repositories";
+import { extractSubdomainFromHost } from "@/lib/helpers";
 import { PasswordProtection } from "@/components/shortCode/password-protection";
 
 interface GenerateMetadataProps {
@@ -133,8 +139,13 @@ export default async function ShortCodePage({
 }: ShortCodePageProps) {
   const { shortCode } = await params;
   const resolvedSearchParams = await searchParams;
+  const resolvedHeaders = await headers();
+  const host = resolvedHeaders.get("host") || "";
+  const subdomain = extractSubdomainFromHost(host);
 
   if (["ggl", "ghub", "lkdn", "demo", "blog"].includes(shortCode)) {
+    if (subdomain) redirect(publicUrl);
+
     const demoUrlsMap: Record<string, string> = {
       ggl: "https://google.com",
       ghub: "https://github.com",
@@ -146,7 +157,24 @@ export default async function ShortCodePage({
     redirect(demoUrlsMap[shortCode]);
   }
 
-  const shortLink = await shortLinksRepository.findByShortCode(shortCode);
+  let shortLink;
+
+  if (subdomain) {
+    const customDomain = await customDomainsRepository.findByDomainAndShortCode(
+      subdomain,
+      shortCode,
+    );
+
+    if (!customDomain) notFound();
+
+    shortLink = await shortLinksRepository.findByShortCodeAndDomain(
+      shortCode,
+      customDomain.id,
+    );
+  } else {
+    shortLink = await shortLinksRepository.findByShortCode(shortCode);
+    if (!!shortLink?.customDomainId) return notFound();
+  }
 
   if (!shortLink || (shortLink.expiresAt && shortLink.expiresAt < new Date())) {
     notFound();

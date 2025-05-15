@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CustomDomain } from "@prisma/client";
 import { format } from "date-fns";
 import { CalendarIcon, X } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -55,6 +56,7 @@ import { toast } from "@/components/ui/simple-toast";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { ShortLinkInput } from "./link-input";
 import { OgPreviewCustomizer } from "./og-preview-customizer";
 import { UtmSetDisplay } from "./utm-set-display";
 import { UtmSetForm } from "./utm-set-form";
@@ -64,6 +66,7 @@ interface LinkDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   initialData?: ShortLinkFromRepository;
+  userCustomDomains: CustomDomain[];
 }
 
 export function LinkDialog({
@@ -71,6 +74,7 @@ export function LinkDialog({
   open: controlledOpen,
   onOpenChange: setControlledOpen,
   initialData,
+  userCustomDomains,
 }: LinkDialogProps) {
   const router = useRouter();
 
@@ -109,6 +113,7 @@ export function LinkDialog({
       customOgTitle: data?.customOgTitle ?? null,
       customOgDescription: data?.customOgDescription ?? null,
       customOgImageUrl: data?.customOgImageUrl ?? null,
+      customDomain: data?.customDomain?.domain ?? null,
     };
   };
 
@@ -383,28 +388,8 @@ export function LinkDialog({
                         )}
                       />
 
-                      <FormField
-                        control={control}
-                        name="shortCode"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Custom Alias</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="my-custom-link"
-                                autoComplete="off"
-                                value={field.value ?? ""}
-                                disabled={!!initialData}
-                              />
-                            </FormControl>
-                            <FormDescription>
-                              Memorable link alias (3-15 characters). Leave
-                              blank for random.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                      <ShortLinkInput
+                        {...{ form, userCustomDomains, initialData }}
                       />
 
                       <FormItem>

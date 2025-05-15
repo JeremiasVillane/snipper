@@ -40,7 +40,7 @@ export async function generateMetadata({
     openGraph: {
       title: "Password Protected Link - Snipper",
       description: "Access to this link requires a password.",
-      url: buildShortUrl(shortCode),
+      url: buildShortUrl(shortLink.shortCode, shortLink.customDomain?.domain),
       type: "website",
       images: [
         {

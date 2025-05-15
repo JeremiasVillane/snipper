@@ -1,4 +1,10 @@
-import { ClickEvent, Plan, UserRole, UTMParam } from "@prisma/client";
+import {
+  ClickEvent,
+  CustomDomain,
+  Plan,
+  UserRole,
+  UTMParam,
+} from "@prisma/client";
 
 export type ShortLinkAnalyticsData = {
   totalClicks: number;
@@ -44,6 +50,7 @@ interface ShortLinkBaseResponse {
   customOgImageUrl: string | null;
   customOgTitle: string | null;
   customOgDescription: string | null;
+  customDomain: CustomDomain | null;
   createdAt: Date;
   expiresAt: Date | null;
 }
@@ -66,7 +73,8 @@ export type authorizationMiddlewareProps =
 
 ///------ API Endpoints Types ------///
 
-export interface APIGetLink extends ShortLinkBaseResponse {
+export interface APIGetLink
+  extends Omit<ShortLinkBaseResponse, "customDomain"> {
   shortUrl: string;
   qrCodeUrl: string;
 }

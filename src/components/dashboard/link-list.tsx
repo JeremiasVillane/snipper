@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import { CustomDomain } from "@prisma/client";
 import {
   CircleXIcon,
   Filter,
@@ -32,9 +33,14 @@ import QrCodeDialog from "./qr-code-dialog";
 interface LinkListProps {
   links: ShortLinkFromRepository[];
   isPremiumOrDemoUser: boolean;
+  userCustomDomains: CustomDomain[];
 }
 
-export function LinkList({ links, isPremiumOrDemoUser }: LinkListProps) {
+export function LinkList({
+  links,
+  isPremiumOrDemoUser,
+  userCustomDomains,
+}: LinkListProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useQueryState(
     "search",
@@ -113,7 +119,7 @@ export function LinkList({ links, isPremiumOrDemoUser }: LinkListProps) {
         <p className="mb-4 mt-1 text-muted-foreground">
           Create your first shortened link to get started
         </p>
-        <LinkDialog>
+        <LinkDialog userCustomDomains={userCustomDomains}>
           <Button className="flex md:hidden">Create Link</Button>
         </LinkDialog>
       </div>
@@ -221,6 +227,7 @@ export function LinkList({ links, isPremiumOrDemoUser }: LinkListProps) {
 
       {editingLink && (
         <LinkDialog
+          userCustomDomains={userCustomDomains}
           initialData={editingLink}
           open={!!editingLink}
           onOpenChange={() => setEditingLink(null)}

@@ -105,7 +105,7 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
           <LineChart className="size-full p-3 text-muted-foreground hover:text-primary" />
         </Link>
         <Link
-          href={buildShortUrl(link.shortCode)}
+          href={buildShortUrl(link.shortCode, link.customDomain?.domain)}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Visit Short Link"

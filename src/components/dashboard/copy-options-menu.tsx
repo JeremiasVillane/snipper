@@ -30,7 +30,7 @@ export function CopyOptionsMenu({
   isExpired,
   className,
 }: CopyOptionsMenuProps) {
-  const baseShortUrl = buildShortUrl(link.shortCode);
+  const baseShortUrl = buildShortUrl(link.shortCode, link.customDomain?.domain);
   const hasUtmParams = link.utmParams && link.utmParams.length > 0;
 
   return (
@@ -40,7 +40,7 @@ export function CopyOptionsMenu({
           variant="ghost"
           size="icon"
           className={cn(
-            "h-7 w-7 shrink-0 text-muted-foreground hover:text-primary",
+            "h-7 w-7 shrink-0 text-muted-foreground hover:bg-transparent hover:text-primary",
             className,
           )}
           disabled={isExpired}

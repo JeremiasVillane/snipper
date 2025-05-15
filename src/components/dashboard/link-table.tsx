@@ -56,7 +56,7 @@ export function LinkTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[180px] pe-0 ps-4">Short URL</TableHead>
+            <TableHead className="w-[180px] pe-0 ps-4">Short Code</TableHead>
             <TableHead>Original URL</TableHead>
             <TableHead>Created</TableHead>
             <TableHead>Expires</TableHead>
@@ -78,7 +78,10 @@ export function LinkTable({
                   <TableCell className="pe-1 ps-4 font-medium">
                     <div className="flex items-center justify-start gap-2">
                       <Link
-                        href={`/${link.shortCode}`}
+                        href={buildShortUrl(
+                          link.shortCode,
+                          link.customDomain?.domain,
+                        )}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={cn(
@@ -87,7 +90,10 @@ export function LinkTable({
                             ? "cursor-not-allowed text-destructive"
                             : "",
                         )}
-                        title={buildShortUrl(link.shortCode)}
+                        title={buildShortUrl(
+                          link.shortCode,
+                          link.customDomain?.domain,
+                        )}
                         aria-disabled={isExpired}
                         onClick={(e) => isExpired && e.preventDefault()}
                       >
