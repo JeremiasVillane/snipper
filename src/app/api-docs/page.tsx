@@ -115,6 +115,11 @@ export default function ApiDocsPage() {
                     <h4 className="text-lg font-semibold">/api/v1/links</h4>
                   </div>
                   <p>List all your short links.</p>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Rate Limiting:</strong> Allow up to 5 requests per
+                    15 seconds (capacity: 100).
+                  </p>
+
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
                     <pre className="overflow-x-auto rounded-md bg-muted p-4">
@@ -155,6 +160,7 @@ export default function ApiDocsPage() {
                                   "Custom preview image description",
                               },
                             ],
+                            remaining: 100,
                           } satisfies APIGetAllLinks,
                           null,
                           2,
@@ -172,6 +178,11 @@ export default function ApiDocsPage() {
                     <h4 className="text-lg font-semibold">/api/v1/links</h4>
                   </div>
                   <p>Create a new short link.</p>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Rate Limiting:</strong> Allow up to 1 request per 10
+                    seconds (capacity: 100).
+                  </p>
+
                   <div className="space-y-2">
                     <h5 className="font-semibold">Request Body</h5>
                     <pre className="overflow-x-auto rounded-md bg-muted p-4">
@@ -205,27 +216,34 @@ export default function ApiDocsPage() {
                       <code>
                         {JSON.stringify(
                           {
-                            id: "link_id",
-                            originalUrl: "https://example.com",
-                            shortUrl: "https://snppr.link/my-link",
-                            shortCode: "my-link",
-                            createdAt: new Date("2025-01-01T00:00:00.000Z"),
-                            expiresAt: new Date("2025-12-31T23:59:59.999Z"),
-                            tags: ["marketing", "social"],
-                            utmParams: [
-                              {
-                                id: "utm_param_id",
-                                source: "facebook",
-                                medium: "social",
-                                campaign: "summer_sale",
-                                term: "running+shoes",
-                                content: "logo_link",
-                                shortLinkId: "link_id",
-                                createdAt: new Date("2025-01-01T00:00:00.000Z"),
-                                updatedAt: new Date("2025-01-01T00:00:00.000Z"),
-                              },
-                            ],
-                            qrCodeUrl: "data:image/png;base64,...",
+                            link: {
+                              id: "link_id",
+                              originalUrl: "https://example.com",
+                              shortUrl: "https://snppr.link/my-link",
+                              shortCode: "my-link",
+                              createdAt: new Date("2025-01-01T00:00:00.000Z"),
+                              expiresAt: new Date("2025-12-31T23:59:59.999Z"),
+                              tags: ["marketing", "social"],
+                              utmParams: [
+                                {
+                                  id: "utm_param_id",
+                                  source: "facebook",
+                                  medium: "social",
+                                  campaign: "summer_sale",
+                                  term: "running+shoes",
+                                  content: "logo_link",
+                                  shortLinkId: "link_id",
+                                  createdAt: new Date(
+                                    "2025-01-01T00:00:00.000Z",
+                                  ),
+                                  updatedAt: new Date(
+                                    "2025-01-01T00:00:00.000Z",
+                                  ),
+                                },
+                              ],
+                              qrCodeUrl: "data:image/png;base64,...",
+                            },
+                            remaining: 100,
                           } satisfies APIPostLink,
                           null,
                           2,
@@ -243,39 +261,51 @@ export default function ApiDocsPage() {
                     <h4 className="text-lg font-semibold">/api/v1/links/:id</h4>
                   </div>
                   <p>Get details of a specific short link.</p>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Rate Limiting:</strong> Allow up to 5 requests per
+                    10 seconds (capacity: 100).
+                  </p>
+
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
                     <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
-                            id: "link_id",
-                            userId: "user_id",
-                            originalUrl: "https://example.com",
-                            shortUrl: "https://snppr.link/abc123",
-                            shortCode: "abc123",
-                            createdAt: new Date("2025-01-01T00:00:00.000Z"),
-                            expiresAt: null,
-                            clicks: 42,
-                            tags: ["marketing", "social"],
-                            utmParams: [
-                              {
-                                id: "utm_param_id",
-                                source: "facebook",
-                                medium: "social",
-                                campaign: "summer_sale",
-                                term: "running+shoes",
-                                content: "logo_link",
-                                shortLinkId: "link_id",
-                                createdAt: new Date("2025-01-01T00:00:00.000Z"),
-                                updatedAt: new Date("2025-01-01T00:00:00.000Z"),
-                              },
-                            ],
-                            qrCodeUrl: "data:image/png;base64,...",
-                            customOgImageUrl: "https://imgurl.com",
-                            customOgTitle: "Custom preview image title",
-                            customOgDescription:
-                              "Custom preview image description",
+                            link: {
+                              id: "link_id",
+                              userId: "user_id",
+                              originalUrl: "https://example.com",
+                              shortUrl: "https://snppr.link/abc123",
+                              shortCode: "abc123",
+                              createdAt: new Date("2025-01-01T00:00:00.000Z"),
+                              expiresAt: null,
+                              clicks: 42,
+                              tags: ["marketing", "social"],
+                              utmParams: [
+                                {
+                                  id: "utm_param_id",
+                                  source: "facebook",
+                                  medium: "social",
+                                  campaign: "summer_sale",
+                                  term: "running+shoes",
+                                  content: "logo_link",
+                                  shortLinkId: "link_id",
+                                  createdAt: new Date(
+                                    "2025-01-01T00:00:00.000Z",
+                                  ),
+                                  updatedAt: new Date(
+                                    "2025-01-01T00:00:00.000Z",
+                                  ),
+                                },
+                              ],
+                              qrCodeUrl: "data:image/png;base64,...",
+                              customOgImageUrl: "https://imgurl.com",
+                              customOgTitle: "Custom preview image title",
+                              customOgDescription:
+                                "Custom preview image description",
+                            },
+                            remaining: 100,
                           } satisfies APIGetLink,
                           null,
                           2,
@@ -293,6 +323,11 @@ export default function ApiDocsPage() {
                     <h4 className="text-lg font-semibold">/api/v1/links/:id</h4>
                   </div>
                   <p>Update a short link.</p>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Rate Limiting:</strong> Allow up to 1 request per 10
+                    seconds (capacity: 100).
+                  </p>
+
                   <div className="space-y-2">
                     <h5 className="font-semibold">Request Body</h5>
                     <pre className="overflow-x-auto rounded-md bg-muted p-4">
@@ -315,33 +350,40 @@ export default function ApiDocsPage() {
                       <code>
                         {JSON.stringify(
                           {
-                            id: "link_id",
-                            userId: "user_id",
-                            originalUrl: "https://example.com",
-                            shortUrl: "https://snppr.link/new-alias",
-                            shortCode: "new-alias",
-                            clicks: 120,
-                            createdAt: new Date("2025-01-01T00:00:00.000Z"),
-                            expiresAt: new Date("2025-12-31T23:59:59.999Z"),
-                            tags: ["marketing", "social"],
-                            utmParams: [
-                              {
-                                id: "utm_param_id",
-                                source: "facebook",
-                                medium: "social",
-                                campaign: "summer_sale",
-                                term: "running+shoes",
-                                content: "logo_link",
-                                shortLinkId: "link_id",
-                                createdAt: new Date("2025-01-01T00:00:00.000Z"),
-                                updatedAt: new Date("2025-01-01T00:00:00.000Z"),
-                              },
-                            ],
-                            qrCodeUrl: "data:image/png;base64,...",
-                            customOgImageUrl: "https://imgurl.com",
-                            customOgTitle: "Custom preview image title",
-                            customOgDescription:
-                              "Custom preview image description",
+                            link: {
+                              id: "link_id",
+                              userId: "user_id",
+                              originalUrl: "https://example.com",
+                              shortUrl: "https://snppr.link/new-alias",
+                              shortCode: "new-alias",
+                              clicks: 120,
+                              createdAt: new Date("2025-01-01T00:00:00.000Z"),
+                              expiresAt: new Date("2025-12-31T23:59:59.999Z"),
+                              tags: ["marketing", "social"],
+                              utmParams: [
+                                {
+                                  id: "utm_param_id",
+                                  source: "facebook",
+                                  medium: "social",
+                                  campaign: "summer_sale",
+                                  term: "running+shoes",
+                                  content: "logo_link",
+                                  shortLinkId: "link_id",
+                                  createdAt: new Date(
+                                    "2025-01-01T00:00:00.000Z",
+                                  ),
+                                  updatedAt: new Date(
+                                    "2025-01-01T00:00:00.000Z",
+                                  ),
+                                },
+                              ],
+                              qrCodeUrl: "data:image/png;base64,...",
+                              customOgImageUrl: "https://imgurl.com",
+                              customOgTitle: "Custom preview image title",
+                              customOgDescription:
+                                "Custom preview image description",
+                            },
+                            remaining: 100,
                           } satisfies APIGetLink,
                           null,
                           2,
@@ -359,6 +401,11 @@ export default function ApiDocsPage() {
                     <h4 className="text-lg font-semibold">/api/v1/links/:id</h4>
                   </div>
                   <p>Delete a short link.</p>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Rate Limiting:</strong> Allow up to 1 request per 10
+                    seconds (capacity: 10).
+                  </p>
+
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
                     <pre className="overflow-x-auto rounded-md bg-muted p-4">
@@ -366,6 +413,7 @@ export default function ApiDocsPage() {
                         {JSON.stringify(
                           {
                             success: true,
+                            remaining: 10,
                           } satisfies APIDeleteLink,
                           null,
                           2,
@@ -387,116 +435,124 @@ export default function ApiDocsPage() {
                     </h4>
                   </div>
                   <p>Get analytics for a specific short link.</p>
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Rate Limiting:</strong> Allow up to 2 requests per
+                    10 seconds (capacity: 100).
+                  </p>
+
                   <div className="space-y-2">
                     <h5 className="font-semibold">Response</h5>
                     <pre className="overflow-x-auto rounded-md bg-muted p-4">
                       <code>
                         {JSON.stringify(
                           {
-                            totalClicks: 42,
-                            clicksByDate: {
-                              "2025-01-01": 10,
-                              "2025-01-02": 15,
-                              "2025-01-03": 17,
-                            },
-                            clicksByCountry: {
-                              "United States": 20,
-                              "United Kingdom": 10,
-                              Canada: 5,
-                              Other: 7,
-                            },
-                            clicksByCity: {
-                              "New York": 8,
-                              London: 5,
-                              Toronto: 3,
-                              "Los Angeles": 7,
-                              Manchester: 2,
-                              Other: 17,
-                            },
-                            clicksByCountryWithCities: {
-                              "United States": {
-                                totalClicks: 20,
-                                cities: {
-                                  "New York": 8,
-                                  "Los Angeles": 7,
-                                  Chicago: 3,
-                                  Houston: 2,
+                            analytics: {
+                              totalClicks: 42,
+                              clicksByDate: {
+                                "2025-01-01": 10,
+                                "2025-01-02": 15,
+                                "2025-01-03": 17,
+                              },
+                              clicksByCountry: {
+                                "United States": 20,
+                                "United Kingdom": 10,
+                                Canada: 5,
+                                Other: 7,
+                              },
+                              clicksByCity: {
+                                "New York": 8,
+                                London: 5,
+                                Toronto: 3,
+                                "Los Angeles": 7,
+                                Manchester: 2,
+                                Other: 17,
+                              },
+                              clicksByCountryWithCities: {
+                                "United States": {
+                                  totalClicks: 20,
+                                  cities: {
+                                    "New York": 8,
+                                    "Los Angeles": 7,
+                                    Chicago: 3,
+                                    Houston: 2,
+                                  },
+                                },
+                                "United Kingdom": {
+                                  totalClicks: 10,
+                                  cities: {
+                                    London: 5,
+                                    Manchester: 2,
+                                    Birmingham: 1,
+                                    Glasgow: 2,
+                                  },
+                                },
+                                Canada: {
+                                  totalClicks: 5,
+                                  cities: {
+                                    Toronto: 3,
+                                    Vancouver: 1,
+                                    Montreal: 1,
+                                  },
                                 },
                               },
-                              "United Kingdom": {
-                                totalClicks: 10,
-                                cities: {
-                                  London: 5,
-                                  Manchester: 2,
-                                  Birmingham: 1,
-                                  Glasgow: 2,
-                                },
+                              clicksByDevice: {
+                                Desktop: 25,
+                                Mobile: 15,
+                                Tablet: 2,
                               },
-                              Canada: {
-                                totalClicks: 5,
-                                cities: {
-                                  Toronto: 3,
-                                  Vancouver: 1,
-                                  Montreal: 1,
-                                },
+                              clicksByBrowser: {
+                                Chrome: 20,
+                                Firefox: 10,
+                                Safari: 8,
+                                Other: 4,
+                              },
+                              clicksByOS: {
+                                Windows: 15,
+                                MacOS: 12,
+                                iOS: 8,
+                                Android: 7,
+                              },
+                              clicksByReferrer: {
+                                direct: 18,
+                                "google.com": 10,
+                                "twitter.com": 5,
+                                "facebook.com": 4,
+                                "linkedin.com": 3,
+                                other: 2,
+                              },
+                              clicksByCampaign: {
+                                spring_promo_2025: 15,
+                                q1_newsletter: 10,
+                                social_media_blitz: 12,
+                                organic: 5,
+                              },
+                              clicksBySource: {
+                                google: 10,
+                                twitter: 5,
+                                facebook: 4,
+                                email: 10,
+                                direct: 8,
+                                linkedin: 3,
+                                other: 2,
+                              },
+                              clicksByMedium: {
+                                organic: 10,
+                                social: 12,
+                                email: 10,
+                                cpc: 2,
+                              },
+                              clicksByTerm: {
+                                "short link analytics": 5,
+                                "url tracking": 3,
+                                "link clicks data": 2,
+                              },
+                              clicksByContent: {
+                                button_cta: 8,
+                                text_link: 5,
+                                image_banner: 4,
                               },
                             },
-                            clicksByDevice: {
-                              Desktop: 25,
-                              Mobile: 15,
-                              Tablet: 2,
-                            },
-                            clicksByBrowser: {
-                              Chrome: 20,
-                              Firefox: 10,
-                              Safari: 8,
-                              Other: 4,
-                            },
-                            clicksByOS: {
-                              Windows: 15,
-                              MacOS: 12,
-                              iOS: 8,
-                              Android: 7,
-                            },
-                            clicksByReferrer: {
-                              direct: 18,
-                              "google.com": 10,
-                              "twitter.com": 5,
-                              "facebook.com": 4,
-                              "linkedin.com": 3,
-                              other: 2,
-                            },
-                            clicksByCampaign: {
-                              spring_promo_2025: 15,
-                              q1_newsletter: 10,
-                              social_media_blitz: 12,
-                              organic: 5,
-                            },
-                            clicksBySource: {
-                              google: 10,
-                              twitter: 5,
-                              facebook: 4,
-                              email: 10,
-                              direct: 8,
-                              linkedin: 3,
-                              other: 2,
-                            },
-                            clicksByMedium: {
-                              organic: 10,
-                              social: 12,
-                              email: 10,
-                              cpc: 2,
-                            },
-                            clicksByTerm: {
-                              "short link analytics": 5,
-                              "url tracking": 3,
-                              "link clicks data": 2,
-                            },
-                            clicksByContent: {
-                              button_cta: 8,
-                              text_link: 5,
-                              image_banner: 4,
-                            },
+                            remaining: 100,
                           } satisfies APIGetLinkAnalytics,
                           null,
                           2,

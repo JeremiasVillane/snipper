@@ -1,11 +1,9 @@
 import { headers as getNextHeaders } from "next/headers";
 import { env } from "@/env.mjs";
-import arcjet, {
-  ArcjetDecision,
-  ArcjetRateLimitReason,
-  tokenBucket,
-} from "@arcjet/next";
+import { Ratelimit } from "@upstash/ratelimit";
 import { createMiddleware } from "next-safe-action";
+
+import { redisClient } from "@/lib/redis";
 
 interface RateLimitInfo {
   window: number;
@@ -27,9 +25,9 @@ export const rateLimitingMiddleware = createMiddleware<{
     };
   };
 }>().define(async ({ next, metadata, ctx: originalContext }) => {
-  if (!env.ARCJET_KEY) {
+  if (!env.KV_REST_API_TOKEN || !env.KV_REST_API_URL) {
     console.warn(
-      `Arcjet key not found. Rate limiting for action '${metadata.name}' will be disabled.`,
+      `Upstash Redis not configured. Rate limiting for action '${metadata.name}' disabled.`,
     );
     return next({ ctx: originalContext });
   }
@@ -41,103 +39,75 @@ export const rateLimitingMiddleware = createMiddleware<{
       capacity: 1000,
       requested: 1,
     },
+    name,
   } = metadata;
 
-  const aj = arcjet({
-    key: env.ARCJET_KEY,
-    rules: [
-      tokenBucket({
-        mode: "LIVE",
-        characteristics: ["ip.src"],
-        refillRate: limiter.refillRate,
-        interval: limiter.interval,
-        capacity: limiter.capacity,
-      }),
-    ],
+  const ratelimit = new Ratelimit({
+    redis: redisClient,
+    limiter: Ratelimit.tokenBucket(
+      limiter.capacity,
+      `${limiter.interval}s`,
+      limiter.refillRate,
+    ),
   });
 
   try {
     const currentHeaders = await getNextHeaders();
-
     const forwardedFor = currentHeaders.get("x-forwarded-for");
-    const clientIpAddress = forwardedFor
-      ? forwardedFor.split(",")[0].trim()
-      : ((await fetch("https://api.ipify.org/?format=json")
-          .then((res) => res.json())
-          .then((res) => res?.ip)) ?? "127.0.0.1");
 
-    const decision: ArcjetDecision = await aj.protect(
-      {
-        headers: currentHeaders,
-        ip: clientIpAddress,
-      },
-      {
-        requested: limiter.requested,
-      },
+    let clientIpAddress: string;
+    if (forwardedFor) {
+      clientIpAddress = forwardedFor.split(",")[0].trim();
+    } else {
+      try {
+        const response = await fetch("https://api.ipify.org/?format=json");
+        const data = await response.json();
+        clientIpAddress = data.ip || "127.0.0.1";
+      } catch {
+        clientIpAddress = "127.0.0.1";
+      }
+    }
+
+    const { success, remaining, reset } = await ratelimit.limit(
+      `action:${name}:ip:${clientIpAddress}`,
+      { rate: limiter.requested },
     );
 
-    if (decision.isDenied()) {
-      const reason = decision.reason as ArcjetRateLimitReason;
-
-      if (reason.isRateLimit()) {
-        console.warn(
-          `Rate limit hit for action '${metadata.name}'. IP: ${
-            decision.ip ?? "N/A"
-          }. Remaining: ${reason.remaining}, Reset: ${new Date(
-            reason.reset * 1000,
-          )}`,
-        );
-        const error = new Error("Too Many Requests");
-        error.cause = "rate-limit";
-        throw error;
-      } else {
-        console.warn(
-          `Request denied for action '${metadata.name}' by Arcjet. IP: ${
-            decision.ip ?? "N/A"
-          }. Reason: ${decision.reason.type}`,
-        );
-        const error = new Error("Forbidden");
-        error.cause = decision.reason.type;
-        throw error;
-      }
+    if (!success) {
+      console.warn(
+        `Rate limit exceeded for action '${name}'. IP: ${clientIpAddress}. Reset: ${new Date(reset)}`,
+      );
+      const error = new Error("Too Many Requests");
+      error.cause = "rate-limit";
+      throw error;
     }
 
     return next({
       ctx: {
         ...originalContext,
-        ...(decision.isDenied() && decision.reason.isRateLimit()
-          ? {
-              ratelimit: {
-                window: decision.reason.window,
-                remaining: decision.reason.remaining,
-                reset: decision.reason.reset,
-              },
-            }
-          : {}),
+        ratelimit: {
+          window: limiter.interval,
+          remaining,
+          reset: Math.floor(reset / 1000),
+        },
       },
     });
   } catch (error) {
-    console.error(
-      `Arcjet middleware error for action '${metadata.name}':`,
-      error,
-    );
+    console.error(`Error de rate limiting en '${name}':`, error);
 
-    if (
-      error instanceof Error &&
-      (error.message === "Too Many Requests" || error.message === "Forbidden")
-    ) {
-      throw error;
+    if (error instanceof Error) {
+      if (error.message.includes("Invariant: headers()")) {
+        console.error(
+          "Error: headers() used outside the context of Next.js. Make sure to execute this action in a Server Action.",
+        );
+        throw new Error("Server configuration error");
+      }
+
+      if (error.message === "Too Many Requests") {
+        throw error;
+      }
     }
 
-    if (
-      error instanceof Error &&
-      error.message.includes("Invariant: headers()")
-    ) {
-      console.error(
-        "Error: headers() was called outside of the Next.js request scope. Ensure this action is run within a Server Action or similar Next.js request context.",
-      );
-      throw new Error("Server configuration error for security check.");
-    }
-    throw new Error("Security check failed");
+    throw new Error("Security error");
   }
 });

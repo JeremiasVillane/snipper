@@ -23,15 +23,6 @@ export const aj = env.ARCJET_KEY
             "CATEGORY:VERCEL", // Vercel infrastructure bots
           ],
         }),
-
-        // Token bucket rate limiting rule
-        tokenBucket({
-          mode: "LIVE", // LIVE mode enforces the rate limit
-          characteristics: ["ip.src"], // Rate limit based on IP address (redundant here as it's default unless overridden, but explicit)
-          refillRate: 5, // Add 5 tokens every interval
-          interval: 10, // Interval is 10 seconds
-          capacity: 1000, // Maximum 1000 tokens per IP
-        }),
       ],
     })
   : null;

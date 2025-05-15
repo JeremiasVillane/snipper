@@ -73,22 +73,34 @@ export type authorizationMiddlewareProps =
 
 ///------ API Endpoints Types ------///
 
-export interface APIGetLink
-  extends Omit<ShortLinkBaseResponse, "customDomain"> {
-  shortUrl: string;
-  qrCodeUrl: string;
+export interface APIGetLink {
+  link: Omit<ShortLinkBaseResponse, "customDomain"> & {
+    shortUrl: string;
+    qrCodeUrl: string;
+  };
+  remaining: number;
 }
-export type APIGetAllLinks = { links: Omit<APIGetLink, "qrCodeUrl">[] };
-export type APIPostLink = Omit<
-  APIGetLink,
-  | "userId"
-  | "clicks"
-  | "customOgImageUrl"
-  | "customOgTitle"
-  | "customOgDescription"
->;
-export type APIDeleteLink = { success: boolean };
-export type APIGetLinkAnalytics = Omit<
-  ShortLinkAnalyticsData,
-  "recentClicks" | "definedCampaigns"
->;
+
+export type APIGetAllLinks = {
+  links: Omit<APIGetLink["link"], "qrCodeUrl">[];
+  remaining: number;
+};
+
+export type APIPostLink = {
+  link: Omit<
+    APIGetLink["link"],
+    | "userId"
+    | "clicks"
+    | "customOgImageUrl"
+    | "customOgTitle"
+    | "customOgDescription"
+  >;
+  remaining: number;
+};
+
+export type APIDeleteLink = { success: boolean; remaining: number };
+
+export type APIGetLinkAnalytics = {
+  analytics: Omit<ShortLinkAnalyticsData, "recentClicks" | "definedCampaigns">;
+  remaining: number;
+};

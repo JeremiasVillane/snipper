@@ -5,7 +5,7 @@ import withAuth, { type NextRequestWithAuth } from "next-auth/middleware";
 
 import { publicUrl } from "./env.mjs";
 import { aj } from "./lib/arcjet";
-import { publicPaths, REGEX, reservedWords } from "./lib/constants";
+import { publicPaths, reservedWords } from "./lib/constants";
 import { getRootUrl } from "./lib/helpers";
 
 function extractSubdomain(request: NextRequest): string | null {
@@ -69,9 +69,7 @@ export default withAuth(
 
     if (!!aj) {
       try {
-        const decision: ArcjetDecision = await aj.protect(req, {
-          requested: 5,
-        });
+        const decision: ArcjetDecision = await aj.protect(req);
 
         if (decision.isDenied()) {
           if (decision.reason.isRateLimit()) {

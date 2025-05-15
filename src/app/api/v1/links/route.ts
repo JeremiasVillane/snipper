@@ -4,13 +4,40 @@ import { z } from "zod";
 import { shortLinksRepository } from "@/lib/db/repositories";
 import { buildShortUrl, generateQRCode, validateApiKey } from "@/lib/helpers";
 import { createLinksSchemaAPI } from "@/lib/schemas";
+import { protectRequest } from "@/lib/security";
 import { APIGetAllLinks, APIPostLink } from "@/lib/types";
 
 // GET /api/v1/links - List all links for the authenticated user
 export async function GET(
-  request: NextRequest,
+  req: NextRequest,
 ): Promise<NextResponse<APIGetAllLinks | { error: string }>> {
-  const apiKeyRecord = await validateApiKey(request);
+  const decision = await protectRequest(
+    req,
+    {
+      refillRate: 5,
+      interval: 15,
+      capacity: 100,
+    },
+    "api:get:links",
+  );
+
+  if (decision.isDenied()) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": "100",
+          "X-RateLimit-Remaining": decision.remaining.toString(),
+          "X-RateLimit-Reset": Math.floor(
+            decision.reset.getTime() / 100,
+          ).toString(),
+        },
+      },
+    );
+  }
+
+  const apiKeyRecord = await validateApiKey(req);
   if (!apiKeyRecord) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -33,20 +60,49 @@ export async function GET(
     customOgDescription: link.customOgDescription,
   }));
 
-  return NextResponse.json({ links: formattedLinks } satisfies APIGetAllLinks);
+  return NextResponse.json({
+    links: formattedLinks,
+    remaining: decision.remaining,
+  } satisfies APIGetAllLinks);
 }
 
 // POST /api/v1/links - Create a new short link
 export async function POST(
-  request: NextRequest,
+  req: NextRequest,
 ): Promise<NextResponse<APIPostLink | { error: string }>> {
-  const apiKeyRecord = await validateApiKey(request);
+  const decision = await protectRequest(
+    req,
+    {
+      refillRate: 1,
+      interval: 10,
+      capacity: 100,
+    },
+    "api:post:link",
+  );
+
+  if (decision.isDenied()) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": "100",
+          "X-RateLimit-Remaining": decision.remaining.toString(),
+          "X-RateLimit-Reset": Math.floor(
+            decision.reset.getTime() / 100,
+          ).toString(),
+        },
+      },
+    );
+  }
+
+  const apiKeyRecord = await validateApiKey(req);
   if (!apiKeyRecord) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const body = await request.json();
+    const body = await req.json();
     const validatedData = createLinksSchemaAPI.parse(body);
 
     const shortLink = await shortLinksRepository.create(
@@ -63,15 +119,18 @@ export async function POST(
     const qrCodeUrl = await generateQRCode(buildShortUrl(shortLink.shortCode));
 
     return NextResponse.json({
-      id: shortLink.id,
-      originalUrl: shortLink.originalUrl,
-      shortUrl: buildShortUrl(shortLink.shortCode),
-      shortCode: shortLink.shortCode,
-      createdAt: shortLink.createdAt,
-      expiresAt: shortLink.expiresAt,
-      tags: shortLink.tags,
-      utmParams: shortLink.utmParams,
-      qrCodeUrl,
+      link: {
+        id: shortLink.id,
+        originalUrl: shortLink.originalUrl,
+        shortUrl: buildShortUrl(shortLink.shortCode),
+        shortCode: shortLink.shortCode,
+        createdAt: shortLink.createdAt,
+        expiresAt: shortLink.expiresAt,
+        tags: shortLink.tags,
+        utmParams: shortLink.utmParams,
+        qrCodeUrl,
+      },
+      remaining: decision.remaining,
     } satisfies APIPostLink);
   } catch (error) {
     if (error instanceof z.ZodError) {
