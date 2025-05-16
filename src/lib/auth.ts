@@ -27,6 +27,12 @@ declare module "next-auth/jwt" {
   }
 }
 
+interface CredentialsWithTurnstile extends Record<string, string | undefined> {
+  email?: string;
+  password?: string;
+  turnstileToken?: string;
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -46,21 +52,65 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        const creds = credentials as CredentialsWithTurnstile;
+
+        if (!creds?.email || !creds?.password) {
+          return null;
+        }
+
+        const turnstileToken = creds.turnstileToken;
+
+        if (!turnstileToken) {
+          console.error("Turnstile token missing from credentials.");
+          return null;
+        }
+
+        const verifyUrl =
+          "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+        try {
+          const turnstileResponse = await fetch(verifyUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              secret: env.TURNSTILE_SECRET_KEY,
+              response: turnstileToken,
+            }),
+          });
+
+          const outcome: { success: boolean; "error-codes"?: string[] } =
+            await turnstileResponse.json();
+
+          if (!outcome.success) {
+            console.error(
+              "Turnstile verification failed:",
+              outcome["error-codes"],
+            );
+            return null; // CAPTCHA failed
+          }
+
+          console.log("Turnstile verification successful.");
+        } catch (error) {
+          console.error("Error during Turnstile verification fetch:", error);
           return null;
         }
 
         try {
-          const user = await usersRepository.findByEmail(credentials.email);
+          const user = await usersRepository.findByEmail(creds.email);
           if (!user || !user.password) {
+            console.warn("User not found or no password set.");
             return null;
           }
 
           const passwordMatch = await bcrypt.compare(
-            credentials.password,
+            creds.password,
             user.password,
           );
+
           if (!passwordMatch) {
+            console.warn("Password mismatch for user:", user.email);
             return null;
           }
 
@@ -71,7 +121,10 @@ export const authOptions: NextAuthOptions = {
             image: user.image,
           };
         } catch (error) {
-          console.error("Error in authorize:", error);
+          console.error(
+            "Error in authorize during user lookup/password check:",
+            error,
+          );
           return null;
         }
       },
@@ -94,7 +147,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
     signOut: "/",
-    error: "/error",
+    error: "/auth/error",
   },
   session: {
     strategy: "jwt",

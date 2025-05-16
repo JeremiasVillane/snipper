@@ -84,6 +84,14 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          async
+          defer
+        ></script>
+      </head>
+
       <body className={cn(nunito.className, "antialiased")}>
         <script
           type="application/ld+json"

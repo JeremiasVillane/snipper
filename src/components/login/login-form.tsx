@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { env } from "@/env.mjs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -25,20 +27,48 @@ import { toast } from "@/components/ui/simple-toast";
 export function LoginForm() {
   const router = useRouter();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: "",
       password: "",
+      turnstileToken: null,
     },
   });
 
+  const onTurnstileVerify = (token: string) => {
+    form.setValue("turnstileToken", token);
+    console.log("Turnstile verified, token:", token);
+  };
+
+  const onTurnstileExpire = () => {
+    form.setValue("turnstileToken", null);
+    console.log("Turnstile expired");
+    toast({
+      title: "CAPTCHA expired",
+      description: "Please re-verify.",
+      type: "warning",
+    });
+    turnstileRef.current?.reset();
+  };
+
   async function onSubmit(values: LoginFormValues) {
+    if (!values.turnstileToken) {
+      toast({
+        title: "CAPTCHA Required",
+        description: "Please complete the CAPTCHA challenge.",
+        type: "error",
+      });
+      return;
+    }
+
     try {
       const result = await signIn("credentials", {
         email: values.email,
         password: values.password,
+        turnstileToken: values.turnstileToken,
         redirect: false,
       });
 
@@ -48,10 +78,14 @@ export function LoginForm() {
           description:
             result.error === "CredentialsSignin"
               ? "Invalid email or password."
-              : "An unexpected error occurred.",
+              : result.error === "TurnstileVerificationFailed"
+                ? "CAPTCHA verification failed. Please try again."
+                : "An unexpected error occurred.",
           type: "error",
         });
         form.resetField("password");
+        turnstileRef.current?.reset();
+        form.setValue("turnstileToken", null);
         return;
       }
 
@@ -175,10 +209,31 @@ export function LoginForm() {
             )}
           />
 
+          <div className="flex w-full items-center justify-center py-4">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              onSuccess={onTurnstileVerify}
+              onExpire={onTurnstileExpire}
+              onError={(err) =>
+                toast({
+                  title: "Authentication error",
+                  description: err,
+                  type: "error",
+                })
+              }
+              className="mx-auto"
+            />
+          </div>
+
           <Button
             type="submit"
             className="w-full"
-            disabled={form.formState.isSubmitting || isGoogleLoading}
+            disabled={
+              form.formState.isSubmitting ||
+              isGoogleLoading ||
+              !form.watch("turnstileToken")
+            }
           >
             {form.formState.isSubmitting ? (
               <>

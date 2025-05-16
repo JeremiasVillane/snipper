@@ -1,11 +1,59 @@
-import { error } from "console";
 import { NextResponse } from "next/server";
+import { env } from "@/env.mjs";
 
 import { signUp } from "@/lib/auth";
 import { validateEmail } from "@/lib/security";
 
 export async function POST(request: Request) {
-  const { email, name, password } = await request.json();
+  const { email, name, password, turnstileToken } = await request.json();
+
+  if (!turnstileToken) {
+    console.error("Registration CAPTCHA: Turnstile token missing.");
+    return NextResponse.json(
+      { success: false, error: "CAPTCHA_FAILED" },
+      { status: 400 },
+    );
+  }
+
+  const verifyUrl = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+  try {
+    const turnstileResponse = await fetch(verifyUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        secret: env.TURNSTILE_SECRET_KEY,
+        response: turnstileToken,
+      }),
+    });
+
+    const outcome: { success: boolean; "error-codes"?: string[] } =
+      await turnstileResponse.json();
+
+    if (!outcome.success) {
+      console.error(
+        "Registration CAPTCHA: Turnstile verification failed:",
+        outcome["error-codes"],
+      );
+      return NextResponse.json(
+        { success: false, error: "CAPTCHA_FAILED" },
+        { status: 400 },
+      );
+    }
+
+    console.log("Registration CAPTCHA: Turnstile verification successful.");
+  } catch (error) {
+    console.error(
+      "Registration CAPTCHA: Error during Turnstile verification fetch:",
+      error,
+    );
+    return NextResponse.json(
+      { success: false, error: "Error verifying CAPTCHA." },
+      { status: 500 },
+    );
+  }
 
   try {
     const isValidEmail = await validateEmail(email);
@@ -27,9 +75,13 @@ export async function POST(request: Request) {
     await signUp(email, name, password);
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Error during user signup process:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed" },
-      { status: 400 },
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to create account",
+      },
+      { status: 500 },
     );
   }
 }

@@ -10,6 +10,7 @@ export const registerFormSchema = z
     confirmPassword: z
       .string()
       .min(1, { message: "Please confirm your password." }),
+    turnstileToken: z.string().nullable().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match.",
