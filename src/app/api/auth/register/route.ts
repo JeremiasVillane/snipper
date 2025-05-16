@@ -2,10 +2,29 @@ import { NextResponse } from "next/server";
 import { env } from "@/env.mjs";
 
 import { signUp } from "@/lib/auth";
-import { validateEmail } from "@/lib/security";
+import { checkIpReputation, validateEmail } from "@/lib/security";
 
-export async function POST(request: Request) {
-  const { email, name, password, turnstileToken } = await request.json();
+export async function POST(req: Request) {
+  const { email, name, password, turnstileToken } = await req.json();
+
+  let ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+
+  if (!ip) {
+    ip = await fetch("https://api.ipify.org/?format=json")
+      .then((res) => res.json())
+      .then((res) => res?.ip);
+  }
+
+  if (ip) {
+    const isBadIp = await checkIpReputation(ip);
+    if (isBadIp) {
+      console.warn(`Blocked IP: ${ip}`);
+      return NextResponse.json(
+        { success: false, error: "BLOCKED_IP" },
+        { status: 403 },
+      );
+    }
+  }
 
   if (!turnstileToken) {
     console.error("Registration CAPTCHA: Turnstile token missing.");

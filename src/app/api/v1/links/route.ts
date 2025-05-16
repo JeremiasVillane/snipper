@@ -4,7 +4,7 @@ import { z } from "zod";
 import { shortLinksRepository } from "@/lib/db/repositories";
 import { buildShortUrl, generateQRCode, validateApiKey } from "@/lib/helpers";
 import { createLinksSchemaAPI } from "@/lib/schemas";
-import { protectRequest } from "@/lib/security";
+import { checkURLReputation, protectRequest } from "@/lib/security";
 import { APIGetAllLinks, APIPostLink } from "@/lib/types";
 
 // GET /api/v1/links - List all links for the authenticated user
@@ -104,6 +104,27 @@ export async function POST(
   try {
     const body = await req.json();
     const validatedData = createLinksSchemaAPI.parse(body);
+
+    const urlIsSafe = await checkURLReputation(validatedData.originalUrl);
+
+    if (!urlIsSafe) {
+      return NextResponse.json(
+        { error: "The URL you provided is not safe." },
+        { status: 400 },
+      );
+    }
+
+    if (validatedData.shortCode) {
+      const existingLink = await shortLinksRepository.findByShortCode(
+        validatedData.shortCode,
+      );
+      if (existingLink) {
+        return NextResponse.json(
+          { error: "Short code already exists." },
+          { status: 400 },
+        );
+      }
+    }
 
     const shortLink = await shortLinksRepository.create(
       {

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { shortLinksRepository } from "@/lib/db/repositories";
 import { buildShortUrl, generateQRCode, validateApiKey } from "@/lib/helpers";
 import { updateLinksSchemaAPI } from "@/lib/schemas";
-import { protectRequest } from "@/lib/security";
+import { checkURLReputation, protectRequest } from "@/lib/security";
 import { APIDeleteLink, APIGetLink } from "@/lib/types";
 
 // GET /api/v1/links/[id] - Get a specific link
@@ -111,6 +111,30 @@ export async function PATCH(
   try {
     const body = await req.json();
     const validatedData = updateLinksSchemaAPI.parse(body);
+
+    if (validatedData.originalUrl) {
+      const urlIsSafe = await checkURLReputation(validatedData.originalUrl);
+
+      if (!urlIsSafe) {
+        return NextResponse.json(
+          { error: "The URL you provided is not safe." },
+          { status: 400 },
+        );
+      }
+    }
+
+    if (validatedData.shortCode) {
+      const existingLink = await shortLinksRepository.findByShortCode(
+        validatedData.shortCode,
+      );
+
+      if (existingLink && existingLink.id !== id) {
+        return NextResponse.json(
+          { error: "Short code already exists." },
+          { status: 400 },
+        );
+      }
+    }
 
     const updatedLink = await shortLinksRepository.update(
       id,

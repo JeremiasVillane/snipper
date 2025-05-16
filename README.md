@@ -63,43 +63,51 @@ Create a `.env` file in the root directory and add the following environment var
 ```dotenv
 # === Required Variables ===
 
-# Database URLs (ensure both point to your PostgreSQL instance)
+# PostgreSQL Database URLs (ensure these point to your PostgreSQL instance)
 POSTGRES_PRISMA_URL="postgresql://username:password@host:port/database?schema=public"
 POSTGRES_URL_NON_POOLING="postgresql://username:password@host:port/database?schema=public"
 
-# Application URL (replace with your deployment URL or http://localhost:3000 for dev)
+# Application URL (replace with your deployment URL or http://localhost:3000 for development)
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-# NextAuth configuration
-NEXTAUTH_SECRET="your-secure-random-secret" # Generate a strong secret key (e.g., using `openssl rand -base64 32`)
-
-# === Optional: Authentication Providers ===
+# NextAuth configuration (generate a strong secret, e.g., using `openssl rand -base64 32`)
+NEXTAUTH_SECRET="your-secure-random-secret"
 
 # Google OAuth Credentials (Required ONLY if you want Google login)
-# Visit: [https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)
+# Visit: https://console.cloud.google.com/apis/credentials
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
-# === Optional: Monitoring, Analytics & Security Services ===
-# These variables integrate with third-party services for enhanced monitoring, analytics,
-# and security. They are NOT strictly required for the core functionality of Snipper
-# if you are self-hosting, but are recommended for production environments.
+# UPLOADTHING Token (required for upload functionalities)
+UPLOADTHING_TOKEN="your-uploadthing-token"
 
-# Arcjet (Bot Protection, Rate Limiting, etc.)
-# Visit: [https://arcjet.com/](https://arcjet.com/)
-ARCJET_KEY="your-arcjet-key"
+# Turnstile configuration
+NEXT_PUBLIC_TURNSTILE_SITE_KEY="your-public-turnstile-site-key"
+TURNSTILE_SECRET_KEY="your-turnstile-secret-key"
+
+# IPQS API Key for IP quality score checks
+IPQS_KEY="your-ipqs-api-key"
+
+# === Optional: Key-Value Store and APIs ===
+
+# KV REST API configuration (optional)
+KV_REST_API_TOKEN="your-kv-rest-api-token"
+KV_REST_API_URL="https://your-kv-rest-api-url"
+
+# Abstract API Key for geo/IP services (optional)
+ABSTRACT_API_KEY="your-abstract-api-key"
+
+# === Optional: Monitoring, Analytics & Security Services ===
 
 # Sentry (Error Monitoring & Performance Tracking)
-# Visit: [https://sentry.io/](https://sentry.io/)
 SENTRY_ORG="your-sentry-org-name"
 SENTRY_PROJECT="your-sentry-project-name"
 SENTRY_AUTH_TOKEN="your-sentry-auth-token"     # Required for build-time operations like source map uploads
-NEXT_PUBLIC_SENTRY_DSN="your-sentry-public-dsn" # Public DSN for client/server error reporting
+NEXT_PUBLIC_SENTRY_DSN="your-sentry-public-dsn"  # Public DSN for client/server error reporting
 
 # PostHog (Product Analytics)
-# Visit: [https://posthog.com/](https://posthog.com/)
-NEXT_PUBLIC_POSTHOG_KEY="your-posthog-public-key"  # Public API Key for sending events
-NEXT_PUBLIC_POSTHOG_HOST="[https://app.posthog.com](https://app.posthog.com)" # Your PostHog instance URL (Cloud default or self-hosted)
+NEXT_PUBLIC_POSTHOG_KEY="your-posthog-public-key"     # Public API Key for sending events
+NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"      # Your PostHog instance URL (Cloud default or self-hosted)
 
 ```
 

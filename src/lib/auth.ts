@@ -9,6 +9,8 @@ import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "@/lib/db/prisma";
 import { usersRepository } from "@/lib/db/repositories";
 
+import { checkIpReputation } from "./security";
+
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
@@ -51,7 +53,21 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        let ip = req.headers?.["x-forwarded-for"]?.split(",")[0]?.trim();
+
+        if (!ip) {
+          ip = await fetch("https://api.ipify.org/?format=json")
+            .then((res) => res.json())
+            .then((res) => res?.ip);
+        }
+
+        const isBadIp = await checkIpReputation(ip);
+        if (isBadIp) {
+          console.warn(`Blocked IP: ${ip}`);
+          throw new Error("Access denied");
+        }
+
         const creds = credentials as CredentialsWithTurnstile;
 
         if (!creds?.email || !creds?.password) {

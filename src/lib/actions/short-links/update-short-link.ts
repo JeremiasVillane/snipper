@@ -6,6 +6,7 @@ import { z } from "zod";
 import { shortLinksRepository } from "@/lib/db/repositories";
 import { validateShortLinkFeatures } from "@/lib/feature-access";
 import { createLinkSchema } from "@/lib/schemas";
+import { checkURLReputation } from "@/lib/security";
 
 import { authActionClient } from "../safe-action";
 
@@ -33,6 +34,16 @@ export const updateShortLink = authActionClient({
     const { userId, activeUserPlans } = ctx;
 
     validateShortLinkFeatures(formData, activeUserPlans);
+
+    if (formData.originalUrl) {
+      const urlIsSafe = await checkURLReputation(formData.originalUrl);
+
+      if (!urlIsSafe) {
+        throw new Error(
+          "The URL you provided is not safe. Please check the URL and try again.",
+        );
+      }
+    }
 
     try {
       const result = await shortLinksRepository.update(

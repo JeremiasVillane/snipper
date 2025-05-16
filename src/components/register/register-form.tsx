@@ -87,6 +87,17 @@ export function RegisterForm() {
         return;
       }
 
+      if (data?.error === "BLOCKED_IP") {
+        toast({
+          title: "Registration Error",
+          description: "Your IP address has been blocked.",
+          type: "error",
+        });
+        form.setValue("turnstileToken", null);
+        turnstileRef.current?.reset();
+        return;
+      }
+
       if (data?.autocorrect.length > 0) {
         toast({
           title: data.error || "Email autocorrected",
@@ -196,7 +207,7 @@ export function RegisterForm() {
           )}
         />
 
-        <div className="py-4 flex w-full items-center justify-center">
+        <div className="flex w-full items-center justify-center py-4">
           <Turnstile
             ref={turnstileRef}
             siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}

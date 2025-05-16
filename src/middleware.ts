@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isSpoofedBot } from "@arcjet/inspect";
-import { ArcjetDecision } from "@arcjet/next";
 import withAuth, { type NextRequestWithAuth } from "next-auth/middleware";
 
 import { publicUrl } from "./env.mjs";
-import { aj } from "./lib/arcjet";
 import { publicPaths, reservedWords } from "./lib/constants";
 import { getRootUrl } from "./lib/helpers";
+import { checkIpReputation } from "./lib/security";
 
 function extractSubdomain(request: NextRequest): string | null {
   const url = request.url;
@@ -48,6 +46,8 @@ function extractSubdomain(request: NextRequest): string | null {
   return isSubdomain ? hostname.replace(`.${rootDomainFormatted}`, "") : null;
 }
 
+const TRUSTED_IPS = new Set(["127.0.0.1"]);
+
 export default withAuth(
   async function middleware(req: NextRequestWithAuth) {
     const { pathname } = req.nextUrl;
@@ -67,42 +67,32 @@ export default withAuth(
       return NextResponse.next();
     }
 
-    if (!!aj) {
+    if (pathname.startsWith("/api")) {
       try {
-        const decision: ArcjetDecision = await aj.protect(req);
+        let ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
 
-        if (decision.isDenied()) {
-          if (decision.reason.isRateLimit()) {
-            return NextResponse.json(
-              { error: "Too Many Requests", reason: decision.reason },
-              { status: 429 },
-            );
-          } else if (decision.reason.isBot()) {
-            return NextResponse.json(
-              { error: "No bots allowed", reason: decision.reason },
-              { status: 403 },
-            );
-          } else {
-            return NextResponse.json(
-              { error: "Forbidden", reason: decision.reason },
-              { status: 403 },
+        if (!ip && process.env.NODE_ENV === "development") {
+          const response = await fetch("https://api.ipify.org?format=json");
+          ip = (await response.json()).ip;
+        }
+
+        if (ip && !TRUSTED_IPS.has(ip)) {
+          const isBadIp = await checkIpReputation(ip);
+
+          if (isBadIp) {
+            console.warn(`IP bloqueada: ${ip}`, {
+              path: pathname,
+              ua: req.headers.get("user-agent"),
+            });
+
+            return new NextResponse(
+              JSON.stringify({ error: "Access denied", code: "IP_BLOCKED" }),
+              { status: 403, headers: { "Content-Type": "application/json" } },
             );
           }
         }
-
-        // https://docs.arcjet.com/bot-protection/reference#bot-verification
-        if (decision.results.some(isSpoofedBot)) {
-          return NextResponse.json(
-            { error: "Forbidden", reason: decision.reason },
-            { status: 403 },
-          );
-        }
       } catch (error) {
-        console.error("Arcjet middleware error:", error);
-        return NextResponse.json(
-          { error: "Security check failed" },
-          { status: 500 },
-        );
+        console.error("IP verification failed:", error);
       }
     }
 

@@ -3,6 +3,8 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { ipAddress } from "@vercel/edge";
 
+import { redisClient } from "./redis";
+
 export type RateLimitConfig = {
   refillRate: number; // Tokens per interval
   interval: number; // Seconds
@@ -84,4 +86,60 @@ export async function validateEmail(
     return { risk: "medium", autocorrect: data.autocorrect };
 
   return { risk: "low", autocorrect: data.autocorrect };
+}
+
+export async function checkIpReputation(ip: string): Promise<boolean> {
+  const cacheKey = `ip_reputation:${ip}`;
+  const cached = await redisClient?.get(cacheKey);
+  if (cached !== null) return Boolean(cached);
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const response = await fetch(
+      `https://www.ipqualityscore.com/api/json/ip/${env.IPQS_KEY}/${ip}`,
+      { signal: controller.signal },
+    );
+    clearTimeout(timeoutId);
+
+    if (!response.ok) return false;
+
+    const data = await response.json();
+    const isBad = data.vpn || data.proxy || data.bot_status;
+
+    await redisClient?.setex(cacheKey, 3600, isBad ? 1 : 0);
+
+    return isBad;
+  } catch (error) {
+    console.error("IPQS IP Check Error:", error);
+    return false;
+  }
+}
+
+export async function checkURLReputation(url: string): Promise<boolean> {
+  const cacheKey = `url_reputation:${url}`;
+  const cached = await redisClient?.get(cacheKey);
+  if (cached !== null) return Boolean(cached);
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const response = await fetch(
+      `https://www.ipqualityscore.com/api/json/url/${env.IPQS_KEY}/${url}`,
+      { signal: controller.signal },
+    );
+    clearTimeout(timeoutId);
+
+    if (!response.ok) return false;
+
+    const data = await response.json();
+    const isSafe = data.malware || data.spamming || !data.dns_valid;
+
+    await redisClient?.setex(cacheKey, 3600, isSafe ? 0 : 1);
+
+    return isSafe;
+  } catch (error) {
+    console.error("IPQS URL Check Error:", error);
+    return false;
+  }
 }
