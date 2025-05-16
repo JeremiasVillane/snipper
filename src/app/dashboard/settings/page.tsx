@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
+import { appName } from "@/lib/constants";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,9 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const metadata: Metadata = {
-  title: "Account Settings - Snipper",
-  description:
-    "Manage your Snipper account settings, including email, password, subscription plan, and account deletion options.",
+  title: `Account Settings - ${appName}`,
+  description: `Manage your ${appName} account settings, including email, password, subscription plan, and account deletion options.`,
   robots: {
     index: false,
     follow: false,

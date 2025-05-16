@@ -1,3 +1,7 @@
+import packageJson from "../../package.json";
+
+export const appName = packageJson.name.replace(/\w/, (c) => c.toUpperCase());
+
 export const publicPaths = [
   "api-docs",
   "features",

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
+import { appName } from "@/lib/constants";
 import { constructMetadata } from "@/lib/metadata";
 import { generateOgImageUrl } from "@/lib/og";
 import { Button } from "@/components/ui/button";
@@ -16,9 +17,8 @@ import {
 import { LoginForm } from "@/components/login/login-form";
 
 export const generateMetadata = async () => {
-  const title = "Login - Snipper Account | Access your Links";
-  const description =
-    "Log in to your Snipper account to access your dashboard, manage your shortened URLs and view click-through analytics.";
+  const title = `Login - ${appName} Account | Access your Links`;
+  const description = `Log in to your ${appName} account to access your dashboard, manage your shortened URLs and view click-through analytics.`;
 
   return constructMetadata({
     title,
@@ -28,10 +28,13 @@ export const generateMetadata = async () => {
       description: description,
       images: [
         {
-          url: generateOgImageUrl({ title: "Snipper Login", type: "website" }),
+          url: generateOgImageUrl({
+            title: `${appName} Login`,
+            type: "website",
+          }),
           width: 1200,
           height: 630,
-          alt: "Snipper Login Page",
+          alt: `${appName} Login Page`,
         },
       ],
     },

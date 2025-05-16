@@ -1,15 +1,15 @@
+import { appName } from "@/lib/constants";
 import { Step } from "@/components/ui/intro-disclosure";
 
 export const onboardingSteps: Step[] = [
   {
     title: "Welcome!",
     short_description: "Your new link management hub.",
-    full_description:
-      "Welcome aboard! We're excited to have you. Let's take a quick tour to show you how Snipper helps you shorten, manage, and track your links effortlessly.",
+    full_description: `Welcome aboard! We're excited to have you. Let's take a quick tour to show you how ${appName} helps you shorten, manage, and track your links effortlessly.`,
     media: {
       type: "image",
       src: "/onboarding/welcome.png",
-      alt: "Snipper welcome illustration",
+      alt: `${appName} welcome illustration`,
     },
   },
   {
@@ -82,8 +82,7 @@ export const onboardingSteps: Step[] = [
   {
     title: "Explore Advanced Features",
     short_description: "Unlock more possibilities.",
-    full_description:
-      "Snipper offers more! Don't forget to explore other powerful features like generating QR Codes for offline sharing or securing links with passwords and expiration dates.",
+    full_description: `${appName} offers more! Don't forget to explore other powerful features like generating QR Codes for offline sharing or securing links with passwords and expiration dates.`,
     media: {
       type: "image",
       src: [
@@ -100,8 +99,7 @@ export const onboardingSteps: Step[] = [
   {
     title: "You're All Set!",
     short_description: "Start shortening and tracking.",
-    full_description:
-      "You've got the basics down! You're now ready to make the most of Snipper. If you have questions, check out our help section or reach out. Happy snipping!",
+    full_description: `You've got the basics down! You're now ready to make the most of ${appName}. If you have questions, check out our help section or reach out. Happy snipping!`,
     media: {
       type: "image",
       src: "/onboarding/all-set.png",

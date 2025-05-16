@@ -14,12 +14,13 @@ import { headers } from "next/headers";
 import { PageTracker } from "react-page-tracker";
 import { WebSite, WithContext } from "schema-dts";
 
+import { appName } from "@/lib/constants";
 import { extractSubdomainFromHost } from "@/lib/helpers";
 
 const nunito = Nunito_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Snipper - Modern Open Source URL Shortener",
+  title: `${appName} - Modern Open Source URL Shortener`,
   description:
     "Shorten, customize, and track your links with advanced analytics",
   keywords: [
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     },
   ],
   openGraph: {
-    title: "Snipper - Open Source URL Shortener",
+    title: `${appName} - Open Source URL Shortener`,
     description: "URL Shortener with Analytics and UTM Campaign Tracker",
     type: "website",
     images: [
@@ -78,7 +79,7 @@ export default async function RootLayout({
   const jsonLd: WithContext<WebSite> = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Snipper - URL Shortener",
+    name: `${appName} - URL Shortener`,
     url: publicUrl,
   };
 
@@ -103,7 +104,9 @@ export default async function RootLayout({
         <Providers>
           {!subdomain && <SiteHeader />}
 
-          <div className="fixed bottom-0 left-0 right-0 top-16 overflow-y-auto">
+          <div
+            className={`fixed bottom-0 left-0 right-0 overflow-y-auto ${!!subdomain ? "top-0" : "top-16"}`}
+          >
             <div className="flex min-h-[calc(100vh-4rem)] flex-col">
               {children}
               <SiteFooter />

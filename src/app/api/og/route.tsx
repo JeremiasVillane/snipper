@@ -1,6 +1,7 @@
 // Code from https://github.com/akash3444/shadcn-ui-blocks
 // Inspired by https://github.com/shadcn-ui/taxonomy/blob/main/app/api/og/route.tsx
 
+import { publicUrl } from "@/env.mjs";
 import { ImageResponse } from "@vercel/og";
 import { z } from "zod";
 
@@ -95,7 +96,7 @@ export async function GET(req: Request) {
               tw="flex text-xl"
               style={{ fontFamily: "DM Sans", fontWeight: "normal" }}
             >
-              snppr.vercel.app
+              {new URL(publicUrl).hostname}
             </div>
             <div
               tw="flex items-center text-xl"

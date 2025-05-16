@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { publicUrl } from "@/env.mjs";
 
+import { appName } from "@/lib/constants";
 import { shortLinksRepository } from "@/lib/db/repositories";
 import { buildShortUrl } from "@/lib/helpers";
 import { PasswordProtection } from "@/components/shortCode/password-protection";
@@ -19,15 +20,14 @@ export async function generateMetadata({
 
   if (!shortLink || (shortLink.expiresAt && shortLink.expiresAt < new Date())) {
     return {
-      title: "Link Not Found - Snipper",
+      title: `Link Not Found - ${appName}`,
       description: "This short link could not be found or has expired.",
       robots: { index: false, follow: false },
     };
   }
 
-  const protectedTitle = "Password Required - Snipper";
-  const protectedDescription =
-    "Enter the password to access this protected link via Snipper.";
+  const protectedTitle = `Password Required - ${appName}`;
+  const protectedDescription = `Enter the password to access this protected link via ${appName}.`;
   const genericProtectedImageUrl = `${publicUrl}/og-protected-link.png`;
 
   return {
@@ -38,7 +38,7 @@ export async function generateMetadata({
       follow: false,
     },
     openGraph: {
-      title: "Password Protected Link - Snipper",
+      title: `Password Protected Link - ${appName}`,
       description: "Access to this link requires a password.",
       url: buildShortUrl(shortLink.shortCode, shortLink.customDomain?.domain),
       type: "website",
@@ -50,11 +50,11 @@ export async function generateMetadata({
           alt: "Password Protected Link",
         },
       ],
-      siteName: "Snipper",
+      siteName: appName,
     },
     twitter: {
       card: "summary_large_image",
-      title: "Password Protected Link - Snipper",
+      title: `Password Protected Link - ${appName}`,
       description: "Access to this link requires a password.",
       images: [genericProtectedImageUrl],
     },

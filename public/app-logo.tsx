@@ -1,10 +1,10 @@
-export const SnipperLogo: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
+export const AppLogo: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg
       version="1.1"
       id="svg1"
-      width="1024"
-      height="1024"
+      width={props.width ?? 1024}
+      height={props.height ?? 1024}
       viewBox="0 0 1024 1024"
       xmlns="http://www.w3.org/2000/svg"
       {...props}

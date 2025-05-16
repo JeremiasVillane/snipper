@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CheckCircle2, ChevronRight } from "lucide-react";
 
+import { appName } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { List, ListItem } from "@/components/ui/list";
 
@@ -39,7 +40,7 @@ export function FeaturesWhyChoose() {
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
           <div className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter">
-              Why Choose Snipper?
+              Why Choose {appName}?
             </h2>
             <p className="text-muted-foreground">
               Our platform offers a complete solution for all your link

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
+import { appName } from "@/lib/constants";
 import { CardBody, CardContainer } from "@/components/ui/3d-card";
 import { AuroraText } from "@/components/ui/aurora-text";
 import { BlurFade } from "@/components/ui/blur-fade";
@@ -17,7 +18,7 @@ export function HeroSection() {
           <div className="space-y-4 text-center lg:text-left">
             <BlurFade direction="right">
               <AuroraText className="text-7xl font-extrabold tracking-tighter">
-                Snipper
+                {appName}
               </AuroraText>
             </BlurFade>
             <TextAnimate

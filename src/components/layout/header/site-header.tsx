@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
 
+import { appName } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -14,7 +15,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { SnipperLogo } from "../../../../public/snipper-logo";
+import { AppLogo } from "../../../../public/app-logo";
 import { AuthButtons, ThemeToggle } from "./modules";
 
 type DataLink = {
@@ -58,8 +59,8 @@ export function SiteHeader() {
     <header className="fixed top-0 z-50 h-16 w-full border-b bg-background">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-1.5">
-          <SnipperLogo className="size-5 text-primary" />
-          <span className="text-xl font-bold">Snipper</span>
+          <AppLogo className="size-5 text-primary" />
+          <span className="text-xl font-bold">{appName}</span>
         </Link>
 
         <div className="hidden items-center space-x-6 md:flex">

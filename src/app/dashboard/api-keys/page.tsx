@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
 
 import { auth } from "@/lib/auth";
+import { appName } from "@/lib/constants";
 import { apiKeysRepository } from "@/lib/db/repositories";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,9 +11,8 @@ import { ApiKeyTable } from "@/components/dashboard/api-keys";
 import CreateApiKeyDialog from "@/components/dashboard/api-keys/create-api-key-dialog";
 
 export const metadata: Metadata = {
-  title: "Manage API Keys - Snipper",
-  description:
-    "Create, view, and manage your API keys for programmatic access to the Snipper service.",
+  title: `Manage API Keys - ${appName}`,
+  description: `Create, view, and manage your API keys for programmatic access to the ${appName} service.`,
   robots: {
     index: false,
     follow: false,

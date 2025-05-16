@@ -6,6 +6,7 @@ import { getUserCustomDomains } from "@/lib/actions/custom-domains";
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
+import { appName } from "@/lib/constants";
 import { usersRepository } from "@/lib/db/repositories";
 import { cn } from "@/lib/utils";
 import { Alert, AlertTitle } from "@/components/ui/alert";
@@ -14,14 +15,14 @@ import { LinkDialog, LinkList } from "@/components/dashboard";
 import { Tour } from "@/components/dashboard/tour";
 
 export const metadata: Metadata = {
-  title: "Snipper Dashboard | Manage Your Links & Analytics",
-  description: "Access your personal Snipper dashboard...",
+  title: `${appName} Dashboard | Manage Your Links & Analytics`,
+  description: `Access your personal ${appName} dashboard...`,
   robots: {
     index: false,
     follow: false,
   },
   openGraph: {
-    title: "Snipper Dashboard",
+    title: `${appName} Dashboard`,
   },
 };
 

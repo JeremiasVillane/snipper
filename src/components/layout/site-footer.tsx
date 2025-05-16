@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Facebook, Github, Instagram, Twitter } from "lucide-react";
 
-import { SnipperLogo } from "../../../public/snipper-logo";
+import { appName } from "@/lib/constants";
+
+import { AppLogo } from "../../../public/app-logo";
 
 export function SiteFooter() {
   return (
@@ -10,8 +12,8 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-4">
             <div className="flex items-center space-x-1.5">
-              <SnipperLogo className="size-5 text-primary" />
-              <span className="text-xl font-bold">Snipper</span>
+              <AppLogo className="size-5 text-primary" />
+              <span className="text-xl font-bold">{appName}</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Simplify and track your links with our powerful URL shortener
@@ -166,7 +168,7 @@ export function SiteFooter() {
 
         <div className="mt-12 border-t pt-6">
           <p className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Snipper. All rights reserved.
+            © {new Date().getFullYear()} {appName}. All rights reserved.
           </p>
         </div>
       </div>

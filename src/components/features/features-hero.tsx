@@ -1,3 +1,5 @@
+import { appName } from "@/lib/constants";
+
 export function FeaturesHero() {
   return (
     <section className="bg-gradient-to-b from-secondary to-secondary/20 py-20">
@@ -7,7 +9,7 @@ export function FeaturesHero() {
             Powerful Features for Your Links
           </h1>
           <p className="max-w-3xl text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            Discover all the tools and capabilities that make Snipper the
+            Discover all the tools and capabilities that make {appName} the
             perfect solution for your link management needs.
           </p>
         </div>

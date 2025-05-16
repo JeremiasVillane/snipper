@@ -1,7 +1,7 @@
 <div align="center">
-<img alt="Snipper" src="./public/snipper.svg" width="210" />
+<img alt="Snippr" src="./public/logo.svg" width="210" />
 
-# Snipper: A Modern URL Shortener & Analytics Platform
+# Snippr: A Modern URL Shortener & Analytics Platform
 
 ![Version](https://img.shields.io/github/package-json/v/jeremiasvillane/snipper.svg)
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
@@ -11,13 +11,13 @@
 
 ---
 
-**Snipper** is a powerful URL shortening application built with [Next.js](https://nextjs.org). It provides a comprehensive solution for creating, sharing, tracking, and managing your links effectively.
+**Snippr** is a powerful URL shortening application built with [Next.js](https://nextjs.org). It provides a comprehensive solution for creating, sharing, tracking, and managing your links effectively.
 
 Built with a modern tech stack including [TypeScript](https://www.typescriptlang.org), [NextAuth.js](https://next-auth.js.org) for authentication, [Prisma](https://www.prisma.io) ORM with [PostgreSQL](https://www.postgresql.org), [Tailwind CSS](https://tailwindcss.com), and UI components from [shadcn/ui](https://ui.shadcn.com/), [shadcn/ui variants](https://shadcn-ui-variants.vercel.app/), [MagicUI](https://magicui.design/), [AceternityUI](https://ui.aceternity.com/), [CultUI](https://www.cult-ui.com/). Animations are powered by [Motion](https://motion.dev/) and themes managed by [Next-Themes](https://www.npmjs.com/package/next-themes).
 
 ## ✨ Features
 
-Snipper offers everything you need to manage your links efficiently:
+Snippr offers everything you need to manage your links efficiently:
 
 - **Custom Short Links:**
   - Create personalized, branded short links using custom aliases.

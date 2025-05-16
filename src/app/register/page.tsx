@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
+import { appName } from "@/lib/constants";
 import { constructMetadata } from "@/lib/metadata";
 import { generateOgImageUrl } from "@/lib/og";
 import { Button } from "@/components/ui/button";
@@ -16,9 +17,8 @@ import {
 import { RegisterForm } from "@/components/register/register-form";
 
 export const generateMetadata = async () => {
-  const title = "Create Account - Snipper | Sign Up Free";
-  const description =
-    "Sign up for Snipper to start creating custom short links, track clicks with detailed analytics and use the UTM builder.";
+  const title = `Create Account - ${appName} | Sign Up Free`;
+  const description = `Sign up for ${appName} to start creating custom short links, track clicks with detailed analytics and use the UTM builder.`;
 
   return constructMetadata({
     title,
@@ -29,12 +29,12 @@ export const generateMetadata = async () => {
       images: [
         {
           url: generateOgImageUrl({
-            title: "Snipper Sign Up",
+            title: `${appName} Sign Up`,
             type: "website",
           }),
           width: 1200,
           height: 630,
-          alt: "Snipper Account Registration Page",
+          alt: `${appName} Account Registration Page`,
         },
       ],
     },

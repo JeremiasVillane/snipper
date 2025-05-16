@@ -2,6 +2,7 @@ import Link from "next/link";
 import { publicUrl } from "@/env.mjs";
 import { ArrowLeft } from "lucide-react";
 
+import { appName } from "@/lib/constants";
 import { constructMetadata } from "@/lib/metadata";
 import { generateOgImageUrl } from "@/lib/og";
 import { CreateLinkBodyAPI, UpdateLinkBodyAPI } from "@/lib/schemas";
@@ -16,16 +17,15 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const generateMetadata = async () => {
-  const title = "Snipper API Documentation | Automate Link Shortening";
+  const title = `${appName} API Documentation | Automate Link Shortening`;
 
-  const description =
-    "Explore the official Snipper API documentation. Learn how to programmatically create, manage, and retrieve analytics for your short links using your API key. Includes endpoint details, request/response examples, and authentication guides.";
+  const description = `Explore the official ${appName} API documentation. Learn how to programmatically create, manage, and retrieve analytics for your short links using your API key. Includes endpoint details, request/response examples, and authentication guides.`;
 
   return constructMetadata({
     title,
     description,
     keywords: [
-      "snipper api",
+      `${appName.toLowerCase()} api`,
       "url shortener api",
       "link shortener api docs",
       "rest api",
@@ -41,12 +41,12 @@ export const generateMetadata = async () => {
       images: [
         {
           url: generateOgImageUrl({
-            title: "Snipper API Documentation",
+            title: `${appName} API Documentation`,
             type: "article",
           }),
           width: 1200,
           height: 630,
-          alt: "Snipper API Documentation for Developers - Automate Link Creation",
+          alt: `${appName} API Documentation for Developers - Automate Link Creation`,
         },
       ],
     },
@@ -72,9 +72,11 @@ export default function ApiDocsPage() {
         <div className="mx-auto max-w-4xl">
           <div className="space-y-6">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight">Snipper API</h2>
+              <h2 className="text-3xl font-bold tracking-tight">
+                {appName} API
+              </h2>
               <p className="mt-2 text-muted-foreground">
-                The Snipper API allows you to programmatically create, manage,
+                The {appName} API allows you to programmatically create, manage,
                 and analyze short links.
               </p>
             </div>

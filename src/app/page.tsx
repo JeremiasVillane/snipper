@@ -1,12 +1,12 @@
 import { publicUrl } from "@/env.mjs";
 
+import { appName } from "@/lib/constants";
 import { constructMetadata } from "@/lib/metadata";
 import { generateOgImageUrl } from "@/lib/og";
-import { BlurFade } from "@/components/ui/blur-fade";
 import { CTASection, FeaturesSection, HeroSection } from "@/components/home";
 
 export const generateMetadata = async () => {
-  const title = "Snipper: URL shortnener | Landing Page";
+  const title = `${appName}: URL shortnener | Landing Page`;
 
   const description =
     "Create personalized, branded links and track its performance with comprehensive statistics and insights.";
@@ -38,19 +38,6 @@ export default function Home() {
     <main className="flex-1">
       <HeroSection />
 
-      {/* <BlurFade direction="up" delay={0.2}>
-        <section className="container py-12 md:py-24">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Shorten Your URL
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              Create a short link in seconds. Sign up for more features.
-            </p>
-          </div>
-        </section>
-      </BlurFade> */}
-
       <FeaturesSection />
 
       <CTASection />
@@ -67,11 +54,11 @@ export default function Home() {
         <div className="mt-12 grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle>What is Snipper?</CardTitle>
+              <CardTitle>What is Snippr?</CardTitle>
             </CardHeader>
             <CardContent>
               <p>
-                Snipper is a URL shortening service that allows you to create
+                Snippr is a URL shortening service that allows you to create
                 short, memorable links from long URLs. It also provides
                 analytics and tracking features.
               </p>
@@ -83,7 +70,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p>
-                Yes, Snipper offers a free tier with basic URL shortening
+                Yes, Snippr offers a free tier with basic URL shortening
                 features. Premium features are available with paid plans.
               </p>
             </CardContent>

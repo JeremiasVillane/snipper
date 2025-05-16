@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getShortLink, getShortLinkAnalytics } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
+import { appName } from "@/lib/constants";
 import { usersRepository } from "@/lib/db/repositories";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -59,7 +60,7 @@ export async function generateMetadata({
     dateRangeDescPart = ` until ${toDateStr}`;
   }
 
-  const pageTitle = `Analytics for ${shortCode}${dateRangeTitlePart} - Snipper`;
+  const pageTitle = `Analytics for ${shortCode}${dateRangeTitlePart} - ${appName}`;
   const pageDescription = `View detailed statistics for short link ${shortCode}${dateRangeDescPart}. ${
     originalUrl ? `Targets ${originalUrl}.` : ""
   }`;

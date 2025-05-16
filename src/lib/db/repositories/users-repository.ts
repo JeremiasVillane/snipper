@@ -1,4 +1,11 @@
-import type { Plan, Prisma, Subscription, User } from "@prisma/client";
+import type {
+  CustomDomain,
+  Plan,
+  Prisma,
+  ShortLink,
+  Subscription,
+  User,
+} from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
 
@@ -26,6 +33,26 @@ export const usersRepository = {
     const user = await prisma.user.findFirst({
       where: { email },
     });
+    return user;
+  },
+
+  async findByCustomDomain(domain: string) {
+    const user = await prisma.user.findFirst({
+      where: {
+        customDomains: {
+          some: {
+            domain,
+          },
+        },
+      },
+      include: {
+        shortLinks: {
+          where: { customDomain: { domain } },
+          include: { customDomain: { select: { domain: true } } },
+        },
+      },
+    });
+
     return user;
   },
 
