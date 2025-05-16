@@ -1,42 +1,117 @@
-import { Metadata } from "next";
-import { Nunito_Sans } from "next/font/google";
-import Image from "next/image";
-import { twMerge } from "tailwind-merge";
+import { publicUrl } from "@/env.mjs";
 
-export const metadata: Metadata = {
-  title: "Snipper: URL shortnener",
+import { constructMetadata } from "@/lib/metadata";
+import { generateOgImageUrl } from "@/lib/og";
+import { BlurFade } from "@/components/ui/blur-fade";
+import { CTASection, FeaturesSection, HeroSection } from "@/components/home";
+
+export const generateMetadata = async () => {
+  const title = "Snipper: URL shortnener | Landing Page";
+
+  const description =
+    "Create personalized, branded links and track its performance with comprehensive statistics and insights.";
+
+  return constructMetadata({
+    title,
+    description,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImageUrl({
+            title,
+            type: "website",
+          }),
+          width: 1200,
+          height: 630,
+          alt: "Create and track short links",
+        },
+      ],
+    },
+    alternates: {
+      canonical: publicUrl,
+    },
+  });
 };
-
-const nunito = Nunito_Sans({ weight: "400", subsets: ["latin"] });
 
 export default function Home() {
   return (
-    <main
-      style={{ height: "calc(100vh - 64px)" }}
-      className="relative w-full overflow-hidden flex flex-col items-center justify-center rounded-lg select-none"
-    >
-      <div
-        className="absolute inset-0 w-full h-full invert dark:invert-0 grayscale dark:grayscale-0 pointer-events-none"
-        style={{ backgroundImage: "url(/bg.png)", opacity: "0.5" }}
-      />
-      <Image
-        src="/snipper.svg"
-        alt="Snipper"
-        width={99}
-        height={99}
-        className="dark:invert mt-[-64px] z-10"
-      />
-      <h1
-        className={twMerge(
-          "text-6xl text-black dark:text-white relative z-20 !p-0 !m-0",
-          nunito.className
-        )}
-      >
-        Snipper
-      </h1>
-      <p className="text-2xl text-center mt-2 text-neutral-700 dark:text-neutral-300 relative z-20">
-        A simple URL shortener
-      </p>
+    <main className="flex-1">
+      <HeroSection />
+
+      {/* <BlurFade direction="up" delay={0.2}>
+        <section className="container py-12 md:py-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              Shorten Your URL
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Create a short link in seconds. Sign up for more features.
+            </p>
+          </div>
+        </section>
+      </BlurFade> */}
+
+      <FeaturesSection />
+
+      <CTASection />
+
+      {/* <section id="faq" className="container py-12 md:py-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+            Frequently Asked Questions
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            Answers to common questions about our service
+          </p>
+        </div>
+        <div className="mt-12 grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle>What is Snipper?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                Snipper is a URL shortening service that allows you to create
+                short, memorable links from long URLs. It also provides
+                analytics and tracking features.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Is it free to use?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                Yes, Snipper offers a free tier with basic URL shortening
+                features. Premium features are available with paid plans.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>How long do links last?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                All users can create links without expiration. Premium users can set custom
+                expiration dates or create permanent links.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Can I customize my short links?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                Yes, premium users can create custom short links with their
+                preferred aliases, making them more memorable and branded.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </section> */}
     </main>
   );
 }
