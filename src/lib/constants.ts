@@ -21,6 +21,18 @@ export const reservedAlias = [
   "https",
   "admin",
   "settings",
+  "x",
+  "fb",
+  "ig",
+  "gh",
+  "jv",
+  "jv-cv",
+  "jv-in",
+  "jv-gh",
+  "jv-x",
+  "jv-ig",
+  "jv-fb",
+  "jv-yt",
 ];
 
 export const reservedWords = [...reservedAlias, ...reservedPaths];

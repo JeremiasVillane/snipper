@@ -84,9 +84,6 @@ export async function generateMetadata({
       colorScheme: "light",
       "viewport.isMobile": "false",
       "viewport.deviceScaleFactor": "1",
-      "viewport.width": "1200",
-      "viewport.height": "630",
-      ttl: "86400", // 1 day
     });
     ogImageUrl = `https://api.microlink.io/?${microlinkParams.toString()}`;
     ogImageWidth = 1200;

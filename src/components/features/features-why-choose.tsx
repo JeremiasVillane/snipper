@@ -26,8 +26,9 @@ const WHY_CHOOSE_ITEMS: WhyChooseItem[] = [
     description: "Manage links your way with custom tags and smart filtering",
   },
   {
-    title: "Open Source & Transparent",
-    description: "Benefit from community contributions and full transparency.",
+    title: "Source-Available & Transparent",
+    description:
+      "Review every line of code and collaborate under our non-commercial license",
   },
 ];
 

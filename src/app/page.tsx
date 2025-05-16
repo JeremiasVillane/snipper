@@ -3,12 +3,7 @@ import { publicUrl } from "@/env.mjs";
 import { constructMetadata } from "@/lib/metadata";
 import { generateOgImageUrl } from "@/lib/og";
 import { BlurFade } from "@/components/ui/blur-fade";
-import {
-  CTASection,
-  FeaturesSection,
-  HeroSection,
-  ShortenerForm,
-} from "@/components/home";
+import { CTASection, FeaturesSection, HeroSection } from "@/components/home";
 
 export const generateMetadata = async () => {
   const title = "Snipper: URL shortnener | Landing Page";
@@ -43,7 +38,7 @@ export default function Home() {
     <main className="flex-1">
       <HeroSection />
 
-      <BlurFade direction="up" delay={0.2}>
+      {/* <BlurFade direction="up" delay={0.2}>
         <section className="container py-12 md:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -53,11 +48,8 @@ export default function Home() {
               Create a short link in seconds. Sign up for more features.
             </p>
           </div>
-          <div className="mx-auto mt-8 max-w-2xl">
-            <ShortenerForm />
-          </div>
         </section>
-      </BlurFade>
+      </BlurFade> */}
 
       <FeaturesSection />
 

@@ -4,8 +4,6 @@
 # Snipper: A Modern URL Shortener & Analytics Platform
 
 ![Version](https://img.shields.io/github/package-json/v/jeremiasvillane/snipper.svg)
-[![License](https://badgen.net/github/license/jeremiasvillane/snipper)](https://github.com/jeremiasvillane/snipper/blob/main/LICENSE)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper?ref=badge_shield&issueType=license)
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 ![Last commit](https://badgen.net/github/last-commit/jeremiasvillane/snipper)
 
@@ -117,8 +115,8 @@ Connect to your PostgreSQL database and set up the schema:
 
 ```shell
 # Install dependencies
-npm install
-# or yarn install / pnpm install
+pnpm install
+# or npm install / yarn install
 
 # Generate Prisma Client
 npx prisma generate
@@ -130,8 +128,8 @@ npx prisma db push
 ### Start the Development Server
 
 ```shell
-npm run dev
-# or yarn dev / pnpm dev
+pnpm run dev
+# or npm dev / yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -140,8 +138,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Licensed under the [**PolyForm Noncommercial License 1.0.0**](https://polyformproject.org/licenses/noncommercial/1.0.0/). See the `LICENSE` file for more information.
 
-[](https://app.fossa.com/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper?ref=badge_large&issueType=license)
-
 ## 📧 Contact
 
-Jeremias Villane - Connect on [LinkedIn](https://snppr.vercel.app/2Vt7W2xMe)
+Jeremias Villane - Connect on [LinkedIn](https://snppr.link/jv-in)

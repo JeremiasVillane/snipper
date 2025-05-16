@@ -22,7 +22,7 @@ const pricingTiers: PricingTier[] = [
     price: 0,
     description: "Perfect for personal use and trying out the service.",
     features: [
-      { text: "Up to 100 short links", included: true },
+      { text: "Up to 10 short links", included: true },
       { text: "Basic click analytics", included: true },
       { text: "UTM builder (1 campaign per link)", included: true },
       { text: "QR code generation", included: true },

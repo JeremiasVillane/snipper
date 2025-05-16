@@ -110,6 +110,20 @@ To confirm we have the right to use your contributions under the PolyForm Noncom
    Signed-off-by: Your Name <your.email@example.com>
    ```
 
+   Git even has a -s command line option to append this automatically to your commit message:
+
+   ```
+   $ git commit -s -m 'This is my commit message'
+   ```
+
+   This will result in:
+
+   ```
+   This is my commit message
+
+   Signed-off-by: Your Name <your.email@example.com>
+   ```
+
 2. When you open a PR, GitHub Actions will verify that all commits include a `Signed-off-by` line.
 
 If you forget, the bot will remind you, and you can amend your commit:

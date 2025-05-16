@@ -73,20 +73,22 @@ export type authorizationMiddlewareProps =
 
 ///------ API Endpoints Types ------///
 
-export interface APIGetLink {
+interface LimiterResponse {
+  remaining: number;
+}
+
+export interface APIGetLink extends LimiterResponse {
   link: Omit<ShortLinkBaseResponse, "customDomain"> & {
     shortUrl: string;
     qrCodeUrl: string;
   };
-  remaining: number;
 }
 
-export type APIGetAllLinks = {
+export interface APIGetAllLinks extends LimiterResponse {
   links: Omit<APIGetLink["link"], "qrCodeUrl">[];
-  remaining: number;
-};
+}
 
-export type APIPostLink = {
+export interface APIPostLink extends LimiterResponse {
   link: Omit<
     APIGetLink["link"],
     | "userId"
@@ -95,12 +97,12 @@ export type APIPostLink = {
     | "customOgTitle"
     | "customOgDescription"
   >;
-  remaining: number;
-};
+}
 
-export type APIDeleteLink = { success: boolean; remaining: number };
+export interface APIDeleteLink extends LimiterResponse {
+  success: boolean;
+}
 
-export type APIGetLinkAnalytics = {
+export interface APIGetLinkAnalytics extends LimiterResponse {
   analytics: Omit<ShortLinkAnalyticsData, "recentClicks" | "definedCampaigns">;
-  remaining: number;
-};
+}

@@ -7,10 +7,12 @@ import { BlurFade } from "@/components/ui/blur-fade";
 import { Button } from "@/components/ui/button";
 import { TextAnimate } from "@/components/ui/text-animate";
 
+import { ScrollDownButton } from "../ui/scroll-down-button";
+
 export function HeroSection() {
   return (
     <section className="bg-gradient-to-b from-secondary to-secondary/20 py-20">
-      <div className="container px-4 md:px-6">
+      <div className="container min-h-screen px-4 md:px-6">
         <div className="grid items-center justify-center gap-6 lg:grid-cols-2 lg:justify-start lg:gap-12">
           <div className="space-y-4 text-center lg:text-left">
             <BlurFade direction="right">
@@ -96,6 +98,9 @@ export function HeroSection() {
               </CardBody>
             </CardContainer>
           </BlurFade>
+        </div>
+        <div className="flex w-full items-center justify-center pt-20">
+          <ScrollDownButton targetId="features" />
         </div>
       </div>
     </section>

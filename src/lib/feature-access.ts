@@ -51,7 +51,7 @@ export function validateShortLinkFeatures(
       condition: Boolean(
         formData?.utmSets?.length && formData.utmSets.length > 1,
       ),
-      planAllows: !activeUserPlans.some((p) => p.maxLinks === 100),
+      planAllows: !activeUserPlans.some((p) => p.maxLinks === 10),
       errorMessage:
         "Your current plan only allows you to set up one campaign per link. Upgrade your plan to set unlimited campaigns.",
     },
