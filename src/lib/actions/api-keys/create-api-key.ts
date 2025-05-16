@@ -19,6 +19,10 @@ export const createApiKey = authActionClient({
 })
   .metadata({
     name: "create-api-key",
+    track: {
+      event: "create_api_key",
+      channel: "analytics",
+    },
     limiter: {
       refillRate: 5,
       interval: 10,

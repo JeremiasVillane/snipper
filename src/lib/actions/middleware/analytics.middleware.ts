@@ -25,7 +25,11 @@ export const analyticsMiddleware = createMiddleware<{
       posthog!.capture({
         distinctId: ctx.userId,
         event: track.event,
-        properties: {},
+        properties: {
+          action: metadata.name,
+          channel: track.channel,
+          userId: ctx.userId,
+        },
       });
 
       await posthog!.shutdown();

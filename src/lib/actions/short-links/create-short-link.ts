@@ -21,6 +21,10 @@ export const createShortLink = authActionClient({
 })
   .metadata({
     name: "create-short-link",
+    track: {
+      event: "create_short_link",
+      channel: "analytics",
+    },
     limiter: {
       refillRate: 10,
       interval: 5,

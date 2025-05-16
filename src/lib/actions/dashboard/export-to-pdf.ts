@@ -11,6 +11,10 @@ export const exportToPDF = authActionClient({
 })
   .metadata({
     name: "export-analytics-to-pdf",
+    track: {
+      event: "export_analytics_to_pdf",
+      channel: "analytics",
+    },
     limiter: {
       refillRate: 5,
       interval: 10,

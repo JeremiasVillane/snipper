@@ -42,6 +42,12 @@ export const actionClientWithMeta = createSafeActionClient({
   defineMetadataSchema() {
     return z.object({
       name: z.string(),
+      track: z
+        .object({
+          event: z.string(),
+          channel: z.string(),
+        })
+        .optional(),
       limiter: z
         .object({
           refillRate: z.number(),

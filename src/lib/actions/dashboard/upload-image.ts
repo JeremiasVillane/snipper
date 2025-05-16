@@ -17,6 +17,10 @@ export const uploadImage = authActionClient({
 })
   .metadata({
     name: "upload-image",
+    track: {
+      event: "upload_image",
+      channel: "analytics",
+    },
     limiter: {
       refillRate: 5,
       interval: 15,

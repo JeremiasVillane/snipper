@@ -11,6 +11,10 @@ export const createCustomDomain = authActionClient({
 })
   .metadata({
     name: "create-custom-domain",
+    track: {
+      event: "create_custom_domain",
+      channel: "analytics",
+    },
     limiter: {
       refillRate: 1,
       interval: 60,
