@@ -1,7 +1,13 @@
 {
   "name": "snipper",
   "version": "0.3.0",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
+  "licenses": [
+    {
+      "type": "PolyForm Noncommercial 1.0.0",
+      "url": "https://polyformproject.org/licenses/noncommercial/1.0.0/"
+    }
+  ],
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",

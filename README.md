@@ -138,7 +138,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 📜 License
 
-Distributed under the [**MIT License**](https://www.google.com/search?q=./LICENSE). See the `LICENSE` file for more information.
+Licensed under the [**PolyForm Noncommercial License 1.0.0**](https://polyformproject.org/licenses/noncommercial/1.0.0/). See the `LICENSE` file for more information.
 
 [](https://app.fossa.com/projects/git%2Bgithub.com%2FJeremiasVillane%2Fsnipper?ref=badge_large&issueType=license)
 
