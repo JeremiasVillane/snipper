@@ -130,7 +130,7 @@ export async function checkURLReputation(url: string): Promise<boolean> {
     );
     clearTimeout(timeoutId);
 
-    if (!response.ok) return false;
+    if (!response.ok) return true;
 
     const data = await response.json();
     const isSafe = !data.malware && !data.spamming && data.dns_valid;

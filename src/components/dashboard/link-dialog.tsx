@@ -378,7 +378,12 @@ export function LinkDialog({
                             <FormControl>
                               <Input
                                 {...field}
-                                placeholder="https://example.com/your-very-long-url..."
+                                value={field.value?.replace(/^https?:\/\//, "")}
+                                onChange={(e) =>
+                                  field.onChange(`https://${e.target.value}`)
+                                }
+                                startInline="https://"
+                                placeholder="example.com/your-very-long-url..."
                                 autoComplete="off"
                                 disabled={!!initialData}
                               />

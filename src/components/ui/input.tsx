@@ -1,47 +1,47 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /**
    * Optional React element to be displayed as an icon at the beginning of the input,
    * inside the border. Typically an SVG or an icon component.
    */
-  startIcon?: React.ReactElement<HTMLElement | SVGElement | unknown>
+  startIcon?: React.ReactElement<HTMLElement | SVGElement | unknown>;
 
   /**
    * Optional React element to be displayed as an icon at the end of the input,
    * inside the border. Typically an SVG or an icon component.
    */
-  endIcon?: React.ReactElement<HTMLElement | SVGElement | unknown>
+  endIcon?: React.ReactElement<HTMLElement | SVGElement | unknown>;
 
   /**
    * Optional string content displayed inline at the start of the input,
    * after the start icon (if present), inside the border. Useful for prefixes like units or symbols.
    */
-  startInline?: string
+  startInline?: string;
 
   /**
    * Optional string content displayed inline at the end of the input,
    * before the end icon or character counter (if present), inside the border. Useful for suffixes.
    */
-  endInline?: string
+  endInline?: string;
 
   /**
    * Optional React node displayed as an addon before the input field,
    * visually attached but outside the input's main container/border.
    * Useful for labels, buttons, or dropdown triggers associated with the input.
    */
-  startAddon?: React.ReactNode
+  startAddon?: React.ReactNode;
 
   /**
    * Optional React node displayed as an addon after the input field,
    * visually attached but outside the input's main container/border.
    * Useful for labels, buttons, or dropdown triggers associated with the input.
    */
-  endAddon?: React.ReactNode
+  endAddon?: React.ReactNode;
 
   /**
    * Determines if and where the character count (current/maxLength) is displayed.
@@ -51,7 +51,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
    * - 'false': Do not show the counter (default).
    * @default "false"
    */
-  showMaxLength?: "inside" | "outside" | "false"
+  showMaxLength?: "inside" | "outside" | "false";
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -72,42 +72,44 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       maxLength,
       ...props
     },
-    ref
+    ref,
   ) => {
-    const [internalValue, setInternalValue] = React.useState(defaultValue ?? "")
-    const isControlled = value !== undefined
-    const currentValue = isControlled ? value : internalValue
+    const [internalValue, setInternalValue] = React.useState(
+      defaultValue ?? "",
+    );
+    const isControlled = value !== undefined;
+    const currentValue = isControlled ? value : internalValue;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = maxLength
         ? e.target.value.slice(0, maxLength)
-        : e.target.value
-      if (!isControlled) setInternalValue(newValue)
-      onChange?.(e)
-    }
+        : e.target.value;
+      if (!isControlled) setInternalValue(newValue);
+      onChange?.(e);
+    };
 
-    const characterCount = String(currentValue).length
-    const hasAddons = startAddon || endAddon
+    const characterCount = String(currentValue).length;
+    const hasAddons = startAddon || endAddon;
 
     const renderInline = (content: React.ReactNode, side: "start" | "end") => (
       <span
         className={cn(
           "flex select-none items-center bg-background text-sm text-muted-foreground",
           side === "start"
-            ? "order-after-icon pl-2"
-            : "order-before-counter pr-2"
+            ? "order-after-icon pl-3"
+            : "order-before-counter pr-2",
         )}
       >
         {content}
       </span>
-    )
+    );
 
     return (
       <div className="w-full">
         <div
           className={cn(
             "flex items-stretch rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-ring",
-            hasAddons && "overflow-hidden"
+            hasAddons && "overflow-hidden",
           )}
         >
           {startAddon && (
@@ -128,9 +130,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         startIcon?.props as React.HTMLProps<
                           HTMLElement | SVGElement
                         >
-                      )?.className
-                    )
-                  }
+                      )?.className,
+                    ),
+                  },
                 )}
               </div>
             )}
@@ -143,12 +145,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 "w-full min-w-0 flex-1 bg-transparent py-2 text-sm",
                 "placeholder:text-muted-foreground focus-visible:outline-none",
                 "file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:opacity-50",
-                startIcon ? "pl-2" : "pl-3",
+                startIcon ? "pl-2" : startInline ? "pl-1" : "pl-3",
                 endIcon || endInline || showMaxLength === "inside"
                   ? "pr-2"
                   : "pr-3",
                 !hasAddons && "rounded-md",
-                className
+                className,
               )}
               ref={ref}
               value={currentValue ?? ""}
@@ -176,9 +178,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         endIcon?.props as React.HTMLProps<
                           HTMLElement | SVGElement
                         >
-                      )?.className
-                    )
-                  }
+                      )?.className,
+                    ),
+                  },
                 )}
               </div>
             )}
@@ -197,10 +199,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </div>
         )}
       </div>
-    )
-  }
-)
-Input.displayName = "Input"
+    );
+  },
+);
+Input.displayName = "Input";
 
-export { Input }
-export type { InputProps }
+export { Input };
+export type { InputProps };
