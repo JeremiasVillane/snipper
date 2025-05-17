@@ -240,7 +240,7 @@ async function main() {
   type ShortLinkSeedData = {
     shortCode: string;
     originalUrl: string;
-    description: string;
+    title: string;
     tagsToAssign: string[];
     expiresAt?: Date;
     utmSets?: UTMSetDefinition[];
@@ -250,7 +250,7 @@ async function main() {
     {
       shortCode: "ggl",
       originalUrl: `https://google.com/`,
-      description: "Link to Google Search",
+      title: "Link to Google Search",
       tagsToAssign: ["tools", "important", "demo-data"],
       utmSets: [
         {
@@ -270,13 +270,13 @@ async function main() {
     {
       shortCode: "ghub",
       originalUrl: "https://github.com",
-      description: "Link to GitHub",
+      title: "Link to GitHub",
       tagsToAssign: ["tools", "dev", "demo-data"],
     },
     {
       shortCode: "lkdn",
       originalUrl: `https://linkedin.com/`,
-      description: "Link to LinkedIn",
+      title: "Link to LinkedIn",
       tagsToAssign: ["social", "marketing", "demo-data"],
       utmSets: [
         {
@@ -290,7 +290,7 @@ async function main() {
     {
       shortCode: "fb",
       originalUrl: `https://facebook.com/?ref=page_internal`,
-      description: "Link to Facebook",
+      title: "Link to Facebook",
       tagsToAssign: ["social", "demo-data"],
       utmSets: [
         { source: "fb_page", medium: "social", campaign: "spring_sale_2025" },
@@ -304,7 +304,7 @@ async function main() {
     {
       shortCode: "demo",
       originalUrl: `https://example.com/?other_param=value1`,
-      description: "A randomly generated link",
+      title: "A randomly generated link",
       tagsToAssign: ["marketing", "demo-data"],
       utmSets: [
         {
@@ -319,7 +319,7 @@ async function main() {
     {
       shortCode: "blog",
       originalUrl: "https://medium.com",
-      description: "Link to Medium blog platform",
+      title: "Link to Medium blog platform",
       expiresAt: faker.date.future({ years: 1 }),
       tagsToAssign: ["social", "demo-data"],
       utmSets: [
@@ -347,7 +347,7 @@ async function main() {
         originalUrl: linkData.originalUrl,
         shortCode: linkData.shortCode,
         userId: demoUser.id,
-        description: linkData.description,
+        title: linkData.title,
         clicks: 0,
         expiresAt: linkData.expiresAt,
         createdAt: randomCreatedAt,

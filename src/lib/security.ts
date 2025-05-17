@@ -133,7 +133,7 @@ export async function checkURLReputation(url: string): Promise<boolean> {
     if (!response.ok) return false;
 
     const data = await response.json();
-    const isSafe = data.malware || data.spamming || !data.dns_valid;
+    const isSafe = !data.malware && !data.spamming && data.dns_valid;
 
     await redisClient?.setex(cacheKey, 3600, isSafe ? 0 : 1);
 

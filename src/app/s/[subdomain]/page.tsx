@@ -61,26 +61,6 @@ export default async function SubdomainPage({ params }: SubdomainPage) {
             {/* <p className="max-w-md text-center text-gray-600">{userData.bio}</p> */}
           </header>
 
-          {/* Social Links */}
-          {/* <div className="flex space-x-4">
-            {userData.socialLinks.map((social) => (
-              <Link
-                key={social.platform}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-white p-2 text-gray-600 shadow-sm transition-all hover:scale-110 hover:text-purple-600 hover:shadow-md"
-                aria-label={`${social.platform} profile`}
-              >
-                {social.platform === "twitter" && <Twitter size={20} />}
-                {social.platform === "instagram" && <Instagram size={20} />}
-                {social.platform === "github" && <Github size={20} />}
-                {social.platform === "linkedin" && <Linkedin size={20} />}
-                {social.platform === "email" && <Mail size={20} />}
-              </Link>
-            ))}
-          </div> */}
-
           {/* Links */}
           <List variant="none" spacing="loose" className="w-full">
             {userData.shortLinks.map((link) => {

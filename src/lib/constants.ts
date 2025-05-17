@@ -18,8 +18,9 @@ export const reservedAlias = [
   "www",
   "admin",
   "api",
-  "snnpr",
   "snipper",
+  "snippr",
+  "snnpr",
   "google",
   "http",
   "https",
@@ -50,7 +51,7 @@ export const REGEX = {
    * - not start or end with a hyphen or underscore
    * - be between 3 and 15 characters long
    */
-  shortCode: /^(?!.*(--|__|-_|_-))(?![-_])a-zA-Z0-9-_]{3,15}(?<![-_])$/,
+  shortCode: /^(?!.*(--|__|-_|_-))(?![-_])[a-zA-Z0-9_-]{3,15}(?<![-_])$/,
   /** It must:
    * - start with a letter or number
    * - end with a letter or number
@@ -59,5 +60,5 @@ export const REGEX = {
    * - not start or end with a hyphen or underscore
    * - be between 2 and 12 characters long
    */
-  subDomain: /^(?![-_])(?!.*(--|__|-_|_-))[a-z0-9-_]{2,12}(?<![-_])$/,
+  subDomain: /^(?!.*(--|__|-_|_-))(?![-_])[a-z0-9_-]{2,12}(?<![-_])$/,
 };
