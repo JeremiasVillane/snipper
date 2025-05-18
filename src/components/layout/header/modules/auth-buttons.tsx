@@ -63,7 +63,7 @@ export function AuthButtons({
     <>
       <div className="flex items-center gap-2 p-2">
         <User className="h-4 w-4" />
-        <span>{session?.user?.name}</span>
+        <span>{session?.user?.name ?? "My Account"}</span>
       </div>
       <button
         className="flex w-full items-center gap-2 rounded-md p-2 text-left hover:bg-secondary"
@@ -77,6 +77,6 @@ export function AuthButtons({
       </button>
     </>
   ) : (
-    <UserMenu {...{ avatar }} />
+    <UserMenu avatar={avatar} userName={session?.user?.name} />
   );
 }

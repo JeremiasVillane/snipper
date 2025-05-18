@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BarChart3, Key, Settings, User } from "lucide-react";
+import { BarChart3, Key, LogOut, Settings, User } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,38 +15,43 @@ import {
 
 interface UserMenuProps {
   avatar: string | undefined | null;
+  userName: string | undefined;
 }
 
-export default function UserMenu({ avatar }: UserMenuProps) {
+const iconStyle = "mr-2 h-4 w-4 group-hover:scale-105";
+
+export default function UserMenu({ avatar, userName }: UserMenuProps) {
   return (
     <div className="flex items-center gap-4">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-            <Avatar className="h-8 w-8">
+            <Avatar className="h-8 w-8 hover:text-foreground active:text-foreground">
               <AvatarImage src={avatar ?? ""} />
-              <AvatarFallback>U</AvatarFallback>
+              <AvatarFallback>{userName?.[0] ?? <User />}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuContent align="end" className="min-w-36 max-w-40">
+          <DropdownMenuLabel className="truncate">
+            {userName ?? "My Account"}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/dashboard">
-              <BarChart3 className="mr-2 h-4 w-4" />
+            <Link href="/dashboard" className="group">
+              <BarChart3 className={iconStyle} />
               Dashboard
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/dashboard/api-keys">
-              <Key className="mr-2 h-4 w-4" />
+            <Link href="/dashboard/api-keys" className="group">
+              <Key className={iconStyle} />
               API Keys
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/dashboard/settings">
-              <Settings className="mr-2 h-4 w-4" />
+            <Link href="/dashboard/settings" className="group">
+              <Settings className={iconStyle} />
               Settings
             </Link>
           </DropdownMenuItem>
@@ -55,8 +60,9 @@ export default function UserMenu({ avatar }: UserMenuProps) {
             onClick={async () => {
               await signOut({ callbackUrl: "/" });
             }}
+            className="group"
           >
-            Log out
+            <LogOut className={iconStyle} /> Log out
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

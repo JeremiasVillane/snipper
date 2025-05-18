@@ -1,3 +1,5 @@
+"use server";
+
 import { customDomainsRepository } from "@/lib/db/repositories";
 
 import { authActionClient } from "../safe-action";

@@ -38,12 +38,12 @@ export function RegisterForm() {
 
   const onTurnstileVerify = (token: string) => {
     form.setValue("turnstileToken", token);
-    console.log("Register Turnstile verified, token:", token);
+    console.info("Register Turnstile verified");
   };
 
   const onTurnstileExpire = () => {
     form.setValue("turnstileToken", null);
-    console.log("Register Turnstile expired");
+    console.info("Register Turnstile expired");
     toast({
       title: "CAPTCHA expired",
       description: "Please re-verify.",

@@ -20,7 +20,7 @@ export const deleteApiKey = authActionClient({
     limiter: {
       refillRate: 5,
       interval: 10,
-      capacity: 5,
+      capacity: 10,
       requested: 1,
     },
   })

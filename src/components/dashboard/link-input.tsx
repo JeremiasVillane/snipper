@@ -5,8 +5,11 @@ import { ChevronDown, Pencil, Plus, X } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 
+import { deleteCustomDomain } from "@/lib/actions/custom-domains";
+import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { CreateLinkFormData } from "@/lib/schemas";
 import { ShortLinkFromRepository } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -23,6 +26,8 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 
+import { toast } from "../ui/simple-toast";
+
 const currentHost = new URL(publicUrl).host;
 
 interface ShortLinkInputProps {
@@ -37,13 +42,18 @@ const SubDomainField = ({
 }: Omit<ShortLinkInputProps, "initialData">) => {
   const [newCustomDomain, setNewCustomDomain] = useState<string | null>(null);
   const [isCustomDomain, setIsCustomDomain] = useState(false);
+  const [customDomainToDelete, setCustomDomainToDelete] = useState<
+    string | null
+  >(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [open, setOpen] = useState(false);
 
   const renderTemp = () => {
     return (
       newCustomDomain && (
         <div className="mt-2 flex cursor-default items-center justify-between gap-4 border-t pt-2 text-sm">
-          <span className="flex items-center gap-0.5 text-foreground/80">
+          <span className="flex items-center gap-0.5 overflow-hidden text-foreground/80">
             <X
               role="button"
               onClick={() => {
@@ -51,11 +61,11 @@ const SubDomainField = ({
                 setNewCustomDomain(null);
                 setOpen(false);
               }}
-              className="mr-1 size-[0.9rem] text-foreground hover:text-destructive"
-              data-tooltip-id="subdomain-delete"
+              className="mr-1 size-[0.9rem] shrink-0 text-foreground hover:text-destructive"
+              data-tooltip-id="temp-subdomain-delete"
               data-tooltip-content="Remove custom subdomain"
             />
-            <span>
+            <span className="truncate">
               {newCustomDomain}.{currentHost}
             </span>
           </span>
@@ -63,9 +73,68 @@ const SubDomainField = ({
           <span className="text-xs italic text-muted-foreground/80">
             pending
           </span>
-          <ReactTooltip id="subdomain-delete" />
+          <ReactTooltip id="temp-subdomain-delete" />
         </div>
       )
+    );
+  };
+
+  const renderDeleteConfirmation = () => {
+    return (
+      <div className="mt-2 flex flex-col items-center justify-between gap-4 border-t pt-2 text-sm">
+        <span className="text-foreground/80">
+          Are you sure you want to delete <br />
+          this custom subdomain?
+        </span>
+        <div className="flex w-full flex-col gap-1 md:flex-row">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              setCustomDomainToDelete(null);
+              setOpen(false);
+            }}
+            className="h-8 w-full"
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={async () => {
+              setIsDeleting(true);
+              const { data, success, error } = await deleteCustomDomain({
+                domainId: customDomainToDelete as string,
+              }).then((res) => getSafeActionResponse(res));
+
+              if (success) {
+                toast({
+                  title: "Success",
+                  description: data.message,
+                  type: "success",
+                });
+                form.setValue("customDomain", null);
+              } else {
+                toast({
+                  title: "Error",
+                  description: error,
+                  type: "error",
+                });
+              }
+
+              setIsDeleting(false);
+              setCustomDomainToDelete(null);
+              setOpen(false);
+            }}
+            className="h-8 w-full"
+            isLoading={isDeleting}
+            disabled={isDeleting}
+          >
+            Delete
+          </Button>
+        </div>
+      </div>
     );
   };
 
@@ -76,28 +145,46 @@ const SubDomainField = ({
           {userCustomDomains.map((domain) => (
             <span
               key={domain.id}
-              className="group flex cursor-pointer items-center gap-0.5 text-sm"
+              className="group flex cursor-pointer items-center gap-0.5 overflow-hidden text-sm"
             >
               <X
                 role="button"
-                onClick={() => {
-                  form.setValue("customDomain", "");
-                  setOpen(false);
-                }}
-                className="mr-1 size-[0.9rem] text-foreground hover:text-destructive"
+                onClick={() =>
+                  !isDeleting && setCustomDomainToDelete(domain.id)
+                }
+                className={cn(
+                  "mr-1 size-[0.9rem] text-foreground hover:text-destructive",
+                  customDomainToDelete === domain.id &&
+                    "text-destructive hover:text-destructive",
+                  isDeleting && "cursor-not-allowed opacity-50",
+                )}
                 data-tooltip-id="subdomain-delete"
                 data-tooltip-content="Remove custom subdomain"
               />
               <span
                 role="button"
                 onClick={() => {
-                  form.setValue("customDomain", domain.domain);
-                  setNewCustomDomain(null);
-                  setOpen(false);
+                  if (!isDeleting) {
+                    form.setValue("customDomain", domain.domain);
+                    form.setValue("isLinkHubEnabled", domain.isLinkHubEnabled);
+                    form.setValue("linkHubTitle", domain.linkHubTitle);
+                    form.setValue(
+                      "linkHubDescription",
+                      domain.linkHubDescription,
+                    );
+                    setNewCustomDomain(null);
+                    setOpen(false);
+                  }
                 }}
-                className="text-foreground/80 group-hover:text-foreground"
+                className={cn(
+                  "truncate",
+                  "text-foreground/80 group-hover:text-foreground",
+                  customDomainToDelete === domain.id &&
+                    "text-destructive group-hover:text-destructive",
+                  isDeleting && "cursor-not-allowed opacity-50",
+                )}
               >
-                {domain.domain}.{currentHost}
+                {domain.domain}.{currentHost}/
               </span>
             </span>
           ))}
@@ -108,12 +195,12 @@ const SubDomainField = ({
     }
 
     return (
-      <>
+      <div>
         <span className="select-none pt-1 text-sm text-muted-foreground">
           No custom subdomains available.
         </span>
         {renderTemp()}
-      </>
+      </div>
     );
   };
 
@@ -125,6 +212,13 @@ const SubDomainField = ({
         const handleClose = () => {
           setIsCustomDomain(false);
           setOpen(false);
+        };
+
+        const handleSetTempDomain = () => {
+          domainField.onChange(newCustomDomain);
+          form.setValue("linkHubTitle", null);
+          form.setValue("linkHubDescription", null);
+          handleClose();
         };
 
         return (
@@ -155,17 +249,14 @@ const SubDomainField = ({
                       : `${currentHost}/`}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent align="start" className="w-auto px-2.5 py-2">
+                <PopoverContent align="start" className="w-56 px-2.5 py-2">
                   {isCustomDomain ? (
                     <div className="flex flex-col gap-2">
                       <Input
                         value={newCustomDomain ?? ""}
                         onChange={(e) => setNewCustomDomain(e.target.value)}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            domainField.onChange(newCustomDomain);
-                            handleClose();
-                          }
+                          if (e.key === "Enter") handleSetTempDomain();
                         }}
                         placeholder="my-subdomain"
                         autoComplete="off"
@@ -173,16 +264,13 @@ const SubDomainField = ({
                         minLength={2}
                         maxLength={12}
                         showMaxLength="inside"
-                        className="w/full h-8"
+                        className="h-8 w-full"
                       />
                       <div className="flex w-full flex-col gap-1 md:flex-row">
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => {
-                            domainField.onChange(newCustomDomain);
-                            handleClose();
-                          }}
+                          onClick={() => handleSetTempDomain()}
                           className="h-8 w-full"
                           disabled={!newCustomDomain}
                         >
@@ -200,7 +288,25 @@ const SubDomainField = ({
                     </div>
                   ) : (
                     <>
+                      <span
+                        role="button"
+                        onClick={() => {
+                          if (!isDeleting) {
+                            form.setValue("customDomain", null);
+                            setNewCustomDomain(null);
+                            setOpen(false);
+                          }
+                        }}
+                        className={`${userCustomDomains.length > 0 ? "ml-5" : "ml-0"} text-sm text-foreground/80 ${
+                          isDeleting
+                            ? "cursor-not-allowed opacity-50"
+                            : "cursor-pointer hover:text-foreground"
+                        }`}
+                      >
+                        {new URL(publicUrl).host}/
+                      </span>
                       {renderDomainSelection()}
+                      {customDomainToDelete && renderDeleteConfirmation()}
                       <Separator className="my-2" />
                       <Button
                         size="sm"
@@ -209,6 +315,7 @@ const SubDomainField = ({
                         iconAnimation="zoomIn"
                         onClick={() => setIsCustomDomain(true)}
                         className="h-8 w-full [&_svg]:size-[0.9rem]"
+                        disabled={isDeleting}
                       >
                         {!!newCustomDomain ? "Edit" : "Add new"}
                       </Button>

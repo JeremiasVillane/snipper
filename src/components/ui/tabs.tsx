@@ -41,7 +41,7 @@ const tabsListVariants = cva(
       variant: {
         default:
           "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
-        underlined: "text-muted-foreground border-b h-10",
+        underlined: "text-muted-foreground border-b h-10 bg-transparent",
         brutalist: "border-b",
         "pill-filled": "h-auto gap-1",
         "pill-outlined": "h-auto gap-1",
@@ -63,7 +63,7 @@ const tabsTriggerVariants = cva(
         default:
           "rounded-md w-full py-1 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
         underlined:
-          "h-10 border-b-2 border-transparent px-4 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:border-primary data-[state=active]:shadow-none",
+          "h-10 border-b-2 border-transparent px-4 data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:border-primary data-[state=active]:shadow-none",
         brutalist:
           "rounded-none bg-background data-[state=active]:shadow-none border border-b-[3px] border-transparent data-[state=active]:border-primary",
         "pill-filled":

@@ -40,12 +40,12 @@ export function LoginForm() {
 
   const onTurnstileVerify = (token: string) => {
     form.setValue("turnstileToken", token);
-    console.log("Turnstile verified, token:", token);
+    console.info("Turnstile verified");
   };
 
   const onTurnstileExpire = () => {
     form.setValue("turnstileToken", null);
-    console.log("Turnstile expired");
+    console.info("Turnstile expired");
     toast({
       title: "CAPTCHA expired",
       description: "Please re-verify.",

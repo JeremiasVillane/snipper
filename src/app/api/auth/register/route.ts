@@ -62,7 +62,7 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("Registration CAPTCHA: Turnstile verification successful.");
+    console.info("Registration CAPTCHA: Turnstile verification successful.");
   } catch (error) {
     console.error(
       "Registration CAPTCHA: Error during Turnstile verification fetch:",

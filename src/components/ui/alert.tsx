@@ -19,7 +19,7 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: "[&>svg]:text-foreground",
+        default: "[&>svg]:text-primary",
         destructive: "text-destructive [&>svg]:text-destructive",
         success: "text-emerald-600 [&>svg]:text-emerald-600",
         warning: "text-amber-600 [&>svg]:text-amber-600",
@@ -35,18 +35,18 @@ const alertVariants = cva(
       {
         variant: "default",
         styleVariant: "outline",
-        className: "text-foreground"
+        className: "text-primary border-primary/30"
       },
       {
         variant: "default",
         styleVariant: "fill",
-        className: "bg-foreground text-background [&>svg]:text-background"
+        className: "bg-primary text-background [&>svg]:text-background"
       },
       {
         variant: "default",
         styleVariant: "bootstrap",
         className:
-          "bg-muted text-foreground/80 [&>svg]:text-foreground/80 dark:text-white dark:[&>svg]:text-white border-muted-foreground/30"
+          "bg-primary/10 text-primary/80 [&>svg]:text-primary/80 dark:text-white dark:[&>svg]:text-white border-primary/30"
       },
       {
         variant: "destructive",

@@ -58,7 +58,10 @@ export function SiteHeader() {
   return (
     <header className="fixed top-0 z-50 h-16 w-full border-b bg-background">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-1.5">
+        <Link
+          href="/"
+          className="flex items-center space-x-1.5 hover:text-primary"
+        >
           <AppLogo className="size-5 text-primary" />
           <span className="text-xl font-bold">{appName}</span>
         </Link>

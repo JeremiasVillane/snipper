@@ -91,15 +91,15 @@ export function ImgUploader({
                 (max. {maxSize}MB)
               </p>
               <Button
-                variant="outline"
-                className="mt-3"
-                onClick={openFileDialog}
                 type="button"
+                variant="outline"
+                iconLeft={
+                  <UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
+                }
+                iconAnimation="translateYUp"
+                onClick={openFileDialog}
+                className="mt-3"
               >
-                <UploadIcon
-                  className="-ms-1 size-4 opacity-60"
-                  aria-hidden="true"
-                />
                 Select image
               </Button>
             </div>

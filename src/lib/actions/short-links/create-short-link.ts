@@ -39,9 +39,17 @@ export const createShortLink = authActionClient({
 
     validateShortLinkFeatures(formData, activeUserPlans, totalUserLinks);
 
-    const urlIsSafe = await checkURLReputation(formData.originalUrl);
+    const { isSafe, isUp } = await checkURLReputation(
+      formData.originalUrl.replace(/^https?:\/\//, ""),
+    );
 
-    if (!urlIsSafe) {
+    if (!isUp) {
+      throw new Error(
+        "The URL you provided is not reachable. Please check the URL and try again.",
+      );
+    }
+
+    if (!isSafe) {
       throw new Error(
         "The URL you provided is not safe. Please check the URL and try again.",
       );
@@ -52,6 +60,8 @@ export const createShortLink = authActionClient({
         {
           originalUrl: formData.originalUrl,
           shortCode: formData.shortCode,
+          title: formData.title,
+          shortLinkIcon: formData.shortLinkIcon,
           tags: formData.tags,
           expiresAt: formData.expiresAt || null,
           password: formData.password || null,
@@ -59,6 +69,9 @@ export const createShortLink = authActionClient({
           customOgDescription: formData.customOgDescription,
           customOgImageUrl: formData.customOgImageUrl,
           customDomain: formData.customDomain,
+          isLinkHubEnabled: formData.isLinkHubEnabled,
+          linkHubTitle: formData.linkHubTitle,
+          linkHubDescription: formData.linkHubDescription,
         },
         userId,
       );

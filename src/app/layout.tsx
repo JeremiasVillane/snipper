@@ -109,7 +109,7 @@ export default async function RootLayout({
           >
             <div className="flex min-h-[calc(100vh-4rem)] flex-col">
               {children}
-              <SiteFooter />
+              {!subdomain && <SiteFooter />}
             </div>
           </div>
 

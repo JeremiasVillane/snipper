@@ -5,14 +5,14 @@ import { z } from "zod";
 
 import { shortLinksRepository } from "@/lib/db/repositories";
 import { validateShortLinkFeatures } from "@/lib/feature-access";
-import { createLinkSchema } from "@/lib/schemas";
+import { updateLinkSchema } from "@/lib/schemas";
 import { checkURLReputation } from "@/lib/security";
 
 import { authActionClient } from "../safe-action";
 
 const updateShortLinkSchema = z.object({
   linkId: z.string().min(1, "Short link ID is required"),
-  formData: createLinkSchema,
+  formData: updateLinkSchema,
 });
 
 export const updateShortLink = authActionClient({
@@ -36,11 +36,19 @@ export const updateShortLink = authActionClient({
     validateShortLinkFeatures(formData, activeUserPlans);
 
     if (formData.originalUrl) {
-      const urlIsSafe = await checkURLReputation(formData.originalUrl);
+      const { isSafe, isUp } = await checkURLReputation(
+        formData.originalUrl.replace(/^https?:\/\//, ""),
+      );
 
-      if (!urlIsSafe) {
+      if (!isSafe) {
         throw new Error(
           "The URL you provided is not safe. Please check the URL and try again.",
+        );
+      }
+
+      if (!isUp) {
+        throw new Error(
+          "The URL you provided is not reachable. Please check the URL and try again.",
         );
       }
     }

@@ -50,6 +50,7 @@ export async function GET(
     originalUrl: link.originalUrl,
     shortUrl: buildShortUrl(link.shortCode, link.customDomain?.domain),
     shortCode: link.shortCode,
+    title: link.title,
     createdAt: link.createdAt,
     expiresAt: link.expiresAt,
     clicks: link.clicks,
@@ -105,11 +106,20 @@ export async function POST(
     const body = await req.json();
     const validatedData = createLinksSchemaAPI.parse(body);
 
-    const urlIsSafe = await checkURLReputation(validatedData.originalUrl);
+    const { isSafe, isUp } = await checkURLReputation(
+      validatedData.originalUrl.replace(/^https?:\/\//, ""),
+    );
 
-    if (!urlIsSafe) {
+    if (!isSafe) {
       return NextResponse.json(
         { error: "The URL you provided is not safe." },
+        { status: 400 },
+      );
+    }
+
+    if (!isUp) {
+      return NextResponse.json(
+        { error: "The URL you provided is not reachable." },
         { status: 400 },
       );
     }
@@ -145,6 +155,7 @@ export async function POST(
         originalUrl: shortLink.originalUrl,
         shortUrl: buildShortUrl(shortLink.shortCode),
         shortCode: shortLink.shortCode,
+        title: shortLink.title,
         createdAt: shortLink.createdAt,
         expiresAt: shortLink.expiresAt,
         tags: shortLink.tags,

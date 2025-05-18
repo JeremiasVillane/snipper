@@ -113,7 +113,9 @@ export async function PATCH(
     const validatedData = updateLinksSchemaAPI.parse(body);
 
     if (validatedData.originalUrl) {
-      const urlIsSafe = await checkURLReputation(validatedData.originalUrl);
+      const urlIsSafe = await checkURLReputation(
+        validatedData.originalUrl.replace(/^https?:\/\//, ""),
+      );
 
       if (!urlIsSafe) {
         return NextResponse.json(
@@ -155,6 +157,7 @@ export async function PATCH(
         originalUrl: updatedLink.originalUrl,
         shortUrl,
         shortCode: updatedLink.shortCode,
+        title: updatedLink.title,
         clicks: updatedLink.clicks,
         createdAt: updatedLink.createdAt,
         expiresAt: updatedLink.expiresAt,

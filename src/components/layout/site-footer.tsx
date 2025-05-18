@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { Facebook, Github, Instagram, Twitter } from "lucide-react";
 
 import { appName } from "@/lib/constants";
+import { FacebookIcon } from "@/components/icons/FacebookIcon";
+import { GitHubIcon } from "@/components/icons/GitHubIcon";
+import { InstagramIcon } from "@/components/icons/InstagramIcon";
+import { TwitterXIcon } from "@/components/icons/TwitterXIcon";
 
 import { AppLogo } from "../../../public/app-logo";
 
@@ -24,28 +27,28 @@ export function SiteFooter() {
                 href="#"
                 className="text-muted-foreground hover:text-primary"
               >
-                <Twitter className="h-5 w-5" />
+                <TwitterXIcon className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
               </Link>
               <Link
                 href="#"
                 className="text-muted-foreground hover:text-primary"
               >
-                <Facebook className="h-5 w-5" />
+                <FacebookIcon className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
               </Link>
               <Link
                 href="#"
                 className="text-muted-foreground hover:text-primary"
               >
-                <Instagram className="h-5 w-5" />
+                <InstagramIcon className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
               <Link
                 href="#"
                 className="text-muted-foreground hover:text-primary"
               >
-                <Github className="h-5 w-5" />
+                <GitHubIcon className="h-5 w-5" />
                 <span className="sr-only">GitHub</span>
               </Link>
             </div>

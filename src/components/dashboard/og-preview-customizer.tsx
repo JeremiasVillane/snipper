@@ -79,6 +79,19 @@ export function OgPreviewCustomizer({
   const customOgTitle = getValues("customOgTitle");
   const customOgDescription = getValues("customOgDescription");
 
+  const getSiteName = () => {
+    const originalUrl = getValues("originalUrl");
+    if (originalUrl) {
+      try {
+        const url = new URL(originalUrl);
+        return url.host;
+      } catch (error) {
+        return "yoursite.com";
+      }
+    }
+    return "yoursite.com";
+  };
+
   useEffect(() => {
     const loadCurrentImage = async () => {
       try {
@@ -135,116 +148,113 @@ export function OgPreviewCustomizer({
           control={control}
           name="isCustomOgEnabled"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Customize Preview</FormLabel>
-                <FormDescription>
-                  Manually set the title, description, and image.
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={(checked) => {
-                    field.onChange(checked);
-                    if (!checked) {
-                      setValue("customOgTitle", null);
-                      setValue("customOgDescription", null);
-                      setValue("customOgImageUrl", null);
-                      setCurrentImageUrl(null);
-                    }
-                  }}
-                />
-              </FormControl>
+            <FormItem className="flex flex-col rounded-lg border p-4">
+              <section className="flex flex-row items-center justify-between">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Customize Preview</FormLabel>
+                  <FormDescription>
+                    Manually set the title, description, and image.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={(checked) => {
+                      field.onChange(checked);
+                      if (!checked) {
+                        setValue("customOgTitle", null);
+                        setValue("customOgDescription", null);
+                        setValue("customOgImageUrl", null);
+                        setCurrentImageUrl(null);
+                      }
+                    }}
+                  />
+                </FormControl>
+              </section>
+
+              {isCustomOgEnabled && (
+                <div className="ml-3 space-y-4 border-l border-dashed pl-3">
+                  <FormField
+                    control={control}
+                    name="customOgTitle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Preview Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter a catchy title (max 70 chars)"
+                            {...field}
+                            value={field.value ?? ""}
+                            maxLength={70}
+                            showMaxLength="inside"
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Appears prominently in the preview.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={control}
+                    name="customOgDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Preview Description</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Describe the link's content (max 200 chars)"
+                            {...field}
+                            value={field.value ?? ""}
+                            maxLength={200}
+                            rows={3}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Supports the title, shown below it.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormItem>
+                    <FormLabel>Preview Image</FormLabel>
+                    <FormDescription>
+                      Upload a custom image (Recommended: 1200x630px).
+                    </FormDescription>
+                    <FormControl>
+                      <ImgUploader
+                        {...{
+                          handleDragEnter,
+                          handleDragLeave,
+                          handleDragOver,
+                          handleDrop,
+                          openFileDialog,
+                          removeFile,
+                          getInputProps,
+                          isDragging,
+                          files,
+                          errors: imgErrors,
+                          acceptedTypes: ACCEPTED_IMAGE_TYPES,
+                          maxSize: MAX_IMAGE_SIZE_MB,
+                          previewWidth: 200,
+                          previewHeight: 105,
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage>
+                      {errors.customOgImageUrl?.message}
+                    </FormMessage>
+                  </FormItem>
+                </div>
+              )}
             </FormItem>
           )}
         />
 
-        {!isCustomOgEnabled && (
-          <p className="px-4 text-sm text-muted-foreground">
-            A preview will be automatically generated based on the original
-            URL's content.
-          </p>
-        )}
-
         {isCustomOgEnabled && (
-          <div className="ml-0 space-y-4 border-l border-dotted pl-3 md:ml-0 md:pl-4">
-            <FormField
-              control={control}
-              name="customOgTitle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Preview Title</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter a catchy title (max 70 chars)"
-                      {...field}
-                      value={field.value ?? ""}
-                      maxLength={70}
-                      showMaxLength="outside"
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Appears prominently in the preview.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="customOgDescription"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Preview Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe the link's content (max 200 chars)"
-                      {...field}
-                      value={field.value ?? ""}
-                      maxLength={200}
-                      rows={3}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Supports the title, shown below it.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormItem>
-              <FormLabel>Preview Image</FormLabel>
-              <FormDescription>
-                Upload a custom image (Recommended: 1200x630px).
-              </FormDescription>
-              <FormControl>
-                <ImgUploader
-                  {...{
-                    handleDragEnter,
-                    handleDragLeave,
-                    handleDragOver,
-                    handleDrop,
-                    openFileDialog,
-                    removeFile,
-                    getInputProps,
-                    isDragging,
-                    files,
-                    errors: imgErrors,
-                    acceptedTypes: ACCEPTED_IMAGE_TYPES,
-                    maxSize: MAX_IMAGE_SIZE_MB,
-                    previewWidth: 200,
-                    previewHeight: 105,
-                  }}
-                />
-              </FormControl>
-              <FormMessage>{errors.customOgImageUrl?.message}</FormMessage>
-            </FormItem>
-          </div>
-        )}
-
-        {isCustomOgEnabled && (
-          <div className="mt-8 border-t border-dotted pt-6">
+          <div>
             <h3 className="mb-4 text-center text-lg font-semibold">
               Live Preview
             </h3>
@@ -253,11 +263,7 @@ export function OgPreviewCustomizer({
               title={customOgTitle}
               description={customOgDescription}
               imageUrl={currentImageUrl}
-              siteName={
-                !!getValues("originalUrl")
-                  ? new URL(getValues("originalUrl")).host
-                  : "your-url.com"
-              }
+              siteName={getSiteName()}
             />
           </div>
         )}

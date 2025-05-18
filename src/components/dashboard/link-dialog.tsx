@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomDomain } from "@prisma/client";
 import { format } from "date-fns";
-import { CalendarIcon, X } from "lucide-react";
+import { CalendarIcon, InfoIcon, X } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 import { deleteImage, uploadImage } from "@/lib/actions/dashboard";
@@ -56,6 +56,8 @@ import { toast } from "@/components/ui/simple-toast";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { Separator } from "../ui/separator";
+import { IconSelector } from "./icon-selector";
 import { ShortLinkInput } from "./link-input";
 import { OgPreviewCustomizer } from "./og-preview-customizer";
 import { UtmSetDisplay } from "./utm-set-display";
@@ -96,6 +98,7 @@ export function LinkDialog({
     return {
       originalUrl: data?.originalUrl ?? "",
       shortCode: data?.shortCode ?? undefined,
+      title: data?.title ?? null,
       tags: data?.tags ?? [],
       isExpirationEnabled: !!data?.expiresAt,
       expiresAt: data?.expiresAt ?? undefined,
@@ -114,6 +117,10 @@ export function LinkDialog({
       customOgDescription: data?.customOgDescription ?? null,
       customOgImageUrl: data?.customOgImageUrl ?? null,
       customDomain: data?.customDomain?.domain ?? null,
+      isLinkHubEnabled: data?.isLinkHubEnabled ?? false,
+      linkHubTitle: data?.linkHubTitle ?? null,
+      linkHubDescription: data?.linkHubDescription ?? null,
+      shortLinkIcon: data?.shortLinkIcon ?? null,
     };
   };
 
@@ -143,9 +150,6 @@ export function LinkDialog({
   });
 
   const formValues = watch();
-
-  const isExpirationEnabled = watch("isExpirationEnabled");
-  const isPasswordEnabled = watch("isPasswordEnabled");
   const currentTags = watch("tags");
 
   const initialFormValues = useMemo(() => {
@@ -247,6 +251,14 @@ export function LinkDialog({
               customOgImageUrl: null,
             }
           : {}),
+        ...(!data.isLinkHubEnabled
+          ? {
+              linkHubTitle: null,
+              linkHubDescription: null,
+              shortLinkTitle: null,
+              shortLinkIcon: null,
+            }
+          : {}),
       };
 
       const result = !!initialData
@@ -261,9 +273,7 @@ export function LinkDialog({
       toast({
         title: result.success ? "Success!" : "Error",
         description: result.success
-          ? `Link ${
-              result.data.shortCode ? "updated" : "created"
-            } successfully.`
+          ? `Link ${!!initialData ? "updated" : "created"} successfully.`
           : result.error,
         type: result.success ? "success" : "error",
         duration: result.success ? 3000 : 9000,
@@ -385,6 +395,7 @@ export function LinkDialog({
                                 startInline="https://"
                                 placeholder="example.com/your-very-long-url..."
                                 autoComplete="off"
+                                autoFocus
                                 disabled={!!initialData}
                               />
                             </FormControl>
@@ -397,9 +408,170 @@ export function LinkDialog({
                         {...{ form, userCustomDomains, initialData }}
                       />
 
+                      {form.watch("customDomain") && (
+                        <FormField
+                          control={control}
+                          name="isLinkHubEnabled"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-col rounded-lg border p-4">
+                              <section className="flex flex-row items-center justify-between">
+                                <div className="space-y-0.5">
+                                  <FormLabel className="text-base">
+                                    Link Hub
+                                  </FormLabel>
+                                  <FormDescription>
+                                    Enable a link hub for this subdomain.{" "}
+                                    <Popover>
+                                      <PopoverTrigger>
+                                        <InfoIcon className="mb-1 inline size-4 text-primary" />
+                                      </PopoverTrigger>
+
+                                      <PopoverContent>
+                                        <div className="space-y-2 rounded-md border bg-muted/30 p-4 shadow-md">
+                                          <p className="text-sm text-muted-foreground">
+                                            A link hub is a personalized page
+                                            that displays all your shortened
+                                            links in one place. It can be shared
+                                            with others, allowing them to access
+                                            all your links easily.
+                                          </p>
+                                          <p className="text-sm text-muted-foreground">
+                                            This feature is useful for sharing
+                                            multiple links with a single URL,
+                                            such as in social media bios or
+                                            email signatures.
+                                          </p>
+                                        </div>
+                                      </PopoverContent>
+                                    </Popover>
+                                  </FormDescription>
+                                </div>
+                                <FormControl>
+                                  <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                              </section>
+
+                              {form.watch("isLinkHubEnabled") && (
+                                <section className="ml-3 space-y-4 border-l border-dashed pl-3 pt-2">
+                                  <FormField
+                                    control={control}
+                                    name="linkHubTitle"
+                                    render={({ field }) => (
+                                      <FormItem className="space-y-2">
+                                        <FormLabel>Link Hub Title</FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            {...field}
+                                            value={field.value ?? ""}
+                                            maxLength={25}
+                                            showMaxLength="inside"
+                                            placeholder="Enter a title for your link hub"
+                                            autoComplete="off"
+                                          />
+                                        </FormControl>
+                                        <FormDescription>
+                                          This title will be displayed on your
+                                          link hub page.
+                                        </FormDescription>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={control}
+                                    name="linkHubDescription"
+                                    render={({ field }) => (
+                                      <FormItem className="space-y-2">
+                                        <FormLabel>
+                                          Link Hub Description
+                                        </FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            {...field}
+                                            value={field.value ?? ""}
+                                            maxLength={100}
+                                            showMaxLength="inside"
+                                            placeholder="Enter a description for your link hub"
+                                            autoComplete="off"
+                                          />
+                                        </FormControl>
+                                        <FormDescription>
+                                          This description will be displayed on
+                                          your link hub page.
+                                        </FormDescription>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <Separator />
+
+                                  <FormField
+                                    control={control}
+                                    name="title"
+                                    render={({ field }) => (
+                                      <FormItem className="space-y-2">
+                                        <FormLabel>Short Link Title</FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            {...field}
+                                            value={field.value ?? ""}
+                                            maxLength={50}
+                                            showMaxLength="inside"
+                                            placeholder="Enter a title for your short link"
+                                            autoComplete="off"
+                                          />
+                                        </FormControl>
+                                        <FormDescription>
+                                          This will be the title of this current
+                                          short link when listed in the link
+                                          hub.
+                                        </FormDescription>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={control}
+                                    name="shortLinkIcon"
+                                    render={({ field }) => (
+                                      <FormItem className="space-y-2">
+                                        <FormLabel>Short Link Icon</FormLabel>
+                                        <FormControl>
+                                          <IconSelector
+                                            value={field.value ?? ""}
+                                            onChange={field.onChange}
+                                          />
+                                        </FormControl>
+                                        <FormDescription>
+                                          This icon will be displayed next to
+                                          the short link in the link hub.
+                                        </FormDescription>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </section>
+                              )}
+                            </FormItem>
+                          )}
+                        />
+                      )}
+
                       <FormItem>
                         <FormLabel>Tags</FormLabel>
-                        <div className="mb-2 flex flex-wrap gap-2">
+                        <div
+                          className={
+                            !!currentTags && currentTags?.length > 0
+                              ? "mb-2 flex flex-wrap gap-2"
+                              : ""
+                          }
+                        >
                           {(currentTags || []).map((tag) => (
                             <Badge
                               key={tag}
@@ -412,7 +584,7 @@ export function LinkDialog({
                                 onClick={() => handleRemoveTag(tag)}
                                 aria-label={`Remove tag ${tag}`}
                               >
-                                <X className="h-3 w-3 cursor-pointer" />
+                                <X className="size-3 cursor-pointer" />
                               </button>
                             </Badge>
                           ))}
@@ -447,129 +619,258 @@ export function LinkDialog({
                         control={control}
                         name="isExpirationEnabled"
                         render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-base">
-                                Expiration Date
-                              </FormLabel>
-                              <FormDescription>
-                                Set an expiration date for this link.
-                              </FormDescription>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={(checked) => {
-                                  field.onChange(checked);
-                                  if (!checked) {
-                                    setValue("expiresAt", undefined);
-                                  }
-                                }}
+                          <FormItem className="flex flex-col rounded-lg border p-4">
+                            <section className="flex flex-row items-center justify-between">
+                              <div className="space-y-0.5">
+                                <FormLabel className="text-base">
+                                  Expiration Date
+                                </FormLabel>
+                                <FormDescription>
+                                  Set an expiration date for this link.
+                                </FormDescription>
+                              </div>
+                              <FormControl>
+                                <Switch
+                                  checked={field.value}
+                                  onCheckedChange={(checked) => {
+                                    field.onChange(checked);
+                                    if (!checked) {
+                                      setValue("expiresAt", undefined);
+                                    }
+                                  }}
+                                />
+                              </FormControl>
+                            </section>
+
+                            {form.watch("isExpirationEnabled") && (
+                              <FormField
+                                control={control}
+                                name="expiresAt"
+                                render={({ field }) => (
+                                  <FormItem className="ml-3 space-y-2 border-l border-dashed pl-3 pt-2">
+                                    <FormLabel>Select Date</FormLabel>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <FormControl>
+                                          <Button
+                                            variant={"outline"}
+                                            className={`w-full justify-start text-left font-normal ${
+                                              !field.value &&
+                                              "text-muted-foreground"
+                                            }`}
+                                          >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {field.value ? (
+                                              format(field.value, "PPP")
+                                            ) : (
+                                              <span>Pick a date</span>
+                                            )}
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                      >
+                                        <div className="flex max-sm:flex-col">
+                                          <Calendar
+                                            mode="single"
+                                            selected={field.value ?? undefined}
+                                            onSelect={field.onChange}
+                                            disabled={(date) =>
+                                              date <
+                                              new Date(
+                                                new Date().setHours(0, 0, 0, 0),
+                                              )
+                                            } // Disable past dates
+                                            initialFocus
+                                          />
+                                          <div className="relative py-4 max-sm:order-1 max-sm:border-t sm:w-32">
+                                            <div className="h-full sm:border-s">
+                                              <div className="flex flex-col items-start px-2">
+                                                <Button
+                                                  size="sm"
+                                                  variant="ghost"
+                                                  onClick={() =>
+                                                    field.onChange(
+                                                      new Date(
+                                                        Date.now() +
+                                                          1 *
+                                                            24 *
+                                                            60 *
+                                                            60 *
+                                                            1000,
+                                                      ),
+                                                    )
+                                                  }
+                                                >
+                                                  In 1 Day
+                                                </Button>
+                                                <Button
+                                                  size="sm"
+                                                  variant="ghost"
+                                                  onClick={() =>
+                                                    field.onChange(
+                                                      new Date(
+                                                        Date.now() +
+                                                          7 *
+                                                            24 *
+                                                            60 *
+                                                            60 *
+                                                            1000,
+                                                      ),
+                                                    )
+                                                  }
+                                                >
+                                                  In 1 Week
+                                                </Button>
+                                                <Button
+                                                  size="sm"
+                                                  variant="ghost"
+                                                  onClick={() =>
+                                                    field.onChange(
+                                                      new Date(
+                                                        Date.now() +
+                                                          14 *
+                                                            24 *
+                                                            60 *
+                                                            60 *
+                                                            1000,
+                                                      ),
+                                                    )
+                                                  }
+                                                >
+                                                  In 2 Weeks
+                                                </Button>
+                                                <Button
+                                                  size="sm"
+                                                  variant="ghost"
+                                                  onClick={() =>
+                                                    field.onChange(
+                                                      new Date(
+                                                        new Date().setMonth(
+                                                          new Date().getMonth() +
+                                                            1,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  }
+                                                >
+                                                  In 1 Month
+                                                </Button>
+                                                <Button
+                                                  size="sm"
+                                                  variant="ghost"
+                                                  onClick={() =>
+                                                    field.onChange(
+                                                      new Date(
+                                                        new Date().setMonth(
+                                                          new Date().getMonth() +
+                                                            6,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  }
+                                                >
+                                                  In 1 Semester
+                                                </Button>
+                                                <Button
+                                                  size="sm"
+                                                  variant="ghost"
+                                                  onClick={() =>
+                                                    field.onChange(
+                                                      new Date(
+                                                        new Date().setFullYear(
+                                                          new Date().getFullYear() +
+                                                            1,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  }
+                                                >
+                                                  In 1 Year
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="border-t border-border p-2">
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() =>
+                                              field.onChange(undefined)
+                                            }
+                                            disabled={!field.value}
+                                          >
+                                            Clear selection
+                                          </Button>
+                                        </div>
+                                      </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
                               />
-                            </FormControl>
+                            )}
                           </FormItem>
                         )}
                       />
-
-                      {isExpirationEnabled && (
-                        <FormField
-                          control={control}
-                          name="expiresAt"
-                          render={({ field }) => (
-                            <FormItem className="ml-6 flex flex-col pt-2">
-                              <FormLabel>Select Date</FormLabel>
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <FormControl>
-                                    <Button
-                                      variant={"outline"}
-                                      className={`w-full justify-start text-left font-normal ${
-                                        !field.value && "text-muted-foreground"
-                                      }`}
-                                    >
-                                      <CalendarIcon className="mr-2 h-4 w-4" />
-                                      {field.value ? (
-                                        format(field.value, "PPP")
-                                      ) : (
-                                        <span>Pick a date</span>
-                                      )}
-                                    </Button>
-                                  </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                  className="w-auto p-0"
-                                  align="start"
-                                >
-                                  <Calendar
-                                    mode="single"
-                                    selected={field.value ?? new Date()}
-                                    onSelect={field.onChange}
-                                    disabled={(date) =>
-                                      date <
-                                      new Date(new Date().setHours(0, 0, 0, 0))
-                                    } // Disable past dates
-                                    initialFocus
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      )}
 
                       <FormField
                         control={control}
                         name="isPasswordEnabled"
                         render={({ field }) => (
-                          <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-base">
-                                Password Protection
-                              </FormLabel>
-                              <FormDescription>
-                                Require a password to access this link.
-                              </FormDescription>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={(checked) => {
-                                  field.onChange(checked);
-                                  if (!checked) {
-                                    setValue("password", undefined);
-                                  }
-                                }}
-                              />
-                            </FormControl>
+                          <FormItem className="flex flex-col rounded-lg border p-4">
+                            <section className="flex flex-row items-center justify-between">
+                              <div className="space-y-0.5">
+                                <FormLabel className="text-base">
+                                  Password Protection
+                                </FormLabel>
+                                <FormDescription>
+                                  Require a password to access this link.
+                                </FormDescription>
+                              </div>
+                              <FormControl>
+                                <Switch
+                                  checked={field.value}
+                                  onCheckedChange={(checked) => {
+                                    field.onChange(checked);
+                                    if (!checked) {
+                                      setValue("password", undefined);
+                                    }
+                                  }}
+                                />
+                              </FormControl>
+                            </section>
+
+                            {form.watch("isPasswordEnabled") &&
+                              !(
+                                initialData?.isPasswordEnabled &&
+                                initialFormValues.password === ""
+                              ) && (
+                                <FormField
+                                  control={control}
+                                  name="password"
+                                  render={({ field }) => (
+                                    <FormItem className="ml-3 space-y-2 border-l border-dashed pl-3 pt-2">
+                                      <FormLabel>Password</FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="password"
+                                          placeholder="Enter a password"
+                                          {...field}
+                                          value={field.value ?? ""}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              )}
                           </FormItem>
                         )}
                       />
-
-                      {isPasswordEnabled &&
-                        !(
-                          initialData?.isPasswordEnabled &&
-                          initialFormValues.password === ""
-                        ) && (
-                          <FormField
-                            control={control}
-                            name="password"
-                            render={({ field }) => (
-                              <FormItem className="ml-6 space-y-2 pt-2">
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="password"
-                                    placeholder="Enter a password"
-                                    {...field}
-                                    value={field.value ?? ""}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        )}
                     </CardContent>
                   </Card>
                 </TabsContent>

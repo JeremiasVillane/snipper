@@ -37,7 +37,7 @@ export async function saveQrPreferences(
 
     await store.put({ shortCode, ...preferences });
     await tx.done;
-    console.log(`QR preferences saved for ${shortCode}`);
+    console.info(`QR preferences saved for ${shortCode}`);
   } catch (error) {
     console.error(`Failed to save QR preferences for ${shortCode}:`, error);
   }
@@ -66,7 +66,7 @@ export async function deleteQrPreferences(shortCode: string): Promise<void> {
     const store = tx.objectStore(STORE_NAME);
     await store.delete(shortCode);
     await tx.done;
-    console.log(`QR preferences deleted for ${shortCode}`);
+    console.info(`QR preferences deleted for ${shortCode}`);
   } catch (error) {
     console.error(`Failed to delete QR preferences for ${shortCode}:`, error);
   }

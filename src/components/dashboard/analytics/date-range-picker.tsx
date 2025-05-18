@@ -253,6 +253,7 @@ export function DateRangePicker({
               variant="ghost"
               size="sm"
               onClick={() => handleSelect(undefined)}
+              disabled={!date}
             >
               Clear selection
             </Button>

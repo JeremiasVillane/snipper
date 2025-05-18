@@ -1,3 +1,4 @@
+import { iconOptions } from "@/data/shortlink-icons";
 import { z } from "zod";
 
 import { REGEX, reservedWords } from "../constants";
@@ -62,6 +63,11 @@ export type UpdateLinkBodyAPI = z.infer<typeof updateLinksSchemaAPI>;
 const formLinkSchema = z.object({
   originalUrl: baseLinkSchema.shape.originalUrl,
   shortCode: baseLinkSchema.shape.shortCode,
+  title: z
+    .string()
+    .max(50, { message: "Title should be 50 characters or less." })
+    .optional()
+    .nullable(),
   tags: baseLinkSchema.shape.tags,
   isExpirationEnabled: z.boolean().optional(),
   expiresAt: baseLinkSchema.shape.expiresAt,
@@ -87,6 +93,32 @@ const formLinkSchema = z.object({
     .optional()
     .nullable(),
   customDomain: customDomainSchema.optional().nullable(),
+  isLinkHubEnabled: z.boolean().optional(),
+  linkHubTitle: z
+    .string()
+    .max(25, { message: "Link hub title should be 25 characters or less." })
+    .optional()
+    .nullable(),
+  linkHubDescription: z
+    .string()
+    .max(100, {
+      message: "Link hub description should be 100 characters or less.",
+    })
+    .optional()
+    .nullable(),
+  shortLinkIcon: z
+    .string()
+    .optional()
+    .nullable()
+    .refine(
+      (val) => {
+        if (val === null || val === undefined) return true;
+        return Object.keys(iconOptions).includes(val);
+      },
+      {
+        message: "Icon not found",
+      },
+    ),
 });
 
 export const createLinkSchema = formLinkSchema

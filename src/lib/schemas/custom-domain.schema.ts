@@ -7,7 +7,8 @@ const domainErrorMessage =
 
 export const customDomainSchema = z
   .string()
-  .max(12, "Domain name must be less than or equal to 12 characters")
+  .min(2, "Subdomain must be between 2 and 12 characters")
+  .max(12, "Subdomain must be between 2 and 12 characters")
   .refine(
     (data) => (data.length > 1 && REGEX.subDomain.test(data)) || data === "",
     {
@@ -23,6 +24,20 @@ export const customDomainSchema = z
 
 export const createCustomDomainSchema = z.object({
   domain: customDomainSchema,
+  isLinkHubEnabled: z.boolean().optional(),
+  linkHubTitle: z
+    .string()
+    .max(25, { message: "Link hub title should be 25 characters or less." })
+    .optional()
+    .nullable(),
+  linkHubDescription: z
+    .string()
+    .max(100, {
+      message: "Link hub description should be 100 characters or less.",
+    })
+    .optional()
+    .nullable(),
+  shortLinkIds: z.array(z.string().uuid()),
 });
 
 export type CreateCustomDomainInput = z.infer<typeof createCustomDomainSchema>;
@@ -33,10 +48,8 @@ const customDomainIdSchema = z.object({
 
 export const getCustomDomainSchema = customDomainIdSchema;
 
-export const updateCustomDomainSchema = z.object({
-  id: customDomainIdSchema.shape.id,
-  domain: customDomainSchema,
-});
+export const updateCustomDomainSchema =
+  createCustomDomainSchema.merge(customDomainIdSchema);
 
 export const deleteCustomDomainSchema = z.object({
   id: customDomainIdSchema.shape.id,

@@ -2,6 +2,7 @@ import {
   ClickEvent,
   CustomDomain,
   Plan,
+  ShortLink,
   UserRole,
   UTMParam,
 } from "@prisma/client";
@@ -43,6 +44,7 @@ interface ShortLinkBaseResponse {
   id: string;
   originalUrl: string;
   shortCode: string;
+  title: string | null;
   userId: string | null;
   clicks: number;
   tags: string[];
@@ -51,6 +53,10 @@ interface ShortLinkBaseResponse {
   customOgTitle: string | null;
   customOgDescription: string | null;
   customDomain: CustomDomain | null;
+  isLinkHubEnabled: boolean;
+  linkHubTitle: string | null;
+  linkHubDescription: string | null;
+  shortLinkIcon: string | null;
   createdAt: Date;
   expiresAt: Date | null;
 }
@@ -59,6 +65,10 @@ export interface ShortLinkFromRepository extends ShortLinkBaseResponse {
   isPasswordEnabled: boolean;
   isExpirationEnabled: boolean;
   isCustomOgEnabled: boolean;
+}
+
+export interface CustomDomainFromRepository extends CustomDomain {
+  shortLinks: ShortLink[];
 }
 
 export type authorizationMiddlewareProps =
@@ -78,14 +88,28 @@ interface LimiterResponse {
 }
 
 export interface APIGetLink extends LimiterResponse {
-  link: Omit<ShortLinkBaseResponse, "customDomain"> & {
+  link: Omit<
+    ShortLinkBaseResponse,
+    | "customDomain"
+    | "isLinkHubEnabled"
+    | "linkHubTitle"
+    | "linkHubDescription"
+    | "shortLinkIcon"
+  > & {
     shortUrl: string;
     qrCodeUrl: string;
   };
 }
 
 export interface APIGetAllLinks extends LimiterResponse {
-  links: Omit<APIGetLink["link"], "qrCodeUrl">[];
+  links: Omit<
+    APIGetLink["link"],
+    | "qrCodeUrl"
+    | "isLinkHubEnabled"
+    | "linkHubTitle"
+    | "linkHubDescription"
+    | "shortLinkIcon"
+  >[];
 }
 
 export interface APIPostLink extends LimiterResponse {
@@ -96,6 +120,10 @@ export interface APIPostLink extends LimiterResponse {
     | "customOgImageUrl"
     | "customOgTitle"
     | "customOgDescription"
+    | "isLinkHubEnabled"
+    | "linkHubTitle"
+    | "linkHubDescription"
+    | "shortLinkIcon"
   >;
 }
 

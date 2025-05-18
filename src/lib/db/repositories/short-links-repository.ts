@@ -19,7 +19,13 @@ export const shortLinksRepository = {
       }
       shortCode = data.shortCode;
     } else {
-      shortCode = generateShortCode();
+      let isUnique = false;
+
+      while (!isUnique) {
+        shortCode = generateShortCode();
+        const existingLink = await this.findByShortCode(shortCode);
+        isUnique = !existingLink;
+      }
     }
 
     const existingUrl = await this.findByOriginalUrl(data.originalUrl, userId);
@@ -38,6 +44,7 @@ export const shortLinksRepository = {
         data: {
           originalUrl: data.originalUrl,
           shortCode,
+          title: data.title,
           expiresAt: data.expiresAt,
           password,
           clicks: 0,
@@ -45,6 +52,10 @@ export const shortLinksRepository = {
           customOgImageUrl: data.customOgImageUrl,
           customOgTitle: data.customOgTitle,
           customOgDescription: data.customOgDescription,
+          shortLinkIcon: data.shortLinkIcon,
+        },
+        include: {
+          customDomain: true,
         },
       });
 
@@ -70,7 +81,7 @@ export const shortLinksRepository = {
             })),
             skipDuplicates: true,
           });
-          console.log(
+          console.info(
             `Associated ${createdTags.length} tags with link ${shortLink.id}`,
           );
         }
@@ -91,16 +102,20 @@ export const shortLinksRepository = {
           tx.uTMParam.create({ data: utmData }),
         );
         createdUtmParams = await Promise.all(createUtmPromises);
-        console.log(
+        console.info(
           `Created ${createdUtmParams.length} UTMParam sets for link ${shortLink.id}`,
         );
       }
 
       let createdCustomDomain: CustomDomain | null = null;
       if (!!data.customDomain) {
-        const existingCustomDomain = await tx.customDomain.findUnique({
-          where: { domain: data.customDomain },
+        const existingCustomDomain = await tx.customDomain.findFirst({
+          where: {
+            domain: data.customDomain,
+            userId: { not: userId },
+          },
         });
+
         if (existingCustomDomain) {
           throw new Error(
             `The custom domain "${data.customDomain}" already exists. Please choose another one.`,
@@ -110,25 +125,29 @@ export const shortLinksRepository = {
         createdCustomDomain = await tx.customDomain.findFirst({
           where: { domain: data.customDomain, userId },
         });
-        if (createdCustomDomain) {
-          throw new Error(
-            `The custom domain "${data.customDomain}" already exists in your dashboard. Please choose another one.`,
+
+        if (!createdCustomDomain) {
+          createdCustomDomain = await tx.customDomain.create({
+            data: {
+              domain: data.customDomain,
+              isLinkHubEnabled: data.isLinkHubEnabled,
+              linkHubTitle: data.linkHubTitle,
+              linkHubDescription: data.linkHubDescription,
+              user: { connect: { id: userId } },
+            },
+          });
+
+          console.info(
+            `Created custom domain ${createdCustomDomain.domain} for link ${shortLink.id}`,
           );
         }
 
-        createdCustomDomain = await tx.customDomain.create({
-          data: {
-            domain: data.customDomain,
-            user: { connect: { id: userId } },
-          },
-        });
         await tx.shortLink.update({
           where: { id: shortLink.id },
-          data: { customDomain: { connect: { id: createdCustomDomain.id } } },
+          data: {
+            customDomainId: createdCustomDomain.id,
+          },
         });
-        console.log(
-          `Created custom domain ${createdCustomDomain.domain} for link ${shortLink.id}`,
-        );
       }
 
       return {
@@ -142,6 +161,9 @@ export const shortLinksRepository = {
           !!shortLink.customOgImageUrl ||
           !!shortLink.customOgTitle ||
           !!shortLink.customOgDescription,
+        isLinkHubEnabled: !!shortLink.customDomain?.isLinkHubEnabled,
+        linkHubTitle: shortLink.customDomain?.linkHubTitle ?? null,
+        linkHubDescription: shortLink.customDomain?.linkHubDescription ?? null,
       };
     });
 
@@ -164,6 +186,7 @@ export const shortLinksRepository = {
       id: shortLink.id,
       originalUrl: shortLink.originalUrl,
       shortCode: shortLink.shortCode,
+      title: shortLink.title,
       customDomain: shortLink.customDomain,
       createdAt: shortLink.createdAt,
       expiresAt: shortLink.expiresAt,
@@ -180,6 +203,10 @@ export const shortLinksRepository = {
         !!shortLink.customOgImageUrl ||
         !!shortLink.customOgTitle ||
         !!shortLink.customOgDescription,
+      isLinkHubEnabled: !!shortLink.customDomain?.isLinkHubEnabled,
+      linkHubTitle: shortLink.customDomain?.linkHubTitle ?? null,
+      linkHubDescription: shortLink.customDomain?.linkHubDescription ?? null,
+      shortLinkIcon: shortLink.shortLinkIcon,
     };
   },
 
@@ -212,6 +239,7 @@ export const shortLinksRepository = {
       id: link.id,
       originalUrl: link.originalUrl,
       shortCode: link.shortCode,
+      title: link.title,
       customDomain: link.customDomain,
       createdAt: link.createdAt,
       expiresAt: link.expiresAt,
@@ -228,6 +256,10 @@ export const shortLinksRepository = {
         !!link.customOgImageUrl ||
         !!link.customOgTitle ||
         !!link.customOgDescription,
+      isLinkHubEnabled: !!link.customDomain?.isLinkHubEnabled,
+      linkHubTitle: link.customDomain?.linkHubTitle ?? null,
+      linkHubDescription: link.customDomain?.linkHubDescription ?? null,
+      shortLinkIcon: link.shortLinkIcon,
     }));
   },
 
@@ -279,6 +311,8 @@ export const shortLinksRepository = {
           customOgTitle: data.customOgTitle,
           customOgDescription: data.customOgDescription,
           customOgImageUrl: data.customOgImageUrl,
+          shortLinkIcon: data.shortLinkIcon,
+          title: data.title,
         },
       });
 
@@ -302,7 +336,7 @@ export const shortLinksRepository = {
             data: createdTags.map((tag) => ({ linkId, tagId: tag.id })),
             skipDuplicates: true,
           });
-          console.log(`Synced ${createdTags.length} tags for link ${linkId}`);
+          console.info(`Synced ${createdTags.length} tags for link ${linkId}`);
         }
       }
 
@@ -322,32 +356,48 @@ export const shortLinksRepository = {
           tx.uTMParam.create({ data: utmData }),
         );
         createdUtmParams = await Promise.all(createUtmPromises);
-        console.log(
+        console.info(
           `Synced ${utmParamsToCreate.length} UTMParam sets for link ${linkId}`,
         );
       }
 
       let createdCustomDomain: CustomDomain | null = null;
       if (!!data.customDomain) {
-        if (shortLink.customDomain?.domain !== data.customDomain) {
-          createdCustomDomain = await tx.customDomain.upsert({
-            where: { domain: data.customDomain },
-            create: {
-              domain: data.customDomain,
-              user: { connect: { id: userId } },
-            },
-            update: {},
-          });
+        const existingCustomDomain = await tx.customDomain.findFirst({
+          where: { domain: data.customDomain, userId: { not: userId } },
+        });
 
+        if (!!existingCustomDomain) {
+          throw new Error(
+            "You don't have permission to modify this custom domain.",
+          );
+        }
+
+        createdCustomDomain = await tx.customDomain.upsert({
+          where: { domain: data.customDomain },
+          create: {
+            domain: data.customDomain,
+            isLinkHubEnabled: data.isLinkHubEnabled,
+            linkHubTitle: data.linkHubTitle,
+            linkHubDescription: data.linkHubDescription,
+            user: { connect: { id: userId } },
+          },
+          update: {
+            isLinkHubEnabled: data.isLinkHubEnabled,
+            linkHubTitle: data.linkHubTitle,
+            linkHubDescription: data.linkHubDescription,
+          },
+        });
+
+        if (shortLink.customDomain?.domain !== data.customDomain) {
           await tx.shortLink.update({
             where: { id: linkId },
             data: { customDomain: { connect: { id: createdCustomDomain.id } } },
           });
-
-          console.log(
-            `Created custom domain ${createdCustomDomain.domain} for link ${linkId}`,
-          );
         }
+        console.info(
+          `Created custom domain ${createdCustomDomain.domain} for link ${linkId}`,
+        );
       }
 
       return {

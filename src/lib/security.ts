@@ -116,10 +116,15 @@ export async function checkIpReputation(ip: string): Promise<boolean> {
   }
 }
 
-export async function checkURLReputation(url: string): Promise<boolean> {
+export async function checkURLReputation(
+  url: string,
+): Promise<{ isSafe: boolean; isUp: boolean }> {
   const cacheKey = `url_reputation:${url}`;
   const cached = await redisClient?.get(cacheKey);
-  if (cached !== null) return Boolean(cached);
+
+  if (typeof cached === "string") {
+    return JSON.parse(cached) as { isSafe: boolean; isUp: boolean };
+  }
 
   try {
     const controller = new AbortController();
@@ -130,16 +135,17 @@ export async function checkURLReputation(url: string): Promise<boolean> {
     );
     clearTimeout(timeoutId);
 
-    if (!response.ok) return true;
+    if (!response.ok) return { isSafe: true, isUp: true };
 
     const data = await response.json();
-    const isSafe = !data.malware && !data.spamming && data.dns_valid;
+    const isUp = Boolean(data.dns_valid && Number(data.status_code) === 200);
+    const isSafe = Boolean(!data.malware);
 
     await redisClient?.setex(cacheKey, 3600, isSafe ? 0 : 1);
 
-    return isSafe;
+    return { isSafe, isUp };
   } catch (error) {
     console.error("IPQS URL Check Error:", error);
-    return false;
+    return { isSafe: true, isUp: true };
   }
 }

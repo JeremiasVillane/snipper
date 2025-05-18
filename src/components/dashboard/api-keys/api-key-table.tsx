@@ -118,25 +118,28 @@ export function ApiKeyTable({ apiKeys }: ApiKeyTableProps) {
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreHorizontal className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" className="size-8">
+                          <MoreHorizontal className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuLabel className="select-none">
+                          Actions
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => copyToClipboard(apiKey.key)}
+                          className="group"
                           disabled={isExpired}
                         >
-                          <Copy className="mr-2 h-4 w-4" />
+                          <Copy className="mr-2 size-4 group-hover:scale-105" />
                           Copy Key
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeletingApiKey(apiKey)}
-                          className="text-destructive focus:text-destructive"
+                          className="group text-destructive focus:text-white"
                         >
-                          <Trash className="mr-2 h-4 w-4" />
+                          <Trash className="mr-2 size-4 group-hover:scale-105" />
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>

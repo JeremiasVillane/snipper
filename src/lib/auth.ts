@@ -107,7 +107,7 @@ export const authOptions: NextAuthOptions = {
             return null; // CAPTCHA failed
           }
 
-          console.log("Turnstile verification successful.");
+          console.info("Turnstile verification successful.");
         } catch (error) {
           console.error("Error during Turnstile verification fetch:", error);
           return null;

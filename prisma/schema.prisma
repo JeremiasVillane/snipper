@@ -180,6 +180,8 @@ model ShortLink {
   customOgTitle       String?
   customOgDescription String?
 
+  shortLinkIcon String?
+
   customDomainId String?
   customDomain   CustomDomain? @relation(fields: [customDomainId], references: [id], onDelete: SetNull)
 
@@ -208,13 +210,14 @@ model ClickEvent {
 }
 
 model CustomDomain {
-  id               String    @id @default(uuid())
-  userId           String
-  domain           String    @unique
-  isLinkHubEnabled Boolean   @default(false)
-  linkHubTitle     String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime? @updatedAt
+  id                 String    @id @default(uuid())
+  userId             String
+  domain             String    @unique
+  isLinkHubEnabled   Boolean   @default(false)
+  linkHubTitle       String?
+  linkHubDescription String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime? @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

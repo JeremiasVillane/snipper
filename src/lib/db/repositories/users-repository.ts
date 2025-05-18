@@ -1,11 +1,4 @@
-import type {
-  CustomDomain,
-  Plan,
-  Prisma,
-  ShortLink,
-  Subscription,
-  User,
-} from "@prisma/client";
+import type { Plan, Prisma, Subscription, User } from "@prisma/client";
 
 import { prisma } from "@/lib/db/prisma";
 
@@ -47,8 +40,14 @@ export const usersRepository = {
       },
       include: {
         shortLinks: {
-          where: { customDomain: { domain } },
+          where: {
+            customDomain: { domain },
+            OR: [{ expiresAt: { gt: new Date() } }, { expiresAt: null }],
+          },
           include: { customDomain: { select: { domain: true } } },
+        },
+        customDomains: {
+          where: { domain },
         },
       },
     });

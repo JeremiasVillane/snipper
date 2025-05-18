@@ -165,10 +165,7 @@ export default async function ShortCodePage({
 
     if (!customDomain) notFound();
 
-    shortLink = await shortLinksRepository.findByShortCodeAndDomain(
-      shortCode,
-      customDomain.id,
-    );
+    shortLink = customDomain.shortLinks[0];
   } else {
     shortLink = await shortLinksRepository.findByShortCode(shortCode);
     if (!!shortLink?.customDomainId) return notFound();

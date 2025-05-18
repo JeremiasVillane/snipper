@@ -48,7 +48,7 @@ export default async function ApiKeysPage() {
         </CreateApiKeyDialog>
       </div>
 
-      <ApiKeyTable apiKeys={apiKeys} />
+      <ApiKeyTable {...{ apiKeys }} />
     </main>
   );
 }

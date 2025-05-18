@@ -1,3 +1,5 @@
+"use server";
+
 import { revalidatePath } from "next/cache";
 
 import { customDomainsRepository } from "@/lib/db/repositories";
@@ -16,21 +18,24 @@ export const createCustomDomain = authActionClient({
       channel: "analytics",
     },
     limiter: {
-      refillRate: 1,
+      refillRate: 5,
       interval: 60,
-      capacity: 1,
+      capacity: 100,
       requested: 1,
     },
   })
   .schema(createCustomDomainSchema)
   .action(async ({ parsedInput, ctx }) => {
-    const { domain } = parsedInput;
     const { userId } = ctx;
 
     try {
-      const result = await customDomainsRepository.create({ domain }, userId);
+      const result = await customDomainsRepository.create(
+        { ...parsedInput },
+        userId,
+      );
 
       revalidatePath("/dashboard");
+      revalidatePath("/dashboard/custom-domains");
 
       return result;
     } catch (error) {

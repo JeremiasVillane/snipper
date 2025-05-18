@@ -76,7 +76,7 @@ export function LinkTable({
                   className={isExpired ? "opacity-60" : ""}
                 >
                   <TableCell className="pe-1 ps-4 font-medium">
-                    <div className="flex items-center justify-start gap-2">
+                    <div className="flex items-center justify-start gap-1">
                       <Link
                         href={buildShortUrl(
                           link.shortCode,
@@ -85,7 +85,7 @@ export function LinkTable({
                         target="_blank"
                         rel="noopener noreferrer"
                         className={cn(
-                          "truncate whitespace-nowrap text-primary hover:underline",
+                          "max-w-[200px] truncate text-primary underline-offset-2 hover:underline",
                           isExpired
                             ? "cursor-not-allowed text-destructive"
                             : "",
@@ -166,33 +166,46 @@ export function LinkTable({
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreHorizontal className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" className="size-8">
+                          <MoreHorizontal className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuLabel className="select-none">
+                          Actions
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => onQrCode(link)}
+                          className="group"
                           disabled={isExpired}
                         >
-                          <QrCode className="mr-2 h-4 w-4" /> QR Code
+                          <QrCode className="mr-2 size-4 group-hover:scale-105" />{" "}
+                          QR Code
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link href={`/dashboard/analytics/${link.id}`}>
-                            <BarChart2 className="mr-2 h-4 w-4" /> Analytics
+                          <Link
+                            href={`/dashboard/analytics/${link.id}`}
+                            className="group"
+                          >
+                            <BarChart2 className="mr-2 size-4 group-hover:scale-105" />{" "}
+                            Analytics
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => onEdit(link)}>
-                          <Pencil className="mr-2 h-4 w-4" /> Edit
+                        <DropdownMenuItem
+                          onClick={() => onEdit(link)}
+                          className="group"
+                        >
+                          <Pencil className="mr-2 size-4 group-hover:scale-105" />{" "}
+                          Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => onDelete(link)}
-                          className="text-destructive focus:text-destructive"
+                          className="group text-destructive focus:text-white"
                         >
-                          <Trash className="mr-2 h-4 w-4" /> Delete
+                          <Trash className="mr-2 size-4 group-hover:scale-105" />{" "}
+                          Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
