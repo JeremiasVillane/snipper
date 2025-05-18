@@ -45,14 +45,33 @@ export const createShortLink = authActionClient({
 
     if (!isUp) {
       throw new Error(
-        "The URL you provided is not reachable. Please check the URL and try again.",
+        "The destination URL you provided is not reachable. Please check the URL and try again.",
       );
     }
 
     if (!isSafe) {
       throw new Error(
-        "The URL you provided is not safe. Please check the URL and try again.",
+        "The destination URL you provided is not safe. Please check the URL and try again.",
       );
+    }
+
+    if (!!formData.expirationUrl) {
+      const { isSafe: isExpirationURLSafe, isUp: isExpirationURLUp } =
+        await checkURLReputation(
+          formData.expirationUrl.replace(/^https?:\/\//, ""),
+        );
+
+      if (!isExpirationURLUp) {
+        throw new Error(
+          "The expiration URL you provided is not reachable. Please check the URL and try again.",
+        );
+      }
+
+      if (!isExpirationURLSafe) {
+        throw new Error(
+          "The expiration URL you provided is not safe. Please check the URL and try again.",
+        );
+      }
     }
 
     try {
@@ -64,6 +83,7 @@ export const createShortLink = authActionClient({
           shortLinkIcon: formData.shortLinkIcon,
           tags: formData.tags,
           expiresAt: formData.expiresAt || null,
+          expirationUrl: formData.expirationUrl || null,
           password: formData.password || null,
           customOgTitle: formData.customOgTitle,
           customOgDescription: formData.customOgDescription,

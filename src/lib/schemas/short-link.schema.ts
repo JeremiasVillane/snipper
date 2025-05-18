@@ -71,6 +71,30 @@ const formLinkSchema = z.object({
   tags: baseLinkSchema.shape.tags,
   isExpirationEnabled: z.boolean().optional(),
   expiresAt: baseLinkSchema.shape.expiresAt,
+  expirationUrl: z
+    .string()
+    .optional()
+    .nullable()
+    .superRefine((val, ctx) => {
+      if (
+        val === null ||
+        val === undefined ||
+        (typeof val === "string" && val.trim() === "")
+      ) {
+        return;
+      }
+
+      try {
+        new URL(val);
+      } catch {
+        ctx.addIssue({
+          code: z.ZodIssueCode.invalid_string,
+          validation: "url",
+          message: "Please provide a valid URL.",
+          path: [],
+        });
+      }
+    }),
   isPasswordEnabled: z.boolean().optional(),
   password: baseLinkSchema.shape.password,
   utmSets: baseLinkSchema.shape.utmSets,

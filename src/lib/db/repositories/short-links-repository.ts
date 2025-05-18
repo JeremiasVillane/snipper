@@ -190,6 +190,7 @@ export const shortLinksRepository = {
       customDomain: shortLink.customDomain,
       createdAt: shortLink.createdAt,
       expiresAt: shortLink.expiresAt,
+      expirationUrl: shortLink.expirationUrl,
       userId: shortLink.userId,
       clicks: shortLink.clicks,
       tags: shortLink.linkTags.map((lt) => lt.tag.name),
@@ -243,6 +244,7 @@ export const shortLinksRepository = {
       customDomain: link.customDomain,
       createdAt: link.createdAt,
       expiresAt: link.expiresAt,
+      expirationUrl: link.expirationUrl,
       userId: link.userId,
       clicks: link.clicks,
       tags: link.linkTags.map((lt) => lt.tag.name),
@@ -307,6 +309,7 @@ export const shortLinksRepository = {
         where: { id: linkId },
         data: {
           expiresAt: data.expiresAt,
+          expirationUrl: data.expirationUrl,
           password,
           customOgTitle: data.customOgTitle,
           customOgDescription: data.customOgDescription,

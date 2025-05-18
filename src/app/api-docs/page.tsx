@@ -138,6 +138,7 @@ export default function ApiDocsPage() {
                                 title: "My Short Link",
                                 createdAt: new Date("2025-01-01T00:00:00.000Z"),
                                 expiresAt: null,
+                                expirationUrl: null,
                                 clicks: 42,
                                 tags: ["marketing", "social"],
                                 utmParams: [
@@ -227,6 +228,7 @@ export default function ApiDocsPage() {
                               title: "My Short Link",
                               createdAt: new Date("2025-01-01T00:00:00.000Z"),
                               expiresAt: new Date("2025-12-31T23:59:59.999Z"),
+                              expirationUrl: "https://some-redirect-url.com",
                               tags: ["marketing", "social"],
                               utmParams: [
                                 {
@@ -285,6 +287,7 @@ export default function ApiDocsPage() {
                               title: "My Short Link",
                               createdAt: new Date("2025-01-01T00:00:00.000Z"),
                               expiresAt: null,
+                              expirationUrl: null,
                               clicks: 42,
                               tags: ["marketing", "social"],
                               utmParams: [
@@ -365,6 +368,7 @@ export default function ApiDocsPage() {
                               clicks: 120,
                               createdAt: new Date("2025-01-01T00:00:00.000Z"),
                               expiresAt: new Date("2025-12-31T23:59:59.999Z"),
+                              expirationUrl: "https://some-redirect-url.com",
                               tags: ["marketing", "social"],
                               utmParams: [
                                 {

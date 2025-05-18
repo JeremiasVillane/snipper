@@ -59,6 +59,7 @@ interface ShortLinkBaseResponse {
   shortLinkIcon: string | null;
   createdAt: Date;
   expiresAt: Date | null;
+  expirationUrl: string | null;
 }
 
 export interface ShortLinkFromRepository extends ShortLinkBaseResponse {

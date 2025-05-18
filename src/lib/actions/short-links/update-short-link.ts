@@ -53,6 +53,25 @@ export const updateShortLink = authActionClient({
       }
     }
 
+    if (!!formData.expirationUrl) {
+      const { isSafe: isExpirationURLSafe, isUp: isExpirationURLUp } =
+        await checkURLReputation(
+          formData.expirationUrl.replace(/^https?:\/\//, ""),
+        );
+
+      if (!isExpirationURLUp) {
+        throw new Error(
+          "The expiration URL you provided is not reachable. Please check the URL and try again.",
+        );
+      }
+
+      if (!isExpirationURLSafe) {
+        throw new Error(
+          "The expiration URL you provided is not safe. Please check the URL and try again.",
+        );
+      }
+    }
+
     try {
       const result = await shortLinksRepository.update(
         linkId,

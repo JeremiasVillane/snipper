@@ -102,6 +102,7 @@ export function LinkDialog({
       tags: data?.tags ?? [],
       isExpirationEnabled: !!data?.expiresAt,
       expiresAt: data?.expiresAt ?? undefined,
+      expirationUrl: data?.expirationUrl ?? undefined,
       isPasswordEnabled: !!data?.isPasswordEnabled,
       password: "",
       utmSets:
@@ -242,7 +243,12 @@ export function LinkDialog({
         ...data,
         id: initialData?.id,
         password: data.isPasswordEnabled ? data.password : undefined,
-        expiresAt: data.isExpirationEnabled ? data.expiresAt : undefined,
+        ...(!data.isExpirationEnabled
+          ? {
+              expiresAt: null,
+              expirationUrl: null,
+            }
+          : {}),
         customOgImageUrl,
         ...(!data.isCustomOgEnabled
           ? {
@@ -346,7 +352,7 @@ export function LinkDialog({
   const isTrulyDirty = initialData
     ? !isDeepEqual(formValues, initialFormValuesRef.current)
     : isDirty;
-
+  console.log("FORM:", form.getValues());
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
       {!!children && <CredenzaTrigger asChild>{children}</CredenzaTrigger>}
@@ -636,6 +642,8 @@ export function LinkDialog({
                                     field.onChange(checked);
                                     if (!checked) {
                                       setValue("expiresAt", undefined);
+                                      setValue("expirationUrl", undefined);
+                                      form.clearErrors("expirationUrl");
                                     }
                                   }}
                                 />
@@ -643,175 +651,239 @@ export function LinkDialog({
                             </section>
 
                             {form.watch("isExpirationEnabled") && (
-                              <FormField
-                                control={control}
-                                name="expiresAt"
-                                render={({ field }) => (
-                                  <FormItem className="ml-3 space-y-2 border-l border-dashed pl-3 pt-2">
-                                    <FormLabel>Select Date</FormLabel>
-                                    <Popover>
-                                      <PopoverTrigger asChild>
-                                        <FormControl>
-                                          <Button
-                                            variant={"outline"}
-                                            className={`w-full justify-start text-left font-normal ${
-                                              !field.value &&
-                                              "text-muted-foreground"
-                                            }`}
-                                          >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {field.value ? (
-                                              format(field.value, "PPP")
-                                            ) : (
-                                              <span>Pick a date</span>
-                                            )}
-                                          </Button>
-                                        </FormControl>
-                                      </PopoverTrigger>
-                                      <PopoverContent
-                                        className="w-auto p-0"
-                                        align="start"
-                                      >
-                                        <div className="flex max-sm:flex-col">
-                                          <Calendar
-                                            mode="single"
-                                            selected={field.value ?? undefined}
-                                            onSelect={field.onChange}
-                                            disabled={(date) =>
-                                              date <
-                                              new Date(
-                                                new Date().setHours(0, 0, 0, 0),
-                                              )
-                                            } // Disable past dates
-                                            initialFocus
-                                          />
-                                          <div className="relative py-4 max-sm:order-1 max-sm:border-t sm:w-32">
-                                            <div className="h-full sm:border-s">
-                                              <div className="flex flex-col items-start px-2">
-                                                <Button
-                                                  size="sm"
-                                                  variant="ghost"
-                                                  onClick={() =>
-                                                    field.onChange(
-                                                      new Date(
-                                                        Date.now() +
-                                                          1 *
-                                                            24 *
-                                                            60 *
-                                                            60 *
-                                                            1000,
-                                                      ),
-                                                    )
-                                                  }
-                                                >
-                                                  In 1 Day
-                                                </Button>
-                                                <Button
-                                                  size="sm"
-                                                  variant="ghost"
-                                                  onClick={() =>
-                                                    field.onChange(
-                                                      new Date(
-                                                        Date.now() +
-                                                          7 *
-                                                            24 *
-                                                            60 *
-                                                            60 *
-                                                            1000,
-                                                      ),
-                                                    )
-                                                  }
-                                                >
-                                                  In 1 Week
-                                                </Button>
-                                                <Button
-                                                  size="sm"
-                                                  variant="ghost"
-                                                  onClick={() =>
-                                                    field.onChange(
-                                                      new Date(
-                                                        Date.now() +
-                                                          14 *
-                                                            24 *
-                                                            60 *
-                                                            60 *
-                                                            1000,
-                                                      ),
-                                                    )
-                                                  }
-                                                >
-                                                  In 2 Weeks
-                                                </Button>
-                                                <Button
-                                                  size="sm"
-                                                  variant="ghost"
-                                                  onClick={() =>
-                                                    field.onChange(
-                                                      new Date(
-                                                        new Date().setMonth(
-                                                          new Date().getMonth() +
-                                                            1,
+                              <section>
+                                <FormField
+                                  control={control}
+                                  name="expiresAt"
+                                  render={({ field }) => (
+                                    <FormItem className="ml-3 space-y-2 border-l border-dashed pl-3 pt-2">
+                                      <FormLabel>Select Date</FormLabel>
+                                      <Popover>
+                                        <PopoverTrigger asChild>
+                                          <FormControl>
+                                            <Button
+                                              variant={"outline"}
+                                              className={`w-full justify-start text-left font-normal ${
+                                                !field.value &&
+                                                "text-muted-foreground"
+                                              }`}
+                                            >
+                                              <CalendarIcon className="mr-2 h-4 w-4" />
+                                              {field.value ? (
+                                                format(field.value, "PPP")
+                                              ) : (
+                                                <span>Pick a date</span>
+                                              )}
+                                            </Button>
+                                          </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent
+                                          className="w-auto p-0"
+                                          align="start"
+                                        >
+                                          <div className="flex max-sm:flex-col">
+                                            <Calendar
+                                              mode="single"
+                                              selected={
+                                                field.value ?? undefined
+                                              }
+                                              onSelect={field.onChange}
+                                              disabled={(date) =>
+                                                date <
+                                                new Date(
+                                                  new Date().setHours(
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                  ),
+                                                )
+                                              } // Disable past dates
+                                              initialFocus
+                                            />
+                                            <div className="relative py-4 max-sm:order-1 max-sm:border-t sm:w-32">
+                                              <div className="h-full sm:border-s">
+                                                <div className="flex flex-col items-start px-2">
+                                                  <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    onClick={() =>
+                                                      field.onChange(
+                                                        new Date(
+                                                          Date.now() +
+                                                            1 *
+                                                              24 *
+                                                              60 *
+                                                              60 *
+                                                              1000,
                                                         ),
-                                                      ),
-                                                    )
-                                                  }
-                                                >
-                                                  In 1 Month
-                                                </Button>
-                                                <Button
-                                                  size="sm"
-                                                  variant="ghost"
-                                                  onClick={() =>
-                                                    field.onChange(
-                                                      new Date(
-                                                        new Date().setMonth(
-                                                          new Date().getMonth() +
-                                                            6,
+                                                      )
+                                                    }
+                                                  >
+                                                    In 1 Day
+                                                  </Button>
+                                                  <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    onClick={() =>
+                                                      field.onChange(
+                                                        new Date(
+                                                          Date.now() +
+                                                            7 *
+                                                              24 *
+                                                              60 *
+                                                              60 *
+                                                              1000,
                                                         ),
-                                                      ),
-                                                    )
-                                                  }
-                                                >
-                                                  In 1 Semester
-                                                </Button>
-                                                <Button
-                                                  size="sm"
-                                                  variant="ghost"
-                                                  onClick={() =>
-                                                    field.onChange(
-                                                      new Date(
-                                                        new Date().setFullYear(
-                                                          new Date().getFullYear() +
-                                                            1,
+                                                      )
+                                                    }
+                                                  >
+                                                    In 1 Week
+                                                  </Button>
+                                                  <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    onClick={() =>
+                                                      field.onChange(
+                                                        new Date(
+                                                          Date.now() +
+                                                            14 *
+                                                              24 *
+                                                              60 *
+                                                              60 *
+                                                              1000,
                                                         ),
-                                                      ),
-                                                    )
-                                                  }
-                                                >
-                                                  In 1 Year
-                                                </Button>
+                                                      )
+                                                    }
+                                                  >
+                                                    In 2 Weeks
+                                                  </Button>
+                                                  <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    onClick={() =>
+                                                      field.onChange(
+                                                        new Date(
+                                                          new Date().setMonth(
+                                                            new Date().getMonth() +
+                                                              1,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    }
+                                                  >
+                                                    In 1 Month
+                                                  </Button>
+                                                  <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    onClick={() =>
+                                                      field.onChange(
+                                                        new Date(
+                                                          new Date().setMonth(
+                                                            new Date().getMonth() +
+                                                              6,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    }
+                                                  >
+                                                    In 1 Semester
+                                                  </Button>
+                                                  <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    onClick={() =>
+                                                      field.onChange(
+                                                        new Date(
+                                                          new Date().setFullYear(
+                                                            new Date().getFullYear() +
+                                                              1,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    }
+                                                  >
+                                                    In 1 Year
+                                                  </Button>
+                                                </div>
                                               </div>
                                             </div>
                                           </div>
-                                        </div>
-                                        <div className="border-t border-border p-2">
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() =>
-                                              field.onChange(undefined)
-                                            }
-                                            disabled={!field.value}
-                                          >
-                                            Clear selection
-                                          </Button>
-                                        </div>
-                                      </PopoverContent>
-                                    </Popover>
-                                    <FormMessage />
-                                  </FormItem>
+                                          <div className="border-t border-border p-2">
+                                            <Button
+                                              variant="ghost"
+                                              size="sm"
+                                              onClick={() =>
+                                                field.onChange(undefined)
+                                              }
+                                              disabled={!field.value}
+                                            >
+                                              Clear selection
+                                            </Button>
+                                          </div>
+                                        </PopoverContent>
+                                      </Popover>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+
+                                {!!form.watch("expiresAt") && (
+                                  <FormField
+                                    control={control}
+                                    name="expirationUrl"
+                                    render={({ field }) => (
+                                      <FormItem className="ml-3 space-y-2 border-l border-dashed pl-3 pt-4">
+                                        <FormLabel>
+                                          Expiration URL{" "}
+                                          <Popover>
+                                            <PopoverTrigger>
+                                              <InfoIcon className="mb-1 inline size-4 text-primary" />
+                                            </PopoverTrigger>
+
+                                            <PopoverContent>
+                                              <div className="space-y-2 rounded-md border bg-muted/30 p-4 shadow-md">
+                                                <p className="text-sm text-muted-foreground">
+                                                  When the link expires, users
+                                                  will be redirected to this
+                                                  URL.
+                                                </p>
+                                                <p className="text-sm text-muted-foreground">
+                                                  If you leave it blank a "Not
+                                                  Found" page will be shown.
+                                                </p>
+                                              </div>
+                                            </PopoverContent>
+                                          </Popover>
+                                        </FormLabel>
+                                        <FormControl>
+                                          <Input
+                                            {...field}
+                                            value={field.value?.replace(
+                                              /^https?:\/\//,
+                                              "",
+                                            )}
+                                            onChange={(e) => {
+                                              if (e.target.value.length === 0) {
+                                                field.onChange("");
+                                              } else {
+                                                field.onChange(
+                                                  `https://${e.target.value}`,
+                                                );
+                                              }
+                                            }}
+                                            startInline="https://"
+                                            placeholder="some-redirect-url.com"
+                                            autoComplete="off"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
                                 )}
-                              />
+                              </section>
                             )}
                           </FormItem>
                         )}

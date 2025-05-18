@@ -51,7 +51,7 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-grow py-2">
+      <CardContent className="flex-grow py-2" suppressHydrationWarning>
         <div className="mb-2">
           <p className="text-sm text-muted-foreground">
             Created{" "}
