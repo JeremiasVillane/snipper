@@ -161,6 +161,7 @@ export async function PATCH(
         clicks: updatedLink.clicks,
         createdAt: updatedLink.createdAt,
         expiresAt: updatedLink.expiresAt,
+        expirationUrl: updatedLink.expirationUrl,
         tags: updatedLink.tags,
         utmParams: updatedLink.utmParams,
         qrCodeUrl,
