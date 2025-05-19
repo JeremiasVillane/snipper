@@ -198,6 +198,7 @@ export const shortLinksRepository = {
       customOgImageUrl: shortLink.customOgImageUrl,
       customOgTitle: shortLink.customOgTitle,
       customOgDescription: shortLink.customOgDescription,
+      shortLinkIcon: shortLink.shortLinkIcon,
       isPasswordEnabled: !!shortLink.password,
       isExpirationEnabled: !!shortLink.expiresAt,
       isCustomOgEnabled:
@@ -207,7 +208,6 @@ export const shortLinksRepository = {
       isLinkHubEnabled: !!shortLink.customDomain?.isLinkHubEnabled,
       linkHubTitle: shortLink.customDomain?.linkHubTitle ?? null,
       linkHubDescription: shortLink.customDomain?.linkHubDescription ?? null,
-      shortLinkIcon: shortLink.shortLinkIcon,
     };
   },
 
@@ -294,9 +294,9 @@ export const shortLinksRepository = {
     const result = await prisma.$transaction(async (tx) => {
       if (data.shortCode && data.shortCode !== shortLink.shortCode) {
         try {
-          const existingLink = await shortLinksRepository.findByShortCode(
-            data.shortCode,
-          );
+          const existingLink = await tx.shortLink.findUnique({
+            where: { shortCode: data.shortCode },
+          });
           if (existingLink && existingLink.id !== linkId) {
             throw new Error("This custom alias is already taken");
           }
@@ -304,20 +304,6 @@ export const shortLinksRepository = {
           throw error;
         }
       }
-
-      await tx.shortLink.update({
-        where: { id: linkId },
-        data: {
-          expiresAt: data.expiresAt,
-          expirationUrl: data.expirationUrl,
-          password,
-          customOgTitle: data.customOgTitle,
-          customOgDescription: data.customOgDescription,
-          customOgImageUrl: data.customOgImageUrl,
-          shortLinkIcon: data.shortLinkIcon,
-          title: data.title,
-        },
-      });
 
       let createdTags: { id: string; name: string }[] = [];
       if (data.tags && data.tags.length > 0) {
@@ -403,17 +389,59 @@ export const shortLinksRepository = {
         );
       }
 
+      if (!!shortLink.customDomain && !data.customDomain) {
+        createdCustomDomain = await tx.customDomain.update({
+          where: { id: shortLink.customDomain.id },
+          data: {
+            shortLinks: { disconnect: { id: shortLink.id } },
+          },
+        });
+      }
+
+      const updatedShortLink = await tx.shortLink.update({
+        where: { id: linkId },
+        data: {
+          expiresAt: data.expiresAt,
+          expirationUrl: data.expirationUrl,
+          password,
+          customOgTitle: data.customOgTitle,
+          customOgDescription: data.customOgDescription,
+          customOgImageUrl: data.customOgImageUrl,
+          shortLinkIcon: data.shortLinkIcon,
+          title: data.title,
+        },
+        include: {
+          customDomain: true,
+          utmParams: true,
+          linkTags: {
+            include: { tag: true },
+          },
+        },
+      });
+
       return {
-        ...shortLink,
+        ...updatedShortLink,
+        password: null,
+        linkTags: null,
+        isPasswordEnabled: !!updatedShortLink.password,
+        isExpirationEnabled: !!updatedShortLink.expiresAt,
+        isCustomOgEnabled:
+          !!updatedShortLink.customOgImageUrl ||
+          !!updatedShortLink.customOgTitle ||
+          !!updatedShortLink.customOgDescription,
+        isLinkHubEnabled: !!updatedShortLink.customDomain?.isLinkHubEnabled,
+        linkHubTitle: updatedShortLink.customDomain?.linkHubTitle ?? null,
+        linkHubDescription:
+          updatedShortLink.customDomain?.linkHubDescription ?? null,
         tags:
           createdTags.length > 0
             ? createdTags.map((t) => t.name)
-            : (shortLink.tags ?? []),
+            : (updatedShortLink?.linkTags?.map((lt) => lt.tag.name) ?? []),
         utmParams:
           createdUtmParams.length > 0
             ? createdUtmParams
-            : (shortLink.utmParams ?? []),
-        customDomain: createdCustomDomain ?? shortLink.customDomain,
+            : (updatedShortLink.utmParams ?? []),
+        customDomain: createdCustomDomain ?? updatedShortLink.customDomain,
       };
     });
 
