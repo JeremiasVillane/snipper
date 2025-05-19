@@ -171,11 +171,11 @@ export default async function SubdomainPage({ params }: SubdomainPage) {
           <section className="absolute bottom-10 flex flex-col items-center space-y-2 pt-4 text-center text-sm text-gray-500">
             <p>
               Powered by{" "}
+              <AppLogo className="mb-0.5 mr-0.5 inline size-4 text-primary" />
               <Link
                 href={publicUrl}
-                className="font-semibold text-primary underline-offset-2 hover:underline"
+                className="link-hover max-w-[200px] truncate font-semibold text-primary"
               >
-                <AppLogo className="mb-0.5 mr-0.5 inline size-4 text-primary" />
                 Snippr
               </Link>
               <span className="text-gray-400"> | </span>©{" "}
@@ -185,7 +185,7 @@ export default async function SubdomainPage({ params }: SubdomainPage) {
               Create your own Link Hub and track your links.
               <Link
                 href={publicUrl}
-                className="ml-1 font-semibold text-primary underline-offset-2 hover:underline"
+                className="link-hover ml-1 max-w-[200px] truncate font-semibold text-primary"
               >
                 Get Started
               </Link>

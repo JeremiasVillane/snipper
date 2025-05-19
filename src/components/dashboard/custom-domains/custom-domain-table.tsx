@@ -10,6 +10,7 @@ import {
   CustomDomainFromRepository,
   ShortLinkFromRepository,
 } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
@@ -112,7 +113,9 @@ export function CustomDomainTable({
                         href={fullLinkHubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="max-w-[220px] truncate text-primary underline-offset-2 hover:underline"
+                        className={cn(
+                          "link-hover max-w-[200px] truncate font-semibold text-primary",
+                        )}
                       >
                         {linkHubUrl}
                       </Link>

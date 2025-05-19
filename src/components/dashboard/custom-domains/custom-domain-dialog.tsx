@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CustomDomain, ShortLink as PrismaShortLink } from "@prisma/client";
 import { Ban, InfoIcon, ListCheck, MoreHorizontal } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Tooltip as ReactTooltip } from "react-tooltip";
@@ -221,7 +220,7 @@ export function CustomDomainDialog({
       <CredenzaContent className="max-w-full md:max-w-[500px]">
         <CredenzaHeader>
           <CredenzaTitle>
-            {!!initialData ? "Editar" : "Crear"} Custom Domain
+            {!!initialData ? "Edit" : "Create"} Custom Domain
           </CredenzaTitle>
         </CredenzaHeader>
 
@@ -262,7 +261,7 @@ export function CustomDomainDialog({
                     iconLeft={<ListCheck />}
                     iconAnimation="zoomIn"
                     onClick={() => setShowLinkSelector(true)}
-                    className="ml-auto h-8"
+                    className="ml-auto mt-2 h-8"
                   >
                     Select links{" "}
                     {selectedFullLinks.length > 0
@@ -357,17 +356,20 @@ export function CustomDomainDialog({
                               <InfoIcon className="mb-1 inline size-4 text-primary" />
                             </PopoverTrigger>
                             <PopoverContent>
-                              <p className="text-sm text-muted-foreground">
-                                A link hub is a personalized page that displays
-                                all your shortened links in one place. It can be
-                                shared with others, allowing them to access all
-                                your links easily.
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                This feature is useful for sharing multiple
-                                links with a single URL, such as in social media
-                                bios or email signatures.
-                              </p>
+                              {" "}
+                              <div className="space-y-2 rounded-md border bg-muted/30 p-4 shadow-md">
+                                <p className="text-sm text-muted-foreground">
+                                  A link hub is a personalized page that
+                                  displays all your shortened links in one
+                                  place. It can be shared with others, allowing
+                                  them to access all your links easily.
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  This feature is useful for sharing multiple
+                                  links with a single URL, such as in social
+                                  media bios or email signatures.
+                                </p>{" "}
+                              </div>
                             </PopoverContent>
                           </Popover>
                         </FormDescription>
@@ -440,10 +442,20 @@ export function CustomDomainDialog({
                 )}
               />
 
-              <div className="flex pb-3 pt-6">
+              <div className="flex w-full flex-col-reverse justify-end gap-2 pb-3 pt-6 md:flex-row">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full md:w-fit"
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+
                 <Button
                   type="submit"
-                  className="m-0 w-full md:ml-auto md:w-fit"
+                  className="w-full md:w-fit"
                   isLoading={isSubmitting}
                   disabled={isSubmitting || !isTrulyDirty}
                 >

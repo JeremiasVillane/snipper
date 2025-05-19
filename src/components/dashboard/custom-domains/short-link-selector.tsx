@@ -58,7 +58,7 @@ export function ShortLinkSelector({
                       checked={isSelected}
                       variant="draw"
                       onCheckedChange={() => toggleSelection(link)}
-                      className="size-[0.9rem] [&>svg]:size-[0.9rem] border-muted-foreground/80 data-[state=checked]:border-primary/60 group-hover:border-primary/80"
+                      className="size-[0.9rem] border-muted-foreground/80 group-hover:border-primary/80 data-[state=checked]:border-primary/60 [&>svg]:size-[0.9rem]"
                     />
                     <div>
                       <p className="text-sm font-medium">{link.shortCode}</p>
@@ -73,7 +73,7 @@ export function ShortLinkSelector({
           )}
         </CredenzaBody>
         <div className="flex justify-end p-4">
-          <Button onClick={onClose} size="sm">
+          <Button onClick={onClose} size="sm" className="w-full md:w-fit">
             Close
           </Button>
         </div>

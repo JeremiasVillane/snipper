@@ -85,7 +85,7 @@ export function LinkTable({
                         target="_blank"
                         rel="noopener noreferrer"
                         className={cn(
-                          "max-w-[200px] truncate text-primary underline-offset-2 hover:underline",
+                          "link-hover max-w-[200px] truncate font-semibold text-primary",
                           isExpired
                             ? "cursor-not-allowed text-destructive"
                             : "",
@@ -112,20 +112,22 @@ export function LinkTable({
                       <LinkPreview
                         url={link.originalUrl}
                         className={cn(
-                          "min-w-0 truncate hover:underline",
+                          "link-hover",
+                          "after:bottom-0.5 after:h-[1px] after:bg-muted-foreground",
+                          "min-w-0 truncate",
                           isExpired ? "text-muted-foreground" : "",
                         )}
                       >
                         {link.originalUrl}
                       </LinkPreview>
-                      <a
+                      <Link
                         href={link.originalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="Open original URL"
                       >
-                        <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground hover:text-foreground" />
-                      </a>
+                        <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground transition-colors hover:text-foreground" />
+                      </Link>
                     </div>
                   </TableCell>
 

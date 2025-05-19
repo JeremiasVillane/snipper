@@ -6,6 +6,7 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { deleteShortLink } from "@/lib/actions/short-links";
+import { deleteQrPreferences } from "@/lib/qr-preferences-db";
 import type { ShortLinkFromRepository } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +18,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui/credenza";
-
-import { toast } from "../ui/simple-toast";
+import { toast } from "@/components/ui/simple-toast";
 
 interface DeleteLinkDialogProps {
   link: ShortLinkFromRepository;
@@ -38,14 +38,23 @@ export default function DeleteLinkDialog({
     try {
       setIsLoading(true);
 
-      const result = await deleteShortLink({ id: link.id }).then((res) =>
-        getSafeActionResponse(res),
-      );
+      const { data, success, error } = await deleteShortLink({
+        id: link.id,
+      }).then((res) => getSafeActionResponse(res));
+
+      if (success) {
+        await deleteQrPreferences(link.shortCode).catch((err) =>
+          console.warn(
+            `Preferences for QR code ${link.shortCode} could not be deleted:`,
+            err,
+          ),
+        );
+      }
 
       toast({
-        title: result.success ? "Success!" : "Error",
-        description: result.success ? result.data.message : result.error,
-        type: result.success ? "success" : "error",
+        title: success ? "Success!" : "Error",
+        description: success ? data.message : error,
+        type: success ? "success" : "error",
       });
 
       onOpenChange(false);

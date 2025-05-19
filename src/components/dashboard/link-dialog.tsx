@@ -399,6 +399,8 @@ export function LinkDialog({
                                   field.onChange(`https://${e.target.value}`)
                                 }
                                 startInline="https://"
+                                maxLength={120}
+                                showMaxLength="inside"
                                 placeholder="example.com/your-very-long-url..."
                                 autoComplete="off"
                                 autoFocus
@@ -703,7 +705,7 @@ export function LinkDialog({
                                             />
                                             <div className="relative py-4 max-sm:order-1 max-sm:border-t sm:w-32">
                                               <div className="h-full sm:border-s">
-                                                <div className="flex flex-col items-start px-2">
+                                                <div className="flex flex-col gap-1 px-2 [&>button]:flex [&>button]:justify-start">
                                                   <Button
                                                     size="sm"
                                                     variant="ghost"

@@ -46,7 +46,10 @@ export const shortLinkPassword = z.string().superRefine((val, ctx) => {
 });
 
 const baseLinkSchema = z.object({
-  originalUrl: z.string().url({ message: "Please enter a valid URL" }),
+  originalUrl: z
+    .string()
+    .url({ message: "Please enter a valid URL" })
+    .max(120, "The url cannot be more than 120 characters long."),
   shortCode: shortCodeSchema.optional().or(z.literal("")),
   tags: z.array(z.string()).optional(),
   expiresAt: z.date().nullable().optional(),

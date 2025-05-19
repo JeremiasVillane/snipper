@@ -10,6 +10,10 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .link-hover {
+    @apply relative after:absolute after:bottom-0 after:left-1/2 after:h-[2px] after:w-0 after:bg-primary/60 after:transition-all after:content-[''] hover:after:left-0 hover:after:w-full
+  }
 }
 
 @layer base {

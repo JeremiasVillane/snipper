@@ -41,12 +41,14 @@ function ImageCarousel({
   interval?: number;
 }) {
   const [current, setCurrent] = React.useState(0);
+
   React.useEffect(() => {
     const id = setInterval(() => {
       setCurrent((prev) => (prev + 1) % images.length);
     }, interval);
     return () => clearInterval(id);
   }, [images.length, interval]);
+
   return (
     <div className="relative h-full w-full">
       <AnimatePresence initial={false} mode="wait">
@@ -67,7 +69,7 @@ function ImageCarousel({
           />
         </motion.div>
       </AnimatePresence>
-      {/* Indicadores */}
+      {/* Indicators */}
       <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
         {images.map((_, idx) => (
           <span
@@ -145,10 +147,10 @@ function StepPreview({ step, direction }: { step: Step; direction: 1 | -1 }) {
   return (
     <motion.div
       {...slideInOut(direction)}
-      className="rounded-rb-lg relative h-full w-full overflow-hidden rounded-sm rounded-tl-xl ring-2 ring-black/10 ring-offset-8 dark:ring-black/10 dark:ring-offset-black"
+      className="rounded-rb-lg relative col-span-2 h-full w-full overflow-hidden rounded-sm rounded-tl-sm border-l-4 border-border"
     >
       {step.media ? (
-        <div className="relative h-full w-full bg-black">
+        <div className="relative h-full w-full bg-background">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={controls}
@@ -392,9 +394,15 @@ function StepContent({
           {/* Navigation buttons */}
           <div className="flex items-center justify-between pr-4">
             <Button
+              size="sm"
               variant="ghost"
-              onClick={onSkip}
-              className="rounded-full text-muted-foreground hover:bg-card"
+              onClick={() => {
+                if (skipNextTime) {
+                  hideFeature();
+                }
+                onSkip();
+              }}
+              className="rounded-full"
             >
               Skip all
             </Button>
@@ -425,7 +433,7 @@ function StepContent({
             </div>
             {/* Don't show again checkbox */}
           </div>
-          <div className="flex items-center space-x-2 px-4 pb-4">
+          <div className="flex items-center space-x-2 px-2.5 pb-4">
             <Checkbox
               id="skipNextTime"
               variant="draw"
@@ -560,7 +568,7 @@ function IntroDisclosure({
             )}
           </DialogHeader>
 
-          <div className="grid h-full grid-cols-2">
+          <div className="grid h-full grid-cols-3">
             <div className="p-2 pr-[18px]">
               <StepContent
                 steps={steps}
@@ -667,9 +675,10 @@ function IntroDisclosure({
             <div className="p-4">
               <div className="mb-4 flex items-center justify-between">
                 <Button
+                  size="sm"
                   variant="ghost"
                   onClick={onSkip}
-                  className="rounded-full text-muted-foreground hover:bg-card"
+                  className="rounded-full"
                 >
                   Skip all
                 </Button>
@@ -679,7 +688,7 @@ function IntroDisclosure({
                       onClick={handlePrevious}
                       size="sm"
                       variant="ghost"
-                      className="rounded-full hover:bg-transparent"
+                      className="rounded-full"
                     >
                       Previous
                     </Button>
@@ -696,7 +705,7 @@ function IntroDisclosure({
                   </Button>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 px-2.5">
                 <Checkbox
                   id="skipNextTime"
                   onCheckedChange={(checked) => {
