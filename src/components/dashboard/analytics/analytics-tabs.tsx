@@ -24,10 +24,8 @@ import { AnalyticsDevices } from "./analytics-devices";
 import { ClicksTable } from "./clicks-table";
 import { CountryMap } from "./country-map";
 import { ExportPDFButton } from "./export-pdf-button";
-import { ReferrersTable } from "./referrers-table";
 import { TopRegionsTable } from "./top-regions-table";
 import { TrafficSources } from "./traffic-sources";
-import { UtmValueTable } from "./utm-value-table";
 
 interface AnalyticsTabsProps {
   analytics: ShortLinkAnalyticsData | null;

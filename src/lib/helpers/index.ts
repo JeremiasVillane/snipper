@@ -2,6 +2,7 @@ export * from "./aggregate-utm-params";
 export * from "./build-custom-domain-url";
 export * from "./build-short-url";
 export * from "./build-url-with-utm";
+export * from "./download-svg";
 export * from "./extract-subdomain-from-host";
 export * from "./generate-api-key";
 export * from "./generate-qr-code";

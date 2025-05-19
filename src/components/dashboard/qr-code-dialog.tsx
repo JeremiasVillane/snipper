@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useFileUpload, type FileWithPreview } from "@/hooks";
 import { Download } from "lucide-react";
-import { QRCodeCanvas } from "qrcode.react";
+import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 
-import { buildShortUrl } from "@/lib/helpers";
+import { buildShortUrl, downloadSvg } from "@/lib/helpers";
 import {
   dataURLtoFile,
   loadQrPreferences,
@@ -30,6 +30,12 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui/credenza";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/simple-toast";
@@ -98,7 +104,8 @@ export default function QrCodeDialog({
   const selectedLogoFileWithPreview: FileWithPreview | undefined = files[0];
   const selectedLogoDataUrl = selectedLogoFileWithPreview?.preview || null;
 
-  const qrCodeRef = useRef<HTMLCanvasElement>(null);
+  const qrCodeCanvasRef = useRef<HTMLCanvasElement>(null);
+  const qrCodeSvgRef = useRef<SVGSVGElement>(null);
 
   // --- Effect to Load preferences when the dialog opens ---
   useEffect(() => {
@@ -130,30 +137,56 @@ export default function QrCodeDialog({
     }
   }, [open, link?.shortCode, isPremiumOrDemoUser]);
 
-  const handleDownload = () => {
-    const canvas = qrCodeRef.current;
-    if (!canvas) {
+  const handleDownload = (extension: "png" | "jpg" | "svg" = "png") => {
+    if (extension === "svg") {
+      const svgElement = qrCodeSvgRef.current;
+      if (!svgElement) {
+        toast({
+          title: "Error",
+          description: "Could not generate QR code SVG for download.",
+          type: "error",
+        });
+        return;
+      }
+
+      try {
+        downloadSvg(svgElement, `qrcode-${link.shortCode}.svg`);
+        toast({
+          title: "Downloaded!",
+          description: "QR code has been downloaded.",
+        });
+      } catch (error) {
+        console.error("Error downloading SVG:", error);
+        toast({
+          title: "Error",
+          description: "Failed to download SVG.",
+          type: "error",
+        });
+      }
+    } else {
+      const canvas = qrCodeCanvasRef.current;
+      if (!canvas) {
+        toast({
+          title: "Error",
+          description: `Could not generate QR code ${extension.toUpperCase()} for download.`,
+          type: "error",
+        });
+        return;
+      }
+
+      const imgUrl = canvas.toDataURL(`image/${extension}`);
+      const a = document.createElement("a");
+      a.href = imgUrl;
+      a.download = `qrcode-${link.shortCode}.${extension}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
       toast({
-        title: "Error",
-        description: "Could not generate QR code for download.",
-        type: "error",
+        title: "Downloaded!",
+        description: `QR code has been downloaded as ${extension.toUpperCase()}.`,
       });
-      return;
     }
-
-    const pngUrl = canvas.toDataURL("image/png");
-
-    const a = document.createElement("a");
-    a.href = pngUrl;
-    a.download = `qrcode-${link.shortCode}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    toast({
-      title: "Downloaded!",
-      description: "QR code has been downloaded.",
-    });
   };
 
   const shortUrl = buildShortUrl(link.shortCode, link.customDomain?.domain);
@@ -229,6 +262,7 @@ export default function QrCodeDialog({
                 width: `${QR_CODE_SIZE / 2}px`,
               }}
             >
+              {/* Render QRCodeCanvas for display - scaled down */}
               <QRCodeCanvas
                 value={shortUrl}
                 size={QR_CODE_SIZE}
@@ -239,16 +273,44 @@ export default function QrCodeDialog({
                   selectedLogoDataUrl
                     ? {
                         src: selectedLogoDataUrl,
-                        x: undefined, // Auto-center
-                        y: undefined, // Auto-center
+                        x: undefined,
+                        y: undefined,
                         height: QR_CODE_SIZE * 0.2, // Logo size (20%)
                         width: QR_CODE_SIZE * 0.2,
                         excavate: true, // Make space for the logo
                       }
                     : undefined
                 }
-                ref={qrCodeRef}
+                ref={qrCodeCanvasRef}
                 className="scale-50"
+              />
+              {/* Render QRCodeSVG hidden - for SVG download */}
+              <QRCodeSVG
+                value={shortUrl}
+                size={QR_CODE_SIZE} // Use full size for download quality
+                fgColor={fgColor}
+                bgColor={bgColor}
+                level="H"
+                imageSettings={
+                  selectedLogoDataUrl
+                    ? {
+                        src: selectedLogoDataUrl,
+                        x: undefined,
+                        y: undefined,
+                        height: QR_CODE_SIZE * 0.2,
+                        width: QR_CODE_SIZE * 0.2,
+                        excavate: true,
+                      }
+                    : undefined
+                }
+                ref={qrCodeSvgRef}
+                style={{
+                  position: "absolute",
+                  top: "-9999px",
+                  left: "-9999px",
+                  width: QR_CODE_SIZE,
+                  height: QR_CODE_SIZE,
+                }}
               />
             </div>
           ) : (
@@ -280,7 +342,7 @@ export default function QrCodeDialog({
                       <Input
                         id="fgColor"
                         type="color"
-                        defaultValue={fgColor} // Usar defaultValue en lugar de value
+                        defaultValue={fgColor}
                         onChange={handleFgColorChange}
                         className="h-10 w-full hover:border-muted-foreground/60"
                       />
@@ -347,14 +409,29 @@ export default function QrCodeDialog({
             Close
           </Button>
           {shortUrl && (
-            <Button
-              onClick={handleDownload}
-              iconLeft={<Download />}
-              iconAnimation="translateYDown"
-              disabled={errors.length > 0}
-            >
-              Download
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  iconLeft={<Download />}
+                  iconAnimation="translateYDown"
+                  disabled={errors.length > 0}
+                >
+                  Download
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent className="p-0">
+                {(["png", "jpg", "svg"] as const).map((ext) => (
+                  <DropdownMenuItem
+                    key={ext}
+                    onClick={() => handleDownload(ext)}
+                    className="px-3 py-1 hover:bg-muted"
+                  >
+                    {ext}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </CredenzaFooter>
       </CredenzaContent>
