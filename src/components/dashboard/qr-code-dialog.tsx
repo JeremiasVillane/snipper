@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useFileUpload, type FileWithPreview } from "@/hooks";
+import { FileMetadata, useFileUpload, type FileWithPreview } from "@/hooks";
+import { saveAs } from "file-saver";
 import { Download } from "lucide-react";
 import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 
@@ -137,7 +138,7 @@ export default function QrCodeDialog({
     }
   }, [open, link?.shortCode, isPremiumOrDemoUser]);
 
-  const handleDownload = (extension: "png" | "jpg" | "svg" = "png") => {
+  const handleDownload = async (extension: "png" | "jpg" | "svg") => {
     if (extension === "svg") {
       const svgElement = qrCodeSvgRef.current;
       if (!svgElement) {
@@ -150,7 +151,36 @@ export default function QrCodeDialog({
       }
 
       try {
-        downloadSvg(svgElement, `qrcode-${link.shortCode}.svg`);
+        let trueLogoDataUrl: string | null = null;
+
+        if (files.length > 0) {
+          const file = files[0];
+          const actualFile: File | FileMetadata =
+            "file" in file ? file.file : file;
+
+          try {
+            trueLogoDataUrl = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.onerror = (error) => reject(error);
+              reader.readAsDataURL(actualFile as File);
+            });
+          } catch (readerError) {
+            console.error("Error reading logo file as Data URL:", readerError);
+            toast({
+              title: "Error",
+              description: "Failed to read logo file for SVG download.",
+              type: "error",
+            });
+            return;
+          }
+        }
+
+        downloadSvg(
+          svgElement,
+          `qrcode-${link.shortCode}.svg`,
+          trueLogoDataUrl,
+        );
         toast({
           title: "Downloaded!",
           description: "QR code has been downloaded.",
@@ -174,18 +204,24 @@ export default function QrCodeDialog({
         return;
       }
 
-      const imgUrl = canvas.toDataURL(`image/${extension}`);
-      const a = document.createElement("a");
-      a.href = imgUrl;
-      a.download = `qrcode-${link.shortCode}.${extension}`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      try {
+        const imgUrl = canvas.toDataURL(`image/${extension}`);
+        const filename = `qrcode-${link.shortCode}.${extension}`;
+        const blob = await fetch(imgUrl).then((res) => res.blob());
+        saveAs(blob, filename);
 
-      toast({
-        title: "Downloaded!",
-        description: `QR code has been downloaded as ${extension.toUpperCase()}.`,
-      });
+        toast({
+          title: "Downloaded!",
+          description: `QR code has been downloaded as ${extension.toUpperCase()}.`,
+        });
+      } catch (error) {
+        console.error(`Error downloading ${extension.toUpperCase()}:`, error);
+        toast({
+          title: "Error",
+          description: `Failed to download ${extension.toUpperCase()}.`,
+          type: "error",
+        });
+      }
     }
   };
 
@@ -425,7 +461,7 @@ export default function QrCodeDialog({
                   <DropdownMenuItem
                     key={ext}
                     onClick={() => handleDownload(ext)}
-                    className="px-3 py-1 hover:bg-muted"
+                    className="px-3 py-1 uppercase hover:bg-muted"
                   >
                     {ext}
                   </DropdownMenuItem>

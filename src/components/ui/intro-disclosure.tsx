@@ -28,6 +28,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 
 function ImageCarousel({
@@ -431,12 +432,12 @@ function StepContent({
               checked={skipNextTime}
               onCheckedChange={(checked) => setSkipNextTime(checked as boolean)}
             />
-            <label
+            <Label
               htmlFor="skipNextTime"
-              className="select-none text-sm text-muted-foreground"
+              className="cursor-pointer select-none text-sm text-muted-foreground"
             >
               Don't show this again
-            </label>
+            </Label>
           </div>
         </motion.div>
       </AnimatePresence>

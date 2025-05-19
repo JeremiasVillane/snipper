@@ -23,7 +23,7 @@ import {
 import { AnalyticsDevices } from "./analytics-devices";
 import { ClicksTable } from "./clicks-table";
 import { CountryMap } from "./country-map";
-import { ExportPDFButton } from "./export-pdf-button";
+import { ExportButton } from "./export-button";
 import { TopRegionsTable } from "./top-regions-table";
 import { TrafficSources } from "./traffic-sources";
 
@@ -118,10 +118,10 @@ export function AnalyticsTabs({
       </TabsContent>
 
       <TabsContent value="clicks" className="mt-6">
-        <ExportPDFButton
+        <ExportButton
           reportTitle="Analytics: Clicks"
           tableHeaders={[
-            "Time",
+            "Timestamp",
             "Country",
             "City",
             "Device",
@@ -148,12 +148,6 @@ export function AnalyticsTabs({
       {isPremiumOrDemoUser && (
         <>
           <TabsContent value="geography" className="mt-6">
-            <ExportPDFButton
-              reportTitle="Analytics: Geography"
-              tableHeaders={["Country", "Clicks"]}
-              data={Object.entries(analytics.clicksByCountry)}
-            />
-
             <Card>
               <CardHeader>
                 <CardTitle>Geography</CardTitle>

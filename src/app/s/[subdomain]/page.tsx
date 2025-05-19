@@ -93,8 +93,6 @@ export default async function SubdomainPage({ params }: SubdomainPage) {
   const userData = await usersRepository.findByCustomDomain(subdomain);
   if (!userData) return notFound();
 
-  console.log("userData:", userData)
-
   const userSubdomain = userData.customDomains[0];
   if (!userSubdomain.isLinkHubEnabled) return notFound();
   if (userData.shortLinks.length < 1) {

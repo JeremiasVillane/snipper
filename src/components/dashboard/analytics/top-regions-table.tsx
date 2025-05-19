@@ -18,6 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { prepareChartData } from "./analytics-helpers";
+import { ExportButton } from "./export-button";
 
 interface TopRegionsTable {
   countryData: ShortLinkAnalyticsData["clicksByCountry"];
@@ -69,6 +70,11 @@ export function TopRegionsTable({ countryData, cityData }: TopRegionsTable) {
       </TabsList>
 
       <TabsContent value="countries">
+        <ExportButton
+          reportTitle="Analytics: Geography - Countries"
+          tableHeaders={["Country", "Clicks"]}
+          data={Object.entries(countryData)}
+        />
         <Table>
           <TableHeader>
             <TableRow>
@@ -120,6 +126,11 @@ export function TopRegionsTable({ countryData, cityData }: TopRegionsTable) {
       </TabsContent>
 
       <TabsContent value="cities">
+        <ExportButton
+          reportTitle="Analytics: Geography - Cities"
+          tableHeaders={["City", "Clicks"]}
+          data={Object.entries(cityData)}
+        />
         <Table>
           <TableHeader>
             <TableRow>

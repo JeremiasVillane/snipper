@@ -352,7 +352,7 @@ export function LinkDialog({
   const isTrulyDirty = initialData
     ? !isDeepEqual(formValues, initialFormValuesRef.current)
     : isDirty;
-  console.log("FORM:", form.getValues());
+
   return (
     <Credenza open={isOpen} onOpenChange={onOpenChange}>
       {!!children && <CredenzaTrigger asChild>{children}</CredenzaTrigger>}

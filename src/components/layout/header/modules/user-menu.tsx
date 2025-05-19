@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BarChart3, Key, LogOut, Settings, User } from "lucide-react";
+import { BarChart3, Globe, Key, LogOut, Settings, User } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -41,6 +41,12 @@ export default function UserMenu({ avatar, userName }: UserMenuProps) {
             <Link href="/dashboard" className="group">
               <BarChart3 className={iconStyle} />
               Dashboard
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/custom-domains" className="group">
+              <Globe className={iconStyle} />
+              Subdomains
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>

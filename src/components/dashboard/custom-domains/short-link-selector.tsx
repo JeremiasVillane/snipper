@@ -1,5 +1,6 @@
 import { ShortLinkFromRepository } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Credenza,
   CredenzaBody,
@@ -7,6 +8,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui/credenza";
+import { Label } from "@/components/ui/label";
 
 interface ShortLinkSelectorProps {
   userShortLinks: ShortLinkFromRepository[];
@@ -48,15 +50,15 @@ export function ShortLinkSelector({
               {userShortLinks.map((link) => {
                 const isSelected = selectedLinkIds?.includes(link.id) ?? false;
                 return (
-                  <label
+                  <Label
                     key={link.id}
-                    className="flex cursor-pointer items-center gap-2 rounded border p-2"
+                    className="group flex cursor-pointer items-center gap-2 rounded border p-2 hover:border-primary/60"
                   >
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={isSelected}
-                      onChange={() => toggleSelection(link)}
-                      className="form-checkbox"
+                      variant="draw"
+                      onCheckedChange={() => toggleSelection(link)}
+                      className="size-[0.9rem] [&>svg]:size-[0.9rem] border-muted-foreground/80 data-[state=checked]:border-primary/60 group-hover:border-primary/80"
                     />
                     <div>
                       <p className="text-sm font-medium">{link.shortCode}</p>
@@ -64,7 +66,7 @@ export function ShortLinkSelector({
                         {link.originalUrl}
                       </p>
                     </div>
-                  </label>
+                  </Label>
                 );
               })}
             </div>

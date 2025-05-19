@@ -5,7 +5,7 @@ import { parseAsString, useQueryState } from "nuqs";
 import { ShortLinkAnalyticsData } from "@/lib/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { ExportPDFButton } from "./export-pdf-button";
+import { ExportButton } from "./export-button";
 import { ReferrersTable } from "./referrers-table";
 import { UtmValueTable } from "./utm-value-table";
 
@@ -48,7 +48,7 @@ export function TrafficSources({
       </TabsList>
 
       <TabsContent value="campaigns">
-        <ExportPDFButton
+        <ExportButton
           reportTitle="Analytics: Campaigns"
           tableHeaders={["Campaign", "Clicks"]}
           data={Object.entries(clicksByCampaign)}
@@ -62,7 +62,7 @@ export function TrafficSources({
       </TabsContent>
 
       <TabsContent value="sources">
-        <ExportPDFButton
+        <ExportButton
           reportTitle="Analytics: Sources"
           tableHeaders={["Source", "Clicks"]}
           data={Object.entries(clicksBySource)}
@@ -76,7 +76,7 @@ export function TrafficSources({
       </TabsContent>
 
       <TabsContent value="mediums">
-        <ExportPDFButton
+        <ExportButton
           reportTitle="Analytics: Mediums"
           tableHeaders={["Medium", "Clicks"]}
           data={Object.entries(clicksByMedium)}
@@ -90,7 +90,7 @@ export function TrafficSources({
       </TabsContent>
 
       <TabsContent value="terms">
-        <ExportPDFButton
+        <ExportButton
           reportTitle="Analytics: Terms"
           tableHeaders={["Term", "Clicks"]}
           data={Object.entries(clicksByTerm)}
@@ -104,7 +104,7 @@ export function TrafficSources({
       </TabsContent>
 
       <TabsContent value="contents">
-        <ExportPDFButton
+        <ExportButton
           reportTitle="Analytics: Contents"
           tableHeaders={["Content", "Clicks"]}
           data={Object.entries(clicksByContent)}
@@ -118,7 +118,7 @@ export function TrafficSources({
       </TabsContent>
 
       <TabsContent value="referrers">
-        <ExportPDFButton
+        <ExportButton
           reportTitle="Analytics: Referrers"
           tableHeaders={["Referrer", "Clicks"]}
           data={Object.entries(clicksByReferrer)}
