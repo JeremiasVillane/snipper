@@ -1,12 +1,10 @@
-import { Tag } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import { prisma } from "../prisma";
 
 export const tagsRepository = {
-  async create(data: Tag) {
-    return await prisma.tag.create({
-      data,
-    });
+  async create(data: Prisma.TagCreateInput) {
+    return await prisma.tag.create({ data });
   },
 
   async findByUserId(userId: string) {
@@ -28,19 +26,24 @@ export const tagsRepository = {
       return existingTag;
     }
     return await this.create({
-      id: crypto.randomUUID(),
       name,
-      userId,
+      user: { connect: { id: userId } },
     });
+  },
+
+  async update(id: string, userId: string, data: Prisma.TagUpdateInput) {
+    return await prisma.tag.update({ where: { id, userId }, data });
+  },
+
+  async delete(id: string, userId: string) {
+    await prisma.tag.delete({ where: { id, userId } });
+    return true;
   },
 
   async addTagToLink(linkId: string, tagId: string) {
     try {
       await prisma.linkTag.create({
-        data: {
-          linkId,
-          tagId,
-        },
+        data: { linkId, tagId },
       });
       return true;
     } catch (error: any) {
@@ -54,12 +57,7 @@ export const tagsRepository = {
 
   async removeTagFromLink(linkId: string, tagId: string) {
     await prisma.linkTag.delete({
-      where: {
-        linkId_tagId: {
-          linkId,
-          tagId,
-        },
-      },
+      where: { linkId_tagId: { linkId, tagId } },
     });
     return true;
   },

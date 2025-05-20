@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Tag" ALTER COLUMN "color" SET DEFAULT '#9A71F4';

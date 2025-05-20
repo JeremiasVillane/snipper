@@ -150,11 +150,11 @@ export function LinkTable({
                       {link.tags.length > 0 ? (
                         link.tags.map((tag) => (
                           <Badge
-                            key={tag}
+                            key={tag.id}
                             variant="secondary"
                             className="text-nowrap"
                           >
-                            {tag}
+                            {tag.name}
                           </Badge>
                         ))
                       ) : (

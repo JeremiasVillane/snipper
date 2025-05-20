@@ -4,4 +4,5 @@ export * from "./export.schema";
 export * from "./login.schema";
 export * from "./register.schema";
 export * from "./short-link.schema";
+export * from "./tag.schema";
 export * from "./utm-param.schema";

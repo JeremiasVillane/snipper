@@ -2,7 +2,10 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
 
-import { getUserCustomDomains } from "@/lib/actions/custom-domains";
+import {
+  getUserCustomDomains,
+  getUserTags,
+} from "@/lib/actions/custom-domains";
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { getUserShortLinks } from "@/lib/actions/short-links";
 import { auth } from "@/lib/auth";
@@ -42,6 +45,14 @@ export default async function DashboardPage() {
     error: customDomainsError,
   } = await getUserCustomDomains().then((res) => getSafeActionResponse(res));
 
+  const { data: tagsData, error: tagsError } = await getUserTags().then((res) =>
+    getSafeActionResponse(res),
+  );
+
+  if (tagsError) {
+    console.warn("Error retrieving user tags:", tagsError);
+  }
+
   const dbUser = await usersRepository.findById(session.user.id);
 
   const isPremiumOrDemoUser = Boolean(
@@ -70,7 +81,7 @@ export default async function DashboardPage() {
             Manage and track your shortened links
           </p>
         </div>
-        <LinkDialog userCustomDomains={customDomainsData}>
+        <LinkDialog userCustomDomains={customDomainsData} userTags={tagsData}>
           <Button
             iconLeft={<Plus className="size-4" />}
             iconAnimation="zoomIn"
@@ -88,6 +99,7 @@ export default async function DashboardPage() {
         links={linksData}
         isPremiumOrDemoUser={isPremiumOrDemoUser}
         userCustomDomains={customDomainsData}
+        userTags={tagsData}
       />
       <Tour />
     </main>

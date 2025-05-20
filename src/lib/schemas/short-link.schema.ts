@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { REGEX, reservedWords } from "../constants";
 import { customDomainSchema } from "./custom-domain.schema";
+import { tagSchema } from "./tag.schema";
 import { utmSetSchema } from "./utm-param.schema";
 
 export const shortCodeSchema = z
@@ -51,7 +52,7 @@ const baseLinkSchema = z.object({
     .url({ message: "Please enter a valid URL" })
     .max(120, "The url cannot be more than 120 characters long."),
   shortCode: shortCodeSchema.optional().or(z.literal("")),
-  tags: z.array(z.string()).optional(),
+  tags: z.array(tagSchema).optional(),
   expiresAt: z.date().nullable().optional(),
   password: shortLinkPassword.optional().nullable(),
   utmSets: z.array(utmSetSchema).optional(),

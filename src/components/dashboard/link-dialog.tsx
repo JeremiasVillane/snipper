@@ -5,20 +5,20 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomDomain } from "@prisma/client";
 import { format } from "date-fns";
-import { CalendarIcon, InfoIcon, X } from "lucide-react";
+import { CalendarIcon, InfoIcon } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 import { deleteImage, uploadImage } from "@/lib/actions/dashboard";
 import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { createShortLink, updateShortLink } from "@/lib/actions/short-links";
+import { deleteTag, updateTag } from "@/lib/actions/tags";
 import {
   CreateLinkFormData,
   createLinkSchema,
   UtmSetFormData,
 } from "@/lib/schemas";
-import { ShortLinkFromRepository } from "@/lib/types";
+import { ShortLinkFromRepository, TagFromRepository } from "@/lib/types";
 import { isDeepEqual } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -52,11 +52,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/simple-toast";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TagBox } from "@/components/ui/tag-box";
 
-import { Separator } from "../ui/separator";
 import { IconSelector } from "./icon-selector";
 import { ShortLinkInput } from "./link-input";
 import { OgPreviewCustomizer } from "./og-preview-customizer";
@@ -69,6 +70,7 @@ interface LinkDialogProps {
   onOpenChange?: (open: boolean) => void;
   initialData?: ShortLinkFromRepository;
   userCustomDomains: CustomDomain[];
+  userTags: TagFromRepository[] | undefined;
 }
 
 export function LinkDialog({
@@ -77,6 +79,7 @@ export function LinkDialog({
   onOpenChange: setControlledOpen,
   initialData,
   userCustomDomains,
+  userTags,
 }: LinkDialogProps) {
   const router = useRouter();
 
@@ -86,7 +89,6 @@ export function LinkDialog({
   const isOpen = isControlled ? controlledOpen : internalOpen;
   const onOpenChange = isControlled ? setControlledOpen : setInternalOpen;
 
-  const [newTag, setNewTag] = useState("");
   const [editingUtmIndex, setEditingUtmIndex] = useState<number | null>(null);
   const [ogImageFile, setOgImageFile] = useState<File | null>(null);
 
@@ -151,7 +153,6 @@ export function LinkDialog({
   });
 
   const formValues = watch();
-  const currentTags = watch("tags");
 
   const initialFormValues = useMemo(() => {
     return calculateFormValues(initialData);
@@ -162,35 +163,11 @@ export function LinkDialog({
       const values = initialFormValues;
       reset(values);
       initialFormValuesRef.current = values;
-      setNewTag("");
       setEditingUtmIndex(null);
     } else {
       initialFormValuesRef.current = null;
     }
   }, [initialData, isOpen, reset]);
-
-  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && newTag.trim()) {
-      e.preventDefault();
-      const trimmedTag = newTag.trim();
-      const currentTagsValue = getValues("tags") || [];
-      if (!currentTagsValue.includes(trimmedTag)) {
-        setValue("tags", [...currentTagsValue, trimmedTag], {
-          shouldValidate: true,
-        });
-      }
-      setNewTag("");
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    const currentTagsValue = getValues("tags") || [];
-    setValue(
-      "tags",
-      currentTagsValue.filter((tag) => tag !== tagToRemove),
-      { shouldValidate: true },
-    );
-  };
 
   const onSubmit = async (data: CreateLinkFormData) => {
     try {
@@ -286,7 +263,6 @@ export function LinkDialog({
       });
 
       if (result.success) {
-        initialFormValuesRef.current = calculateFormValues(result.data);
         onOpenChange(false);
         router.refresh();
       }
@@ -571,45 +547,54 @@ export function LinkDialog({
                         />
                       )}
 
-                      <FormItem>
-                        <FormLabel>Tags</FormLabel>
-                        <div
-                          className={
-                            !!currentTags && currentTags?.length > 0
-                              ? "mb-2 flex flex-wrap gap-2"
-                              : ""
-                          }
-                        >
-                          {(currentTags || []).map((tag) => (
-                            <Badge
-                              key={tag}
-                              variant="secondary"
-                              className="flex items-center gap-1"
-                            >
-                              {tag}
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveTag(tag)}
-                                aria-label={`Remove tag ${tag}`}
-                              >
-                                <X className="size-3 cursor-pointer" />
-                              </button>
-                            </Badge>
-                          ))}
-                        </div>
-                        <FormControl>
-                          <Input
-                            placeholder="Add tags (press Enter)"
-                            value={newTag}
-                            onChange={(e) => setNewTag(e.target.value)}
-                            onKeyDown={handleAddTag}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Tags help you organize your links.
-                        </FormDescription>
-                        <FormMessage>{errors.tags?.message}</FormMessage>
-                      </FormItem>
+                      <FormField
+                        control={form.control}
+                        name="tags"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tags</FormLabel>
+                            <FormControl>
+                              <TagBox
+                                {...field}
+                                placeholder="Add tags (press Enter)"
+                                maxTags={12}
+                                showMaxTags
+                                userTags={userTags ?? []}
+                                onTagEdit={async (tag) => {
+                                  const { data, success, error } =
+                                    await updateTag({ ...tag }).then((res) =>
+                                      getSafeActionResponse(res),
+                                    );
+
+                                  toast({
+                                    title: success ? "Success!" : "Error",
+                                    description: success ? data.message : error,
+                                    type: success ? "success" : "error",
+                                  });
+                                }}
+                                onTagRemove={async (tag) => {
+                                  const { data, success, error } =
+                                    await deleteTag({
+                                      id: tag.id,
+                                    }).then((res) =>
+                                      getSafeActionResponse(res),
+                                    );
+
+                                  toast({
+                                    title: success ? "Success!" : "Error",
+                                    description: success ? data.message : error,
+                                    type: success ? "success" : "error",
+                                  });
+                                }}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Tags help you organize your links.
+                            </FormDescription>
+                            <FormMessage>{errors.tags?.message}</FormMessage>
+                          </FormItem>
+                        )}
+                      />
                     </CardContent>
                   </Card>
                 </TabsContent>

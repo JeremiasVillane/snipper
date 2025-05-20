@@ -69,8 +69,8 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
 
         <div className="mr-4 mt-2 flex flex-wrap gap-1">
           {link.tags?.map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-xs">
-              {tag}
+            <Badge key={tag.id} variant="secondary" className="text-xs">
+              {tag.name}
             </Badge>
           ))}
 

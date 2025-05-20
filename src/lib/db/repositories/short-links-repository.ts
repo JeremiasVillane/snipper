@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 
 import { generateShortCode } from "@/lib/helpers";
 import { CreateLinkFormData, UpdateLinkFormData } from "@/lib/schemas";
-import { ShortLinkFromRepository } from "@/lib/types";
+import { ShortLinkFromRepository, TagFromRepository } from "@/lib/types";
 
 import { prisma } from "../prisma";
 
@@ -59,16 +59,16 @@ export const shortLinksRepository = {
         },
       });
 
-      let createdTags: { id: string; name: string }[] = [];
+      let createdTags: TagFromRepository[] = [];
       if (data.tags && data.tags.length > 0) {
-        const tagOperations = data.tags.map(async (tagName) => {
+        const tagOperations = data.tags.map(async (tag) => {
           return await tx.tag.upsert({
             where: {
-              userId_name: { userId, name: tagName.trim() },
+              userId_name: { userId, name: tag.name.trim() },
             },
             update: {},
-            create: { name: tagName.trim(), userId },
-            select: { id: true, name: true },
+            create: { name: tag.name.trim(), color: tag.color, userId },
+            select: { id: true, name: true, color: true },
           });
         });
         createdTags = await Promise.all(tagOperations);
@@ -152,7 +152,11 @@ export const shortLinksRepository = {
 
       return {
         ...shortLink,
-        tags: createdTags.map((t) => t.name),
+        tags: createdTags.map((t) => ({
+          id: t.id,
+          name: t.name,
+          color: t.color,
+        })),
         utmParams: createdUtmParams,
         customDomain: createdCustomDomain,
         isPasswordEnabled: !!shortLink.password,
@@ -193,7 +197,11 @@ export const shortLinksRepository = {
       expirationUrl: shortLink.expirationUrl,
       userId: shortLink.userId,
       clicks: shortLink.clicks,
-      tags: shortLink.linkTags.map((lt) => lt.tag.name),
+      tags: shortLink.linkTags.map((lt) => ({
+        id: lt.tag.id,
+        name: lt.tag.name,
+        color: lt.tag.color,
+      })),
       utmParams: shortLink.utmParams,
       customOgImageUrl: shortLink.customOgImageUrl,
       customOgTitle: shortLink.customOgTitle,
@@ -247,7 +255,11 @@ export const shortLinksRepository = {
       expirationUrl: link.expirationUrl,
       userId: link.userId,
       clicks: link.clicks,
-      tags: link.linkTags.map((lt) => lt.tag.name),
+      tags: link.linkTags.map((lt) => ({
+        id: lt.tag.id,
+        name: lt.tag.name,
+        color: lt.tag.color,
+      })),
       utmParams: link.utmParams,
       customOgImageUrl: link.customOgImageUrl,
       customOgTitle: link.customOgTitle,
@@ -305,17 +317,42 @@ export const shortLinksRepository = {
         }
       }
 
-      let createdTags: { id: string; name: string }[] = [];
-      if (data.tags && data.tags.length > 0) {
-        await tx.linkTag.deleteMany({ where: { linkId } });
-        const tagOperations = data.tags.map(async (tagName) => {
+      // Retrieve currently connected tags for this short link
+      const existingLinkTags = await tx.linkTag.findMany({
+        where: { linkId },
+        include: { tag: true },
+      });
+      const existingTagNames = existingLinkTags.map((lt) => lt.tag.name);
+
+      // Disconnect tags that are no longer present in data.tags
+      const tagsToDisconnect = existingLinkTags.filter(
+        (lt) =>
+          !data.tags || !data.tags.some((tag) => tag.name === lt.tag.name),
+      );
+      if (tagsToDisconnect.length > 0) {
+        const tagIdsToDisconnect = tagsToDisconnect.map((lt) => lt.tag.id);
+        await tx.linkTag.deleteMany({
+          where: { linkId, tagId: { in: tagIdsToDisconnect } },
+        });
+        console.info(
+          `Disconnected ${tagsToDisconnect.length} tags for link ${linkId}`,
+        );
+      }
+
+      // For each tag in data.tags that is not already connected, upsert and connect it
+      let createdTags: TagFromRepository[] = [];
+      const tagsToAdd = (data.tags || []).filter(
+        (tag) => !existingTagNames.some((t) => t === tag.name),
+      );
+      if (tagsToAdd.length > 0) {
+        const tagOperations = tagsToAdd.map(async (tag) => {
           return await tx.tag.upsert({
             where: {
-              userId_name: { userId, name: tagName.trim() },
+              userId_name: { userId, name: tag.name.trim() },
             },
             update: {},
-            create: { name: tagName.trim(), userId },
-            select: { id: true, name: true },
+            create: { name: tag.name.trim(), color: tag.color, userId },
+            select: { id: true, name: true, color: true },
           });
         });
         createdTags = await Promise.all(tagOperations);
@@ -325,7 +362,9 @@ export const shortLinksRepository = {
             data: createdTags.map((tag) => ({ linkId, tagId: tag.id })),
             skipDuplicates: true,
           });
-          console.info(`Synced ${createdTags.length} tags for link ${linkId}`);
+          console.info(
+            `Connected ${createdTags.length} new tags for link ${linkId}`,
+          );
         }
       }
 
@@ -435,8 +474,16 @@ export const shortLinksRepository = {
           updatedShortLink.customDomain?.linkHubDescription ?? null,
         tags:
           createdTags.length > 0
-            ? createdTags.map((t) => t.name)
-            : (updatedShortLink?.linkTags?.map((lt) => lt.tag.name) ?? []),
+            ? createdTags.map((t) => ({
+                id: t.id,
+                name: t.name,
+                color: t.color,
+              }))
+            : (updatedShortLink?.linkTags?.map((lt) => ({
+                id: lt.tag.id,
+                name: lt.tag.name,
+                color: lt.tag.color,
+              })) ?? []),
         utmParams:
           createdUtmParams.length > 0
             ? createdUtmParams

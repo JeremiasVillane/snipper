@@ -3,6 +3,7 @@ import {
   CustomDomain,
   Plan,
   ShortLink,
+  Tag,
   UserRole,
   UTMParam,
 } from "@prisma/client";
@@ -40,6 +41,12 @@ export type ShortLinkAnalyticsData = {
   clicksByContent: Record<string, number>;
 };
 
+export interface TagFromRepository {
+  id: string;
+  name: string;
+  color: string;
+}
+
 interface ShortLinkBaseResponse {
   id: string;
   originalUrl: string;
@@ -47,7 +54,7 @@ interface ShortLinkBaseResponse {
   title: string | null;
   userId: string | null;
   clicks: number;
-  tags: string[];
+  tags: TagFromRepository[];
   utmParams: UTMParam[];
   customOgImageUrl: string | null;
   customOgTitle: string | null;

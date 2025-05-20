@@ -140,7 +140,18 @@ export default function ApiDocsPage() {
                                 expiresAt: null,
                                 expirationUrl: null,
                                 clicks: 42,
-                                tags: ["marketing", "social"],
+                                tags: [
+                                  {
+                                    id: "tag_id_1",
+                                    name: "marketing",
+                                    color: "#9A71F4",
+                                  },
+                                  {
+                                    id: "tag_id_2",
+                                    name: "social",
+                                    color: "#9A71F4",
+                                  },
+                                ],
                                 utmParams: [
                                   {
                                     id: "utm_param_id",
@@ -197,7 +208,18 @@ export default function ApiDocsPage() {
                             shortCode: "my-link",
                             expiresAt: new Date("2025-12-31T23:59:59.999Z"),
                             password: "secret",
-                            tags: ["marketing", "social"],
+                            tags: [
+                              {
+                                id: "tag_id_1",
+                                name: "marketing",
+                                color: "#9A71F4",
+                              },
+                              {
+                                id: "tag_id_2",
+                                name: "social",
+                                color: "#9A71F4",
+                              },
+                            ],
                             utmSets: [
                               {
                                 source: "facebook",
@@ -229,7 +251,18 @@ export default function ApiDocsPage() {
                               createdAt: new Date("2025-01-01T00:00:00.000Z"),
                               expiresAt: new Date("2025-12-31T23:59:59.999Z"),
                               expirationUrl: "https://some-redirect-url.com",
-                              tags: ["marketing", "social"],
+                              tags: [
+                                {
+                                  id: "tag_id_1",
+                                  name: "marketing",
+                                  color: "#9A71F4",
+                                },
+                                {
+                                  id: "tag_id_2",
+                                  name: "social",
+                                  color: "#9A71F4",
+                                },
+                              ],
                               utmParams: [
                                 {
                                   id: "utm_param_id",
@@ -289,7 +322,18 @@ export default function ApiDocsPage() {
                               expiresAt: null,
                               expirationUrl: null,
                               clicks: 42,
-                              tags: ["marketing", "social"],
+                              tags: [
+                                {
+                                  id: "tag_id_1",
+                                  name: "marketing",
+                                  color: "#9A71F4",
+                                },
+                                {
+                                  id: "tag_id_2",
+                                  name: "social",
+                                  color: "#9A71F4",
+                                },
+                              ],
                               utmParams: [
                                 {
                                   id: "utm_param_id",
@@ -369,7 +413,18 @@ export default function ApiDocsPage() {
                               createdAt: new Date("2025-01-01T00:00:00.000Z"),
                               expiresAt: new Date("2025-12-31T23:59:59.999Z"),
                               expirationUrl: "https://some-redirect-url.com",
-                              tags: ["marketing", "social"],
+                              tags: [
+                                {
+                                  id: "tag_id_1",
+                                  name: "marketing",
+                                  color: "#9A71F4",
+                                },
+                                {
+                                  id: "tag_id_2",
+                                  name: "social",
+                                  color: "#9A71F4",
+                                },
+                              ],
                               utmParams: [
                                 {
                                   id: "utm_param_id",

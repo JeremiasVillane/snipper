@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
-import { ShortLinkFromRepository } from "@/lib/types";
+import { ShortLinkFromRepository, TagFromRepository } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -34,12 +34,14 @@ interface LinkListProps {
   links: ShortLinkFromRepository[];
   isPremiumOrDemoUser: boolean;
   userCustomDomains: CustomDomain[];
+  userTags: TagFromRepository[] | undefined;
 }
 
 export function LinkList({
   links,
   isPremiumOrDemoUser,
   userCustomDomains,
+  userTags,
 }: LinkListProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useQueryState(
@@ -67,7 +69,7 @@ export function LinkList({
     const tagSet = new Set<string>();
     links.forEach((link) => {
       if (link.tags) {
-        link.tags.forEach((tag) => tagSet.add(tag));
+        link.tags.forEach((tag) => tagSet.add(tag.name));
       }
     });
     return Array.from(tagSet).sort();
@@ -87,7 +89,9 @@ export function LinkList({
     const currentSelectedTags = Array.isArray(selectedTags) ? selectedTags : [];
     if (currentSelectedTags.length > 0) {
       result = result.filter((link) =>
-        currentSelectedTags.some((tag) => link.tags?.includes(tag)),
+        currentSelectedTags.some((tag) =>
+          link.tags?.some((t) => t.name === tag),
+        ),
       );
     }
 
@@ -119,7 +123,7 @@ export function LinkList({
         <p className="mb-4 mt-1 text-muted-foreground">
           Create your first shortened link to get started
         </p>
-        <LinkDialog userCustomDomains={userCustomDomains}>
+        <LinkDialog {...{ userCustomDomains, userTags }}>
           <Button className="flex md:hidden">Create Link</Button>
         </LinkDialog>
       </div>
@@ -228,6 +232,7 @@ export function LinkList({
       {editingLink && (
         <LinkDialog
           userCustomDomains={userCustomDomains}
+          userTags={userTags}
           initialData={editingLink}
           open={!!editingLink}
           onOpenChange={() => setEditingLink(null)}

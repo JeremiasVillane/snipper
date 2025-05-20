@@ -95,7 +95,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           "flex select-none items-center bg-background text-sm text-muted-foreground",
           side === "start"
             ? "pl-3" // after icon
-            : "pr-2" // before counter
+            : "pr-2 text-xs text-muted-foreground/80" // before counter
         )}
       >
         {content}
