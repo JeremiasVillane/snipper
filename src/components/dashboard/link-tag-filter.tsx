@@ -1,18 +1,18 @@
 import { useState } from "react";
-import { Tag } from "lucide-react";
+import { Plus, Tag } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Credenza,
-  CredenzaBody,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaFooter,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaTrigger,
-} from "@/components/ui/credenza";
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalTitle,
+  ModalTrigger,
+} from "@/components/ui/modal";
 
 interface LinkTagFilterProps {
   selectedTags: string[];
@@ -48,14 +48,15 @@ export function LinkTagFilter({
   };
 
   return (
-    <Credenza
+    <Modal
       open={open}
       onOpenChange={(isOpen) => {
         isOpen ? setCurrentTags(selectedTags) : setCurrentTags([]);
         setOpen(isOpen);
       }}
+      separatedFooter
     >
-      <CredenzaTrigger asChild>
+      <ModalTrigger asChild>
         <Button
           variant="outline"
           iconLeft={<Tag className="size-4" />}
@@ -64,27 +65,36 @@ export function LinkTagFilter({
         >
           Tags
           {selectedTags.length > 0 && (
-            <Badge variant="secondary" className="ml-1">
+            <Badge size="sm" variant="secondary" className="ml-1 p-2">
               {selectedTags.length}
             </Badge>
           )}
         </Button>
-      </CredenzaTrigger>
-      <CredenzaContent>
-        <CredenzaHeader>
-          <CredenzaTitle>Filter by Tags</CredenzaTitle>
-          <CredenzaDescription>
-            Select tags to filter your links
-          </CredenzaDescription>
-        </CredenzaHeader>
-        <CredenzaBody className="flex flex-wrap gap-2 py-4">
+      </ModalTrigger>
+      <ModalContent>
+        <ModalTitle>Filter by Tags</ModalTitle>
+        <ModalDescription>Select tags to filter your links</ModalDescription>
+
+        <ModalBody className="flex flex-row flex-wrap gap-2 py-4">
           {availableTags.length > 0 ? (
             availableTags.map((tag) => (
               <Badge
                 key={tag}
+                role="button"
                 variant={currentTags.includes(tag) ? "default" : "outline"}
-                className="cursor-pointer select-none"
+                size="md"
+                shape="pill"
+                leftElement={<Tag />}
+                rightElement={
+                  <Plus
+                    className={cn(
+                      "transition-all",
+                      currentTags.includes(tag) && "rotate-45",
+                    )}
+                  />
+                }
                 onClick={() => toggleTag(tag)}
+                className="cursor-pointer"
               >
                 {tag}
               </Badge>
@@ -92,18 +102,22 @@ export function LinkTagFilter({
           ) : (
             <p className="text-muted-foreground">No tags available</p>
           )}
-        </CredenzaBody>
-        <CredenzaFooter>
+        </ModalBody>
+        <ModalFooter>
           {availableTags.length > 0 && (
-            <Button variant="outline" onClick={clearTags}>
+            <Button
+              variant="outline"
+              onClick={clearTags}
+              disabled={currentTags.length < 1}
+            >
               Clear All
             </Button>
           )}
           <Button onClick={applyTags}>
             {currentTags.length > 0 ? "Apply" : "Close"}
           </Button>
-        </CredenzaFooter>
-      </CredenzaContent>
-    </Credenza>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }

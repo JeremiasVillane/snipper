@@ -191,12 +191,15 @@ export function LinkList({
               <span className="text-sm text-muted-foreground">Tags:</span>
               <div className="flex flex-wrap gap-1">
                 {selectedTags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">
+                  <Badge
+                    key={tag}
+                    size="xs"
+                    variant="secondary"
+                    shape="pill"
+                    rightElement={<X role="button" onClick={() => toggleTag(tag)} />}
+                    className="border border-border"
+                  >
                     {tag}
-                    <X
-                      className="ml-1 h-3 w-3 cursor-pointer"
-                      onClick={() => toggleTag(tag)}
-                    />
                   </Badge>
                 ))}
               </div>

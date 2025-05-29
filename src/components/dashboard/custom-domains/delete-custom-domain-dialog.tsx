@@ -8,15 +8,15 @@ import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { CustomDomainFromRepository } from "@/lib/types";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { List, ListItem } from "@/components/ui/list";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalTitle,
+} from "@/components/ui/modal";
 import { toast } from "@/components/ui/simple-toast";
 
 interface DeleteCustomDomainDialogProps {
@@ -62,16 +62,20 @@ export function DeleteCustomDomainDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete Custom Domain</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete this subdomain? This action cannot
-            be undone.
-          </DialogDescription>
-        </DialogHeader>
-        <div>
+    <Modal
+      mode="alertdialog"
+      open={open}
+      onOpenChange={onOpenChange}
+      separatedFooter
+    >
+      <ModalContent>
+        <ModalTitle>Delete Custom Domain</ModalTitle>
+        <ModalDescription>
+          Are you sure you want to delete this subdomain? This action cannot be
+          undone.
+        </ModalDescription>
+
+        <ModalBody>
           <p className="text-sm font-medium">
             Subdomain: <strong>{customDomain.domain}</strong>
           </p>
@@ -113,8 +117,9 @@ export function DeleteCustomDomainDialog({
               </Alert>
             </>
           )}
-        </div>
-        <DialogFooter>
+        </ModalBody>
+
+        <ModalFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
@@ -132,8 +137,8 @@ export function DeleteCustomDomainDialog({
               "Delete"
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }

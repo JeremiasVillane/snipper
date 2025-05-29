@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 
 import { BubbleMenu } from "../ui/bubble-menu";
+import { getTagStyle } from "../ui/tag-box";
 import { CopyOptionsMenu } from "./copy-options-menu";
 
 interface LinkCardProps {
@@ -44,7 +45,12 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
             </CardDescription>
           </div>
           <div>
-            <Badge variant="outline" className="whitespace-nowrap">
+            <Badge
+              size="sm"
+              variant="outline"
+              shape="tag"
+              className="whitespace-nowrap"
+            >
               {link.clicks} clicks
             </Badge>
           </div>
@@ -69,19 +75,24 @@ export function LinkCard({ link, onEdit, onDelete, onQrCode }: LinkCardProps) {
 
         <div className="mr-4 mt-2 flex flex-wrap gap-1">
           {link.tags?.map((tag) => (
-            <Badge key={tag.id} variant="secondary" className="text-xs">
+            <Badge
+              key={tag.id}
+              size="xs"
+              shape="pill"
+              style={getTagStyle(tag.color)}
+            >
               {tag.name}
             </Badge>
           ))}
 
           {link.isPasswordEnabled && (
-            <Badge variant="outline" className="text-xs">
+            <Badge size="xs" variant="outline" shape="pill">
               Password Protected
             </Badge>
           )}
 
           {link.utmParams.length > 0 && (
-            <Badge variant="outline" className="text-xs">
+            <Badge size="xs" variant="outline" shape="pill">
               UTM Params
             </Badge>
           )}

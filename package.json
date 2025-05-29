@@ -43,6 +43,8 @@
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-switch": "^1.2.2",
     "@radix-ui/react-tabs": "^1.1.4",
+    "@radix-ui/react-toggle": "^1.1.9",
+    "@radix-ui/react-toggle-group": "^1.1.10",
     "@sentry/nextjs": "^9.14.0",
     "@t3-oss/env-nextjs": "^0.13.0",
     "@upstash/ratelimit": "^2.0.5",
@@ -52,7 +54,6 @@
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "cmdk": "^1.1.1",
     "d3-scale": "^4.0.2",
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
@@ -75,6 +76,7 @@
     "qrcode.react": "^4.2.0",
     "qss": "^3.0.0",
     "react": "^19",
+    "react-colorful": "^5.6.1",
     "react-country-flag": "^3.1.0",
     "react-day-picker": "8.10.1",
     "react-dom": "^19",
@@ -90,7 +92,7 @@
     "ua-parser-js": "^2.0.3",
     "uploadthing": "^7.7.2",
     "vaul": "^1.1.2",
-    "xlsx": "^0.18.5",
+    "write-excel-file": "^2.3.2",
     "zod": "^3.24.3"
   },
   "devDependencies": {

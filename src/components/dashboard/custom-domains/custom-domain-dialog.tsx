@@ -22,14 +22,6 @@ import {
 import { isDeepEqual } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
-  Credenza,
-  CredenzaBody,
-  CredenzaContent,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaTrigger,
-} from "@/components/ui/credenza";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -46,6 +38,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalTitle,
+  ModalTrigger,
+} from "@/components/ui/modal";
 import {
   Popover,
   PopoverContent,
@@ -215,16 +215,14 @@ export function CustomDomainDialog({
   };
 
   return (
-    <Credenza open={isOpen} onOpenChange={setIsOpen}>
-      {!!children && <CredenzaTrigger asChild>{children}</CredenzaTrigger>}
-      <CredenzaContent className="max-w-full md:max-w-[500px]">
-        <CredenzaHeader>
-          <CredenzaTitle>
-            {!!initialData ? "Edit" : "Create"} Custom Domain
-          </CredenzaTitle>
-        </CredenzaHeader>
+    <Modal open={isOpen} onOpenChange={setIsOpen} separatedFooter>
+      {!!children && <ModalTrigger asChild>{children}</ModalTrigger>}
+      <ModalContent className="max-w-full md:max-w-[500px]">
+        <ModalTitle>
+          {!!initialData ? "Edit" : "Create"} Custom Domain
+        </ModalTitle>
 
-        <CredenzaBody>
+        <ModalBody className="px-1">
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
               <FormField
@@ -441,35 +439,35 @@ export function CustomDomainDialog({
                   </FormItem>
                 )}
               />
-
-              <div className="flex w-full flex-col-reverse justify-end gap-2 pb-3 pt-6 md:flex-row">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsOpen(false)}
-                  className="w-full md:w-fit"
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </Button>
-
-                <Button
-                  type="submit"
-                  className="w-full md:w-fit"
-                  isLoading={isSubmitting}
-                  disabled={isSubmitting || !isTrulyDirty}
-                >
-                  {isSubmitting
-                    ? "Processing..."
-                    : initialData?.id
-                      ? "Update Custom Domain"
-                      : "Create Custom Domain"}
-                </Button>
-              </div>
             </form>
           </Form>
-        </CredenzaBody>
-      </CredenzaContent>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsOpen(false)}
+            className="w-full md:w-fit"
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            className="w-full md:w-fit"
+            isLoading={isSubmitting}
+            disabled={isSubmitting || !isTrulyDirty}
+          >
+            {isSubmitting
+              ? "Processing..."
+              : initialData?.id
+                ? "Update Custom Domain"
+                : "Create Custom Domain"}
+          </Button>
+        </ModalFooter>
+      </ModalContent>
 
       {showLinkSelector && (
         <ShortLinkSelector
@@ -485,6 +483,6 @@ export function CustomDomainDialog({
           onClose={() => setShowLinkSelector(false)}
         />
       )}
-    </Credenza>
+    </Modal>
   );
 }

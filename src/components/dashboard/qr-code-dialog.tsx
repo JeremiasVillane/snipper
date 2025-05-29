@@ -23,24 +23,23 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
-  Credenza,
-  CredenzaBody,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaFooter,
-  CredenzaHeader,
-  CredenzaTitle,
-} from "@/components/ui/credenza";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalTitle,
+} from "@/components/ui/modal";
 import { toast } from "@/components/ui/simple-toast";
 
+import { ColorPicker } from "../ui/color-picker";
 import { ImgUploader } from "./img-uploader";
 
 interface QrCodeDialogProps {
@@ -264,7 +263,8 @@ export default function QrCodeDialog({
   };
 
   return (
-    <Credenza
+    <Modal
+      separatedFooter
       open={open}
       onOpenChange={(isOpen) => {
         if (!isOpen) {
@@ -280,19 +280,18 @@ export default function QrCodeDialog({
         onOpenChange(isOpen);
       }}
     >
-      <CredenzaContent className="max-h-full max-w-full overflow-hidden md:max-h-[90vh] md:max-w-lg md:overflow-y-auto">
-        <CredenzaHeader>
-          <CredenzaTitle>Customize & Download QR Code</CredenzaTitle>
-          <CredenzaDescription>
-            Scan this QR code to access your shortened URL. Customize its
-            appearance and add an optional logo.
-          </CredenzaDescription>
-        </CredenzaHeader>
-        <CredenzaBody className="flex flex-grow flex-col items-center gap-6 overflow-y-auto py-6">
+      <ModalContent>
+        <ModalTitle>Customize & Download QR Code</ModalTitle>
+        <ModalDescription>
+          Scan this QR code to access your shortened URL. Customize its
+          appearance and add an optional logo.
+        </ModalDescription>
+
+        <ModalBody className="flex flex-col items-center gap-4">
           {/* QR Code Display */}
           {shortUrl ? (
             <div
-              className="relative flex items-center justify-center overflow-hidden rounded-md border"
+              className="relative flex items-center justify-center"
               style={{
                 height: `${QR_CODE_SIZE / 2}px`,
                 width: `${QR_CODE_SIZE / 2}px`,
@@ -361,6 +360,8 @@ export default function QrCodeDialog({
             type="single"
             variant="separated"
             styleVariant="outline"
+            trigger="plus-minus"
+            triggerPosition="left"
             collapsible
           >
             <AccordionItem
@@ -375,23 +376,21 @@ export default function QrCodeDialog({
                   <section className="w-full space-y-6 px-1">
                     <div className="grid w-full items-center gap-3">
                       <Label htmlFor="fgColor">Foreground Color</Label>
-                      <Input
+                      <ColorPicker
                         id="fgColor"
-                        type="color"
-                        defaultValue={fgColor}
-                        onChange={handleFgColorChange}
+                        value={fgColor}
+                        onChange={setFgColor}
                         className="h-10 w-full hover:border-muted-foreground/60"
                       />
                     </div>
 
                     <div className="grid w-full items-center gap-3">
                       <Label htmlFor="bgColor">Background Color</Label>
-                      <Input
+                      <ColorPicker
                         id="bgColor"
-                        type="color"
-                        defaultValue={bgColor}
-                        onChange={handleBgColorChange}
-                        className="h-10 w-full"
+                        value={bgColor}
+                        onChange={setBgColor}
+                        className="h-10 w-full hover:border-muted-foreground/60"
                       />
                     </div>
 
@@ -439,8 +438,9 @@ export default function QrCodeDialog({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </CredenzaBody>
-        <CredenzaFooter>
+        </ModalBody>
+
+        <ModalFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Close
           </Button>
@@ -469,8 +469,8 @@ export default function QrCodeDialog({
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-        </CredenzaFooter>
-      </CredenzaContent>
-    </Credenza>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }

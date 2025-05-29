@@ -29,15 +29,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Credenza,
-  CredenzaBody,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaTrigger,
-} from "@/components/ui/credenza";
-import {
   Form,
   FormControl,
   FormDescription,
@@ -47,6 +38,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalTitle,
+  ModalTrigger,
+} from "@/components/ui/modal";
 import {
   Popover,
   PopoverContent,
@@ -330,21 +330,19 @@ export function LinkDialog({
     : isDirty;
 
   return (
-    <Credenza open={isOpen} onOpenChange={onOpenChange}>
-      {!!children && <CredenzaTrigger asChild>{children}</CredenzaTrigger>}
-      <CredenzaContent className="max-h-full max-w-full overflow-hidden md:max-h-[90vh] md:max-w-3xl md:overflow-y-auto">
-        <CredenzaHeader>
-          <CredenzaTitle>
-            {initialData?.id ? "Edit Link" : "Create New Link"}
-          </CredenzaTitle>
-          <CredenzaDescription>
-            {initialData?.id
-              ? "Update your shortened URL properties"
-              : "Enter details for your new shortened URL"}
-          </CredenzaDescription>
-        </CredenzaHeader>
+    <Modal open={isOpen} onOpenChange={onOpenChange} separatedFooter>
+      {!!children && <ModalTrigger asChild>{children}</ModalTrigger>}
+      <ModalContent className="max-h-full max-w-full overflow-hidden md:max-h-[90vh] md:max-w-3xl md:overflow-y-auto">
+        <ModalTitle>
+          {initialData?.id ? "Edit Link" : "Create New Link"}
+        </ModalTitle>
+        <ModalDescription>
+          {initialData?.id
+            ? "Update your shortened URL properties"
+            : "Enter details for your new shortened URL"}
+        </ModalDescription>
 
-        <CredenzaBody className="flex-grow overflow-y-auto">
+        <ModalBody className="flex-grow overflow-y-auto">
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <Tabs variant="segmented" defaultValue="basic">
@@ -556,6 +554,7 @@ export function LinkDialog({
                             <FormControl>
                               <TagBox
                                 {...field}
+                                tagClassName="animate-tag-fade-in"
                                 placeholder="Add tags (press Enter)"
                                 maxTags={12}
                                 showMaxTags
@@ -990,25 +989,25 @@ export function LinkDialog({
                   />
                 </TabsContent>
               </Tabs>
-
-              <div className="flex pb-3 pt-6">
-                <Button
-                  type="submit"
-                  className="m-0 w-full md:ml-auto md:w-fit"
-                  isLoading={isSubmitting}
-                  disabled={isSubmitting || !isTrulyDirty}
-                >
-                  {isSubmitting
-                    ? "Processing..."
-                    : initialData?.id
-                      ? "Update Link"
-                      : "Create Link"}
-                </Button>
-              </div>
             </form>
           </Form>
-        </CredenzaBody>
-      </CredenzaContent>
-    </Credenza>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            className="m-0 w-full md:ml-auto md:w-fit"
+            isLoading={isSubmitting}
+            disabled={isSubmitting || !isTrulyDirty}
+          >
+            {isSubmitting
+              ? "Processing..."
+              : initialData?.id
+                ? "Update Link"
+                : "Create Link"}
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }

@@ -24,6 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LinkPreview } from "@/components/ui/link-preview";
 import {
   Table,
   TableBody,
@@ -32,8 +33,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getTagStyle } from "@/components/ui/tag-box";
 
-import { LinkPreview } from "../ui/link-preview";
 import { CopyOptionsMenu } from "./copy-options-menu";
 
 interface LinkTableProps {
@@ -137,7 +138,12 @@ export function LinkTable({
                   <TableCell className="whitespace-nowrap">
                     {link.expiresAt ? formatDate(link.expiresAt) : "Never"}
                     {isExpired && (
-                      <Badge variant="destructive" className="ms-2">
+                      <Badge
+                        size="xs"
+                        variant="destructive"
+                        shape="pill"
+                        className="ms-2"
+                      >
                         Expired
                       </Badge>
                     )}
@@ -151,8 +157,9 @@ export function LinkTable({
                         link.tags.map((tag) => (
                           <Badge
                             key={tag.id}
-                            variant="secondary"
-                            className="text-nowrap"
+                            size="xs"
+                            shape="pill"
+                            style={getTagStyle(tag.color)}
                           >
                             {tag.name}
                           </Badge>

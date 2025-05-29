@@ -124,9 +124,13 @@ export function CustomDomainTable({
                   </TableCell>
                   <TableCell className="w-36">
                     {customDomain.isLinkHubEnabled ? (
-                      <Badge>Enabled</Badge>
+                      <Badge size="xs" shape="rounded">
+                        Enabled
+                      </Badge>
                     ) : (
-                      <Badge variant="outline">Disabled</Badge>
+                      <Badge size="xs" shape="rounded" variant="outline">
+                        Disabled
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell className="max-w-[200px] truncate">

@@ -1,11 +1,36 @@
 "use server";
 
-import * as XLSX from "xlsx";
+import writeXlsxFile from "write-excel-file/node";
 
 import { createPDF } from "@/lib/pdf";
 import { exportDataSchema } from "@/lib/schemas";
 
 import { authActionClient } from "../safe-action";
+
+const prepareExcelData = (
+  data: Array<{ [key: string]: any }>,
+  headers: string[],
+): Array<Array<{ value: any; fontWeight?: "bold"; type?: any }>> => {
+  if (!data || data.length === 0) return [];
+
+  const headerRow: Array<{ value: string; fontWeight: "bold" }> = headers.map(
+    (header) => ({
+      value: header,
+      fontWeight: "bold",
+    }),
+  );
+
+  const dataRows: Array<Array<{ value: any }>> = data.map((item) => {
+    return headers.map((header) => {
+      const cellValue = item[header];
+      return {
+        value: cellValue ?? null,
+      };
+    });
+  });
+
+  return [headerRow, ...dataRows];
+};
 
 const objectDataToPdfRows = (
   data: Array<{ [key: string]: any }>,
@@ -64,10 +89,14 @@ export const exportData = authActionClient({
 
         case "csv":
           const Papa = require("papaparse");
-          const finalCsvString = Papa.unparse(data, {
-            header: true,
+
+          const csvConfig = {
+            columns: tableHeaders,
             skipEmptyLines: true,
-          });
+          };
+
+          const finalCsvString = Papa.unparse(data, csvConfig);
+
           const csvBuffer = Buffer.from(finalCsvString, "utf-8");
           fileBuffer = csvBuffer.buffer.slice(
             csvBuffer.byteOffset,
@@ -76,20 +105,28 @@ export const exportData = authActionClient({
           break;
 
         case "xlsx":
-          const worksheet = XLSX.utils.json_to_sheet(data);
-          const workbook = XLSX.utils.book_new();
+          const excelData = prepareExcelData(data, tableHeaders);
+          if (excelData.length <= 1) {
+            throw new Error(
+              "No data to format for Excel (after preparing headers)",
+            );
+          }
+
           const sheetName = reportTitle
             .substring(0, 31)
             .replace(/[\\/:?*[\]]/g, "_");
-          XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
 
-          const xlsxBuffer = XLSX.write(workbook, {
-            bookType: "xlsx",
-            type: "buffer",
+          const excelStream = await writeXlsxFile(excelData, {
+            sheet: sheetName,
           });
-          fileBuffer = xlsxBuffer.buffer.slice(
-            xlsxBuffer.byteOffset,
-            xlsxBuffer.byteOffset + xlsxBuffer.byteLength,
+          const chunks: Buffer[] = [];
+          for await (const chunk of excelStream) {
+            chunks.push(Buffer.from(chunk));
+          }
+          const buffer = Buffer.concat(chunks);
+          fileBuffer = buffer.buffer.slice(
+            buffer.byteOffset,
+            buffer.byteOffset + buffer.byteLength,
           );
           break;
 

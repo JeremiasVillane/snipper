@@ -10,14 +10,13 @@ import { deleteQrPreferences } from "@/lib/qr-preferences-db";
 import type { ShortLinkFromRepository } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
-  Credenza,
-  CredenzaBody,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaFooter,
-  CredenzaHeader,
-  CredenzaTitle,
-} from "@/components/ui/credenza";
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalTitle,
+} from "@/components/ui/modal";
 import { toast } from "@/components/ui/simple-toast";
 
 interface DeleteLinkDialogProps {
@@ -72,16 +71,20 @@ export default function DeleteLinkDialog({
   };
 
   return (
-    <Credenza open={open} onOpenChange={onOpenChange}>
-      <CredenzaContent>
-        <CredenzaHeader>
-          <CredenzaTitle>Delete Link</CredenzaTitle>
-          <CredenzaDescription>
-            Are you sure you want to delete this link? This action cannot be
-            undone.
-          </CredenzaDescription>
-        </CredenzaHeader>
-        <CredenzaBody className="overflow-x-hidden py-4">
+    <Modal
+      mode="alertdialog"
+      open={open}
+      onOpenChange={onOpenChange}
+      separatedFooter
+    >
+      <ModalContent>
+        <ModalTitle>Delete Link</ModalTitle>
+        <ModalDescription>
+          Are you sure you want to delete this link? This action cannot be
+          undone.
+        </ModalDescription>
+
+        <ModalBody className="overflow-x-hidden py-4">
           <p className="text-sm font-medium">Short URL: {link.shortCode}</p>
           <p
             data-tooltip-id="url-tooltip"
@@ -90,8 +93,8 @@ export default function DeleteLinkDialog({
           >
             Original URL: {link.originalUrl}
           </p>
-        </CredenzaBody>
-        <CredenzaFooter>
+        </ModalBody>
+        <ModalFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
@@ -103,13 +106,13 @@ export default function DeleteLinkDialog({
           >
             {isLoading ? "Deleting..." : "Delete"}
           </Button>
-        </CredenzaFooter>
+        </ModalFooter>
         <ReactTooltip
           id="url-tooltip"
           offset={15}
           className="max-w-sm whitespace-normal break-words md:max-w-md lg:max-w-xl"
         />
-      </CredenzaContent>
-    </Credenza>
+      </ModalContent>
+    </Modal>
   );
 }

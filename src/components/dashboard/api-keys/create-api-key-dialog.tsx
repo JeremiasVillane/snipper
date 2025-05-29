@@ -18,16 +18,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { CopyToClipboardButton } from "@/components/ui/copy-to-clipboard-button";
 import {
-  Credenza,
-  CredenzaBody,
-  CredenzaContent,
-  CredenzaDescription,
-  CredenzaFooter,
-  CredenzaHeader,
-  CredenzaTitle,
-  CredenzaTrigger,
-} from "@/components/ui/credenza";
-import {
   Form,
   FormControl,
   FormDescription,
@@ -38,6 +28,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalTitle,
+  ModalTrigger,
+} from "@/components/ui/modal";
 import {
   Popover,
   PopoverContent,
@@ -97,7 +96,7 @@ export default function CreateApiKeyDialog({
       });
 
       result.success && setCreatedKey(result.data.key);
-      setOpen(false);
+      // setOpen(false);
     } catch (error) {
       console.error("Error creating API key:", error);
       toast({
@@ -115,26 +114,29 @@ export default function CreateApiKeyDialog({
   };
 
   return (
-    <Credenza open={open} onOpenChange={setOpen}>
-      <CredenzaTrigger asChild>{children}</CredenzaTrigger>
-      <CredenzaContent className="max-w-full md:max-w-[500px]">
-        <CredenzaHeader>
-          <CredenzaTitle>
-            {createdKey ? "API Key Created" : "Create API Key"}
-          </CredenzaTitle>
-          <CredenzaDescription>
-            {createdKey
-              ? "Your API key has been created. Make sure to copy it now as you won't be able to see it again."
-              : "Create a new API key for programmatic access to the URL shortener."}
-          </CredenzaDescription>
-        </CredenzaHeader>
+    <Modal
+      open={open}
+      onOpenChange={setOpen}
+      mode={!createdKey ? "dialog" : "alertdialog"}
+      separatedFooter
+    >
+      <ModalTrigger asChild>{children}</ModalTrigger>
+      <ModalContent className="">
+        <ModalTitle>
+          {createdKey ? "API Key Created" : "Create API Key"}
+        </ModalTitle>
+        <ModalDescription>
+          {createdKey
+            ? "Your API key has been created."
+            : "Create a new API key for programmatic access to the URL shortener."}
+        </ModalDescription>
 
-        <CredenzaBody>
+        <ModalBody className="px-1">
           {!createdKey ? (
             <Form {...form}>
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="space-y-4 py-4"
+                className="space-y-4 pb-4"
               >
                 <FormField
                   control={control}
@@ -213,54 +215,55 @@ export default function CreateApiKeyDialog({
                     </FormItem>
                   )}
                 />
-
-                <CredenzaFooter className="mt-6 px-0">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setOpen(false)}
-                    disabled={isSubmitting}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    isLoading={isSubmitting}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Creating..." : "Create API Key"}
-                  </Button>
-                </CredenzaFooter>
               </form>
             </Form>
           ) : (
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="api-key">API Key</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="api-key"
-                    value={createdKey}
-                    readOnly
-                    className="font-mono text-sm"
-                  />
-                  <CopyToClipboardButton
-                    size="icon"
-                    variant="outline"
-                    content={createdKey}
-                  />
-                </div>
-                <p className="mt-2 px-1 text-sm text-muted-foreground">
-                  This key will only be shown once. Make sure to copy it now.
-                </p>
+            <div className="space-y-2">
+              <Label htmlFor="api-key">API Key</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="api-key"
+                  value={createdKey}
+                  readOnly
+                  className="font-mono text-sm"
+                />
+                <CopyToClipboardButton
+                  size="icon"
+                  variant="outline"
+                  content={createdKey}
+                />
               </div>
-              <CredenzaFooter className="mt-6 px-0">
-                <Button onClick={handleDone}>Done</Button>
-              </CredenzaFooter>
+              <p className="mt-2 px-1 text-sm text-muted-foreground">
+                You can always copy this key from the api keys table.
+              </p>
             </div>
           )}
-        </CredenzaBody>
-      </CredenzaContent>
-    </Credenza>
+        </ModalBody>
+
+        {!createdKey ? (
+          <ModalFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmit(onSubmit)}
+              isLoading={isSubmitting}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Creating..." : "Create API Key"}
+            </Button>
+          </ModalFooter>
+        ) : (
+          <ModalFooter>
+            <Button onClick={handleDone}>Done</Button>
+          </ModalFooter>
+        )}
+      </ModalContent>
+    </Modal>
   );
 }

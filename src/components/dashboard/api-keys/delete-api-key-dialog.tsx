@@ -9,13 +9,13 @@ import { getSafeActionResponse } from "@/lib/actions/safe-action-helpers";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalDescription,
+  ModalFooter,
+  ModalTitle,
+} from "@/components/ui/modal";
 import { toast } from "@/components/ui/simple-toast";
 
 interface ApiKey {
@@ -70,22 +70,26 @@ export default function DeleteApiKeyDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete API Key</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete this API key? This action cannot be
-            undone.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="py-4">
+    <Modal
+      mode="alertdialog"
+      open={open}
+      onOpenChange={onOpenChange}
+      separatedFooter
+    >
+      <ModalContent>
+        <ModalTitle>Delete API Key</ModalTitle>
+        <ModalDescription>
+          Are you sure you want to delete this API key? This action cannot be
+          undone.
+        </ModalDescription>
+
+        <ModalBody>
           <p className="text-sm font-medium">Name: {apiKey.name}</p>
           <p className="mt-1 text-sm text-muted-foreground">
             Created: {formatDate(apiKey.createdAt)}
           </p>
-        </div>
-        <DialogFooter>
+        </ModalBody>
+        <ModalFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
@@ -103,8 +107,8 @@ export default function DeleteApiKeyDialog({
               "Delete"
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }
